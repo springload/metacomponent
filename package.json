@@ -1,15 +1,17 @@
 {
   "name": "@springload/metatemplate",
   "version": "2.0.0-alpha1",
-  "private": true,
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
+    "@types/jsdom": "^16.2.3",
     "@types/node": "^12.0.0",
+    "@types/prettier": "^2.0.1",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "jsdom": "^16.2.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
@@ -37,6 +39,7 @@
     ]
   },
   "dependencies": {
-    "postcss-selector-parser": "^6.0.2"
+    "postcss-selector-parser": "^6.0.2",
+    "prettier": "^2.0.5"
   }
 }

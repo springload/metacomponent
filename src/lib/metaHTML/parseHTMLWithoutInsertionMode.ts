@@ -23,16 +23,19 @@ export function parseHTMLWithoutInsertionMode(
   metaHTMLString: string,
   cssString: string
 ): Window {
+  console.log("p1");
   const documentString = wrapBodyHtml(metaHTMLString, cssString);
-  window.document.documentElement.outerHTML = documentString;
+  console.log("p2", documentString);
+  window.document.documentElement.innerHTML = documentString;
+  console.log("p3", window.document.documentElement.outerHTML);
   restoreParsingModeElements(window);
   return window;
 }
 
 function wrapBodyHtml(metaHTMLString: string, cssString: string): string {
-  return `<!DOCTYPE html><html><head><style>${cssString}</style></head><body>${aliasParsingModeElements(
+  return `<head><style>${cssString}</style></head><body>${aliasParsingModeElements(
     metaHTMLString
-  )}</body></html>`;
+  )}</body>`;
 }
 
 const MT_ALIAS_TAG = "mt-";

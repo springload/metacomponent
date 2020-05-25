@@ -4,22 +4,32 @@ type Options = {
   blacklist?: { stylesheet?: string; media?: string; rule?: string };
 };
 
-export type MatchedCSS = {
-  [index: string]: {
-    before?: string;
-    selectors?: string[];
-    after?: string;
-    children?: MatchedCSS;
-    properties?: string;
-  };
+export type CSSSniffRoot = {
+  [sheetIndex: string]: CSSSniffStyleSheet;
+};
+
+export type CSSSniffStyleSheet = {
+  [ruleIndex: string]: CSSSniffStyleRule | CSSSniffMediaRule;
+};
+
+export type CSSSniffStyleRule = {
+  type: "CSSSniffStyleRule";
+  selectors: string[];
+  properties: string;
+};
+
+export type CSSSniffMediaRule = {
+  type: "CSSSniffMediaRule";
+  before: string;
+  children: CSSSniffStyleSheet;
 };
 
 export function cssSniff(
   children: ChildNode[],
   options: Options,
-  matchedCSS?: MatchedCSS
-): MatchedCSS {
-  const matched: MatchedCSS = matchedCSS || {};
+  matchedCSS?: CSSSniffRoot
+): CSSSniffRoot {
+  const matched: CSSSniffRoot = matchedCSS || {};
 
   children.forEach((child) => {
     if (child.nodeType !== Node.ELEMENT_NODE) {
@@ -34,13 +44,15 @@ export function cssSniff(
     }
   });
 
+  console.log("FOUND", JSON.stringify(matched));
+
   return matched;
 }
 
 function getCSSMatchesByElement(
   el: HTMLElement,
   options: Options,
-  matched: MatchedCSS
+  sniffRoot: CSSSniffRoot
 ): void {
   if (el.nodeType !== Node.ELEMENT_NODE) {
     return;
@@ -59,15 +71,9 @@ function getCSSMatchesByElement(
     const cssRulesArray = Array.from(sheet.cssRules);
 
     if (sheetIsAllowed(sheet, options)) {
-      const matchedCSSRule = _filterCSSRulesByElement(
-        el,
-        cssRulesArray,
-        options,
-        matched || {}
-      );
-      if (matchedCSSRule) {
-        matched[i] = matchedCSSRule;
-      }
+      const cssSniffStyleSheet: CSSSniffStyleSheet = sniffRoot[i] || {};
+      sniffRoot[i] = cssSniffStyleSheet;
+      _filterCSSRulesByElement(el, cssRulesArray, options, cssSniffStyleSheet);
     }
   }
 }
@@ -76,13 +82,19 @@ function _filterCSSRulesByElement(
   el: HTMLElement,
   rules: CSSRule[],
   options: Options,
-  matched: MatchedCSS
-): MatchedCSS | void {
+  cssSniffStyleSheet: CSSSniffStyleSheet // is mutated
+): void {
   for (let i in rules) {
     const rule = rules[i];
 
-    if (rule instanceof CSSStyleRule) {
-      const sanitisedSelector = rule.selectorText.replace(/@charset.*?;/g, "");
+    // @ts-ignore
+    if (rule.selectorText) {
+      // @ts-ignore
+      const cssStyleRule: CSSStyleRule = rule;
+      const sanitisedSelector = cssStyleRule.selectorText.replace(
+        /@charset.*?;/g,
+        ""
+      );
 
       if (ruleIsAllowed(sanitisedSelector, options)) {
         const selectors = splitSelectors(sanitisedSelector);
@@ -129,7 +141,7 @@ function _filterCSSRulesByElement(
             // where we should change to
             //   input
             //   p > *
-            // respectively.
+            // respectively because we can't know HTML structure.
             //
             // So given all those scenarios we have the following logic,
             //
@@ -170,55 +182,89 @@ function _filterCSSRulesByElement(
 
             const isMatch = el.matches(normalizedSelector);
 
+            console.log("rule", normalizedSelector, isMatch);
+
             if (isMatch) {
-              matched[i] = {
-                selectors: (matched[i] && matched[i].selectors) || [],
-                properties: rule.cssText.substring(rule.cssText.indexOf("{")),
-              };
-              if (matched[i].selectors?.indexOf(selector) === -1) {
-                matched[i].selectors?.push(selector);
+              console.log("rulea");
+              const existingCSSSniffStyleRule = cssSniffStyleSheet[i];
+              if (
+                existingCSSSniffStyleRule &&
+                existingCSSSniffStyleRule.type !== "CSSSniffStyleRule"
+              ) {
+                throw Error("Rule can't change type");
               }
+              console.log("ruleaa");
+              const cssSniffStyleRule: CSSSniffStyleRule = {
+                type: "CSSSniffStyleRule",
+                selectors: existingCSSSniffStyleRule
+                  ? existingCSSSniffStyleRule.selectors
+                  : [],
+                properties: cssStyleRule.cssText.substring(
+                  cssStyleRule.cssText.indexOf("{") + 1,
+                  cssStyleRule.cssText.lastIndexOf("}")
+                ),
+              };
+              console.log("ruleb", cssSniffStyleRule.properties);
+              if (!cssSniffStyleRule.selectors.includes(selector)) {
+                cssSniffStyleRule.selectors.push(selector);
+              }
+              cssSniffStyleSheet[i] = cssSniffStyleRule;
+
+              console.log("Added rule ", cssSniffStyleSheet[i]);
             }
           } catch (e) {
-            const isCharset = "@charset".indexOf(rule.selectorText) !== -1;
+            console.log(e);
+            const isCharset =
+              "@charset".indexOf(cssStyleRule.selectorText) !== -1;
             if (isCharset) {
               console.error(
                 "ERROR",
-                rule.type,
+                cssStyleRule.type,
                 `[${trimmedSelector}]`,
                 `[[${normalizedSelector}]]`,
-                `(((${rule.selectorText})))`,
+                `(((${cssStyleRule.selectorText})))`,
                 e
               );
             }
           }
         });
       }
-    } else if (rule instanceof CSSMediaRule) {
-      const conditionText = rule.conditionText || rule.media[0];
+    } else if (
+      // @ts-ignore
+      rule.media
+    ) {
+      // @ts-ignore
+      const cssMediaRule: CSSMediaRule = rule;
+      const conditionText = cssMediaRule.conditionText || cssMediaRule.media[0];
       if (mediaIsAllowed(conditionText, options)) {
         // a nested rule like @media { rule { ... } }
         // so we filter the rules inside individually
-        const cssRulesArray = Array.from(rule.cssRules);
+        const cssRulesArray = Array.from(cssMediaRule.cssRules);
 
-        const nestedRules = _filterCSSRulesByElement(
-          el,
-          cssRulesArray,
-          options,
-          {}
-        );
+        const existingMediaRule = cssSniffStyleSheet[i];
+        if (
+          existingMediaRule &&
+          existingMediaRule.type !== "CSSSniffMediaRule"
+        ) {
+          throw Error(`Can't change type`);
+        }
 
-        if (nestedRules) {
-          matched[i] = {
-            before: "@media " + conditionText + " {",
-            children: nestedRules,
-            after: "}",
+        const childrenRules: CSSSniffStyleSheet = existingMediaRule
+          ? existingMediaRule.children
+          : {};
+
+        _filterCSSRulesByElement(el, cssRulesArray, options, childrenRules);
+
+        if (Object.keys(childrenRules).length > 0) {
+          cssSniffStyleSheet[i] = {
+            type: "CSSSniffMediaRule",
+            before: "@media " + conditionText,
+            children: childrenRules,
           };
         }
       }
     }
   }
-  return Object.keys(matched).length ? matched : undefined;
 }
 
 function sheetIsAllowed(sheet: StyleSheet, options: Options) {
@@ -336,7 +382,7 @@ function ruleIsAllowed(ruleString: string, options: Options) {
   return whitelisted !== false && blacklisted !== true;
 }
 
-export function mergeMatches(matchedCSSArray: MatchedCSS[]): MatchedCSS {
+export function mergeMatches(matchedCSSArray: CSSSniffRoot[]): CSSSniffRoot {
   // Via https://stackoverflow.com/a/34749873
   const isObject = (item: any): boolean => {
     return item && typeof item === "object" && !Array.isArray(item);
@@ -373,36 +419,66 @@ export function mergeMatches(matchedCSSArray: MatchedCSS[]): MatchedCSS {
   return mergeDeep({}, ...matchedCSSArray);
 }
 
-export function serializeCSSMatches(matchedCSS: MatchedCSS): string {
-  if (!matchedCSS) return "";
-  const response = Object.keys(matchedCSS)
-    .map((key: string) => {
-      const rule = matchedCSS[key];
-      let css = "";
-      if (!rule) {
-        throw Error(
-          `css-sniff: serializeCSSRules() key: "${key}", value: ${JSON.stringify(
-            rule
-          )}`
-        );
-      }
-      if (rule.selectors) {
-        css += rule.selectors.join(",");
-        css += rule.properties;
-      } else if (rule.before && rule.children) {
-        css += rule.before;
-        css += serializeCSSMatches(rule.children);
-        css += rule.after;
-      } else if (rule instanceof Object) {
-        // @ts-ignore
-        const matchedCSS: MatchedCSS = rule;
-        css += serializeCSSMatches(matchedCSS);
-      }
-      return css;
-    })
-    .join("");
+export function serializeCSSMatches(matchedCSS: CSSSniffRoot): string {
+  console.log({ serialize: matchedCSS });
+  let css = "";
 
-  return response;
+  Object.keys(matchedCSS).map((sheetIndex: string) => {
+    const sheet = matchedCSS[sheetIndex];
+
+    Object.keys(sheet).map((ruleIndex: string) => {
+      const rule = sheet[ruleIndex];
+      if (rule.type === "CSSSniffStyleRule") {
+        css += rule.selectors.join(",");
+        css += "{";
+        css += rule.properties;
+        css += "}";
+      } else if (rule.type === "CSSSniffMediaRule") {
+        css += rule.before;
+        css += "{";
+        Object.keys(rule.children).map((childRuleIndex: string) => {
+          const childRule = rule.children[childRuleIndex];
+          if (childRule.type === "CSSSniffStyleRule") {
+            css += childRule.selectors.join(",");
+            css += "{";
+            css += childRule.properties;
+            css += "}";
+          } else {
+            throw Error("Can't serialize invalid CSS structure");
+          }
+        });
+        css += "}";
+      }
+    });
+  });
+
+  return css;
+}
+
+export function serializeCSSMatchesAsProperties(
+  matchedCSS: CSSSniffRoot
+): string {
+  return Object.values(matchedCSS)
+    .map((sheet): string => {
+      return Object.values(sheet)
+        .map((rule): string => {
+          if (rule.type === "CSSSniffStyleRule") {
+            return rule.properties;
+          } else if (rule.type === "CSSSniffMediaRule") {
+            return `${rule.before}{${Object.values(rule.children)
+              .map((childRule): string => {
+                if (childRule.type === "CSSSniffStyleRule") {
+                  return childRule.properties;
+                }
+                throw Error("Invalid structure");
+              })
+              .join("")}}`;
+          }
+          throw Error(`Unknown type.`);
+        })
+        .join("");
+    })
+    .join(";");
 }
 
 export function splitSelectors(selectors: string): string[] {

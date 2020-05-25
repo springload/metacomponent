@@ -1,0 +1,502 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`twig-embed Snapshots makeIndexImports 1`] = `
+Object {
+  "react-ts/index.tsx": "// DEVELOPER NOTE: These components are ready to lazy-load. You may also import components directly.
+
+export const blah.js = () => import(\\"./blah.js\\");
+",
+  "react-ts/indexNotLazy.tsx": "// DEVELOPER NOTE: This file includes all components so importing this file may be very inefficient. Use carefully! You may prefer to import components directly or use index.js which has import functions, typically treated as a code splitting point.
+
+export { default as blahJs } from \\"./blah.js\\";
+",
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: <img src="pic.jpeg" class="frogs"> 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/imgSrc.html.twig": "<img
+class=\\"frogs\\"
+src=\\"{{ src | escape('html_attr') }}\\"
+width=\\"{{ width | escape('html_attr') }}\\"
+height=\\"{{ height | escape('html_attr') }}\\"
+srcset=\\"{{ srcset | escape('html_attr') }}\\"
+crossorigin=\\"{{ crossorigin | escape('html_attr') }}\\"
+/>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: Basic variables 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/paragraph.html.twig": "<p
+>
+{% block children %}Some placeholder text{% endblock %}
+</p>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: Boolean attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/row.html.twig": "<div
+class=\\"g-flex-row{% if isReversed %} g-flex-reverse{% endif %}\\"
+>
+  
+            
+{% block children %}Columns{% endblock %}
+  
+          
+</div>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed Snapshots twig-embed: Boolean attribute values 2`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/row.html.twig": "<div
+class=\\"g-form-group{% if errorId %} g-form-group--error{% endif %}\\"
+>
+  
+            
+<fieldset
+aria-describedby=\\"{{ hintId | escape('html_attr') }} {{ errorId | escape('html_attr') }}\\"
+class=\\"g-fieldset\\"
+>
+  
+              
+<legend
+class=\\"g-fieldset__legend\\"
+>
+  
+                
+{% block legend %}Legend text{% endblock %}
+  
+              
+</legend>
+  
+              
+  
+                
+<div
+class=\\"g-hint\\"
+id=\\"{{ hintId | escape('html_attr') }}\\"
+>
+  
+                  
+{% block hint %}Hint text{% endblock %}
+  
+                
+</div>
+  
+              
+  
+              
+  
+                
+<div
+class=\\"g-error-message\\"
+id=\\"{{ errorId | escape('html_attr') }}\\"
+>
+  
+                  
+<span
+class=\\"g-visually-hidden\\"
+>
+  
+                    Error:
+                  
+</span>
+  
+                  
+{% block error %}Error text{% endblock %}
+  
+                
+</div>
+  
+              
+  
+              
+<div
+>
+{% block children %}Fieldset contents{% endblock %}
+</div>
+  
+            
+</fieldset>
+  
+          
+</div>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed Snapshots twig-embed: Enum attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/container.html.twig": "<div
+class=\\"{% if containerType == \\"g-flex-container\\" %}g-flex-container{% elseif containerType == \\"g-flex-container-fluid\\" %}g-flex-container-fluid{% endif %}\\"
+>
+  
+          
+{% block children %}Rows...{% endblock %}
+  
+        
+</div>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed Snapshots twig-embed: Form input[checked] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/input.html.twig": "<input
+id=\\"{{ textId | escape('html_attr') }}\\"
+type=\\"checkbox\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+name=\\"{{ name | escape('html_attr') }}\\"
+value=\\"{{ value | escape('html_attr') }}\\"
+checked=\\"{% if checked %}checked{% endif %}\\"
+/>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: Form label input[checked] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/input.html.twig": "<label
+for=\\"{{ textId | escape('html_attr') }}\\"
+>
+<input
+id=\\"{{ textId | escape('html_attr') }}\\"
+type=\\"checkbox\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+name=\\"{{ name | escape('html_attr') }}\\"
+value=\\"{{ value | escape('html_attr') }}\\"
+checked=\\"{% if checked %}checked{% endif %}\\"
+/>
+</label>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: H1 with configurable Id 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/h1Id.html.twig": "<h1
+id=\\"{{ id | escape('html_attr') }}\\"
+>
+  stuff
+</h1>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed Snapshots twig-embed: Link with boolean class 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/a.html.twig": "<a
+class=\\"g-link{% if isMuted %} g-link--muted{% endif %}\\"
+href=\\"{{ href | escape('html_attr') }}\\"
+rel=\\"{{ rel | escape('html_attr') }}\\"
+target=\\"{{ target | escape('html_attr') }}\\"
+>
+{% block children %}Example text{% endblock %}
+</a>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed Snapshots twig-embed: Lots of enum attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/container.html.twig": "<div
+class=\\"g-flex-col{% if isReversed %} g-flex-reverse{% endif %} {% if columnXs == \\"g-flex-col-xs\\" %}g-flex-col-xs{% elseif columnXs == \\"g-flex-col-xs-1\\" %}g-flex-col-xs-1{% elseif columnXs == \\"g-flex-col-xs-2\\" %}g-flex-col-xs-2{% elseif columnXs == \\"g-flex-col-xs-3\\" %}g-flex-col-xs-3{% elseif columnXs == \\"g-flex-col-xs-4\\" %}g-flex-col-xs-4{% elseif columnXs == \\"g-flex-col-xs-5\\" %}g-flex-col-xs-5{% elseif columnXs == \\"g-flex-col-xs-6\\" %}g-flex-col-xs-6{% elseif columnXs == \\"g-flex-col-xs-7\\" %}g-flex-col-xs-7{% elseif columnXs == \\"g-flex-col-xs-8\\" %}g-flex-col-xs-8{% elseif columnXs == \\"g-flex-col-xs-9\\" %}g-flex-col-xs-9{% elseif columnXs == \\"g-flex-col-xs-10\\" %}g-flex-col-xs-10{% elseif columnXs == \\"g-flex-col-xs-11\\" %}g-flex-col-xs-11{% elseif columnXs == \\"g-flex-col-xs-12\\" %}g-flex-col-xs-12{% endif %}\\"
+>
+  
+        
+{% block children %}Columns{% endblock %}
+  
+      
+</div>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed Snapshots twig-embed: form input[text] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/input.html.twig": "<label
+for=\\"{{ textId | escape('html_attr') }}\\"
+>
+  Label text
+</label>
+<input
+id=\\"{{ textId | escape('html_attr') }}\\"
+type=\\"text\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+name=\\"{{ name | escape('html_attr') }}\\"
+value=\\"{{ value | escape('html_attr') }}\\"
+spellcheck=\\"{% if spellCheck %}spellCheck{% endif %}\\"
+maxlength=\\"\\"
+autocomplete=\\"{{ autoComplete | escape('html_attr') }}\\"
+/>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed twig-embed: CSS Configuration (CSS Variables and Scss Variables) 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/a.html.twig": "<a
+class=\\"g-link{% if isMuted %} g-link--muted{% endif %}\\"
+href=\\"{{ href | escape('html_attr') }}\\"
+rel=\\"{{ rel | escape('html_attr') }}\\"
+target=\\"{{ target | escape('html_attr') }}\\"
+>
+{% block children %}Example text{% endblock %}
+</a>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed twig-embed: CSS Configuration (CSS Variables and Scss Variables) 2`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/a.html.twig": "<a
+class=\\"g-link{% if isMuted %} g-link--muted{% endif %}\\"
+href=\\"{{ href | escape('html_attr') }}\\"
+rel=\\"{{ rel | escape('html_attr') }}\\"
+target=\\"{{ target | escape('html_attr') }}\\"
+>
+{% block children %}Example text{% endblock %}
+</a>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed twig-embed: CSS Configuration of Fonts 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "twig-embed/a.html.twig": "<a
+class=\\"g-link\\"
+href=\\"{{ href | escape('html_attr') }}\\"
+rel=\\"{{ rel | escape('html_attr') }}\\"
+target=\\"{{ target | escape('html_attr') }}\\"
+>
+{% block children %}Example text{% endblock %}
+</a>",
+    },
+    "formatId": "twig-embed",
+  },
+]
+`;
+
+exports[`twig-embed twig-embed: CalculatedProps 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/textbox.html.twig": "<input
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+name=\\"{{ name | escape('html_attr') }}\\"
+value=\\"{{ value | escape('html_attr') }}\\"
+min=\\"\\"
+max=\\"\\"
+type=\\"{{ type | escape('html_attr') }}\\"
+spellcheck=\\"{% if spellCheck %}spellCheck{% endif %}\\"
+maxlength=\\"\\"
+autocomplete=\\"{{ autoComplete | escape('html_attr') }}\\"
+/>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed twig-embed: jsxToUsageCode with boolean false 1`] = `
+Object {
+  "twig-embed": "{% embed \\"Ul.html.twig\\"  with {'isBulleted':'false'} only %}{% block children %}{% embed \\"Li.html.twig\\"  with {'children':'Unordered item one'} only %}{% endembed %}
+{% embed \\"Li.html.twig\\"  with {'children':'Unordered item two'} only %}{% endembed %}{% endblock %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: jsxToUsageCode with boolean false and inline HTML 1`] = `
+Object {
+  "twig-embed": "{% embed \\"Ul.html.twig\\"  with {'isBulleted':'false'} only %}{% block children %}{% embed \\"Li.html.twig\\" %}{% block children %}Unordered
+<a href=\\"http://zombo.com/\\">item one</a>{% endblock %}{% endembed %}
+{% embed \\"Li.html.twig\\"  with {'children':'Unordered item two'} only %}{% endembed %}{% endblock %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: jsxToUsageCode with boolean true 1`] = `
+Object {
+  "twig-embed": "{% embed \\"Ul.html.twig\\"  with {'isBulleted':'true'} only %}{% block children %}{% embed \\"Li.html.twig\\"  with {'children':'Unordered item one'} only %}{% endembed %}
+{% embed \\"Li.html.twig\\"  with {'children':'Unordered item two'} only %}{% endembed %}{% endblock %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: jsxToUsageCode with enumerations 1`] = `
+Object {
+  "twig-embed": "{% embed \\"Div.html.twig\\"  with {'containerType':'fixed'} only %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: makeUsage 1`] = `
+Object {
+  "twig-embed": "{% embed \\"H1.html.twig\\" %}{% block children %}{% embed \\"A.html.twig\\"  with {'href':'https://html5zombo.com/', 'children':'Click me', 'reversed':'On'} only %}{% endembed %}{% endblock %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: makeUsage with booleans 1`] = `
+Object {
+  "twig-embed": "{% embed \\"H1.html.twig\\" %}{% block children %}{% embed \\"A.html.twig\\"  with {'href':'https://html5zombo.com/', 'children':'Click me', 'isReversed':'true'} only %}{% endembed %}{% endblock %}{% endembed %}",
+}
+`;
+
+exports[`twig-embed twig-embed: renders aria-current 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/ariacurrent.html.twig": "<a
+aria-current=\\"{{ ariaCurrent | escape('html_attr') }}\\"
+href=\\"{{ href | escape('html_attr') }}\\"
+rel=\\"{{ rel | escape('html_attr') }}\\"
+target=\\"{{ target | escape('html_attr') }}\\"
+>
+  test
+</a>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;
+
+exports[`twig-embed twig-embed: retains name prop 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "twig-embed/textboxes.html.twig": "<input
+id=\\"{{ yearId | escape('html_attr') }}\\"
+maxlength=\\"4\\"
+name=\\"{{ yearName | escape('html_attr') }}\\"
+type=\\"text\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+value=\\"{{ value | escape('html_attr') }}\\"
+spellcheck=\\"{% if spellCheck %}spellCheck{% endif %}\\"
+autocomplete=\\"{{ autoComplete | escape('html_attr') }}\\"
+/>
+  
+      
+<input
+id=\\"{{ monthId | escape('html_attr') }}\\"
+maxlength=\\"2\\"
+name=\\"{{ monthName | escape('html_attr') }}\\"
+type=\\"text\\"
+value=\\"{{ value2 | escape('html_attr') }}\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+spellcheck=\\"{% if spellCheck %}spellCheck{% endif %}\\"
+autocomplete=\\"{{ autoComplete | escape('html_attr') }}\\"
+/>
+  
+      
+<input
+id=\\"{{ dayId | escape('html_attr') }}\\"
+maxlength=\\"2\\"
+name=\\"{{ dayName | escape('html_attr') }}\\"
+type=\\"text\\"
+value=\\"{{ value3 | escape('html_attr') }}\\"
+disabled=\\"{% if disabled %}disabled{% endif %}\\"
+readonly=\\"{% if readOnly %}readOnly{% endif %}\\"
+autofocus=\\"{% if autoFocus %}autoFocus{% endif %}\\"
+spellcheck=\\"{% if spellCheck %}spellCheck{% endif %}\\"
+autocomplete=\\"{{ autoComplete | escape('html_attr') }}\\"
+/>",
+      },
+      "formatId": "twig-embed",
+    },
+  ],
+}
+`;

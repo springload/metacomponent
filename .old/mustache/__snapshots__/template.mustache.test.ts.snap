@@ -1,0 +1,808 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mustache Snapshots makeIndexImports 1`] = `
+Object {
+  "react-ts/index.tsx": "// DEVELOPER NOTE: These components are ready to lazy-load. You may also import components directly.
+
+export const blah.js = () => import(\\"./blah.js\\");
+",
+  "react-ts/indexNotLazy.tsx": "// DEVELOPER NOTE: This file includes all components so importing this file may be very inefficient. Use carefully! You may prefer to import components directly or use index.js which has import functions, typically treated as a code splitting point.
+
+export { default as blahJs } from \\"./blah.js\\";
+",
+}
+`;
+
+exports[`mustache Snapshots mustache: <img src="pic.jpeg" class="frogs"> 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/imgSrc.mustache": "<img
+class=\\"frogs\\"
+{{#src}}
+  src=\\"{{src}}\\"
+{{/src}}
+{{#width}}
+  width=\\"{{width}}\\"
+{{/width}}
+{{#height}}
+  height=\\"{{height}}\\"
+{{/height}}
+{{#srcset}}
+  srcset=\\"{{srcset}}\\"
+{{/srcset}}
+{{#crossorigin}}
+  crossorigin=\\"{{crossorigin}}\\"
+{{/crossorigin}}
+/>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache Snapshots mustache: Basic variables 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/paragraph.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+<p
+>
+  {{{children}}}
+</p>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache Snapshots mustache: Boolean attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/row.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+  
+          
+<div
+class=\\"g-flex-row{{#isReversed}} g-flex-reverse{{/isReversed}}\\"
+>
+  
+            
+  {{{children}}}
+  
+          
+</div>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache Snapshots mustache: Boolean attribute values 2`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/row.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - legend,
+     - hint,
+     - error,
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+  
+          
+<div
+class=\\"g-form-group{{#errorId}} g-form-group--error{{/errorId}}\\"
+>
+  
+            
+<fieldset
+aria-describedby=\\"{{hintId}} {{errorId}}\\"
+class=\\"g-fieldset\\"
+>
+  
+              
+<legend
+class=\\"g-fieldset__legend\\"
+>
+  
+                
+  {{{legend}}}
+  
+              
+</legend>
+  
+              
+  
+                
+<div
+class=\\"g-hint\\"
+{{#hintId}}
+  id=\\"{{hintId}}\\"
+{{/hintId}}
+>
+  
+                  
+  {{{hint}}}
+  
+                
+</div>
+  
+              
+  
+              
+  
+                
+<div
+class=\\"g-error-message\\"
+{{#errorId}}
+  id=\\"{{errorId}}\\"
+{{/errorId}}
+>
+  
+                  
+<span
+class=\\"g-visually-hidden\\"
+>
+  
+                    Error:
+                  
+</span>
+  
+                  
+  {{{error}}}
+  
+                
+</div>
+  
+              
+  
+              
+<div
+>
+  {{{children}}}
+</div>
+  
+            
+</fieldset>
+  
+          
+</div>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache Snapshots mustache: Enum attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/container.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+  
+        
+<div
+class=\\"{{#containerType=g-flex-container}}g-flex-container{{/containerType=g-flex-container}}{{#containerType=g-flex-container-fluid}}g-flex-container-fluid{{/containerType=g-flex-container-fluid}}\\"
+>
+  
+          
+  {{{children}}}
+  
+        
+</div>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache Snapshots mustache: Form input[checked] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/input.mustache": "<input
+{{#textId}}
+  id=\\"{{textId}}\\"
+{{/textId}}
+type=\\"checkbox\\"
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#name}}
+  name=\\"{{name}}\\"
+{{/name}}
+{{#value}}
+  value=\\"{{value}}\\"
+{{/value}}
+{{#checked}}
+  checked=\\"{{#checked}}checked{{/checked}}\\"
+{{/checked}}
+/>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache Snapshots mustache: Form label input[checked] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/input.mustache": "<label
+{{#textId}}
+  for=\\"{{textId}}\\"
+{{/textId}}
+>
+<input
+{{#textId}}
+  id=\\"{{textId}}\\"
+{{/textId}}
+type=\\"checkbox\\"
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#name}}
+  name=\\"{{name}}\\"
+{{/name}}
+{{#value}}
+  value=\\"{{value}}\\"
+{{/value}}
+{{#checked}}
+  checked=\\"{{#checked}}checked{{/checked}}\\"
+{{/checked}}
+/>
+</label>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache Snapshots mustache: H1 with configurable Id 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/h1Id.mustache": "<h1
+{{#id}}
+  id=\\"{{id}}\\"
+{{/id}}
+>
+  stuff
+</h1>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache Snapshots mustache: Link with boolean class 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/a.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+<a
+class=\\"g-link{{#isMuted}} g-link--muted{{/isMuted}}\\"
+{{#href}}
+  href=\\"{{href}}\\"
+{{/href}}
+{{#rel}}
+  rel=\\"{{rel}}\\"
+{{/rel}}
+{{#target}}
+  target=\\"{{target}}\\"
+{{/target}}
+>
+  {{{children}}}
+</a>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache Snapshots mustache: Lots of enum attribute values 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/container.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+  
+      
+<div
+class=\\"g-flex-col{{#isReversed}} g-flex-reverse{{/isReversed}} {{#columnXs=g-flex-col-xs}} g-flex-col-xs{{/columnXs=g-flex-col-xs}}{{#columnXs=g-flex-col-xs-1}} g-flex-col-xs-1{{/columnXs=g-flex-col-xs-1}}{{#columnXs=g-flex-col-xs-2}} g-flex-col-xs-2{{/columnXs=g-flex-col-xs-2}}{{#columnXs=g-flex-col-xs-3}} g-flex-col-xs-3{{/columnXs=g-flex-col-xs-3}}{{#columnXs=g-flex-col-xs-4}} g-flex-col-xs-4{{/columnXs=g-flex-col-xs-4}}{{#columnXs=g-flex-col-xs-5}} g-flex-col-xs-5{{/columnXs=g-flex-col-xs-5}}{{#columnXs=g-flex-col-xs-6}} g-flex-col-xs-6{{/columnXs=g-flex-col-xs-6}}{{#columnXs=g-flex-col-xs-7}} g-flex-col-xs-7{{/columnXs=g-flex-col-xs-7}}{{#columnXs=g-flex-col-xs-8}} g-flex-col-xs-8{{/columnXs=g-flex-col-xs-8}}{{#columnXs=g-flex-col-xs-9}} g-flex-col-xs-9{{/columnXs=g-flex-col-xs-9}}{{#columnXs=g-flex-col-xs-10}} g-flex-col-xs-10{{/columnXs=g-flex-col-xs-10}}{{#columnXs=g-flex-col-xs-11}} g-flex-col-xs-11{{/columnXs=g-flex-col-xs-11}}{{#columnXs=g-flex-col-xs-12}} g-flex-col-xs-12{{/columnXs=g-flex-col-xs-12}}\\"
+>
+  
+        
+  {{{children}}}
+  
+      
+</div>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache Snapshots mustache: form input[text] 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/input.mustache": "<label
+{{#textId}}
+  for=\\"{{textId}}\\"
+{{/textId}}
+>
+  Label text
+</label>
+<input
+{{#textId}}
+  id=\\"{{textId}}\\"
+{{/textId}}
+type=\\"text\\"
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#name}}
+  name=\\"{{name}}\\"
+{{/name}}
+{{#value}}
+  value=\\"{{value}}\\"
+{{/value}}
+{{#spellCheck}}
+  spellcheck=\\"{{#spellCheck}}spellCheck{{/spellCheck}}\\"
+{{/spellCheck}}
+{{#maxLength}}
+  maxlength=\\"\\"
+{{/maxLength}}
+{{#autoComplete}}
+  autocomplete=\\"{{autoComplete}}\\"
+{{/autoComplete}}
+/>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache mustache: CSS Configuration (CSS Variables and Scss Variables) 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/a.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+<a
+class=\\"g-link{{#isMuted}} g-link--muted{{/isMuted}}\\"
+{{#href}}
+  href=\\"{{href}}\\"
+{{/href}}
+{{#rel}}
+  rel=\\"{{rel}}\\"
+{{/rel}}
+{{#target}}
+  target=\\"{{target}}\\"
+{{/target}}
+>
+  {{{children}}}
+</a>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache mustache: CSS Configuration (CSS Variables and Scss Variables) 2`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/a.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+<a
+class=\\"g-link{{#isMuted}} g-link--muted{{/isMuted}}\\"
+{{#href}}
+  href=\\"{{href}}\\"
+{{/href}}
+{{#rel}}
+  rel=\\"{{rel}}\\"
+{{/rel}}
+{{#target}}
+  target=\\"{{target}}\\"
+{{/target}}
+>
+  {{{children}}}
+</a>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache mustache: CSS Configuration of Fonts 1`] = `
+Array [
+  Object {
+    "files": Object {
+      "mustache/a.mustache": "{{! DEVELOPER NOTE: This template uses triple-bracket \\"{{{\\"
+    which disables HTML escaping.
+    Please ensure these variables are properly escaped:
+     - children.
+    The reason for this is to allow raw HTML, for values such as (eg) '<span lang=\\"mi\\">Māori</span>'. }}
+
+<a
+class=\\"g-link\\"
+{{#href}}
+  href=\\"{{href}}\\"
+{{/href}}
+{{#rel}}
+  rel=\\"{{rel}}\\"
+{{/rel}}
+{{#target}}
+  target=\\"{{target}}\\"
+{{/target}}
+>
+  {{{children}}}
+</a>",
+    },
+    "formatId": "mustache",
+  },
+]
+`;
+
+exports[`mustache mustache: CalculatedProps 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/textbox.mustache": "<input
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#name}}
+  name=\\"{{name}}\\"
+{{/name}}
+{{#value}}
+  value=\\"{{value}}\\"
+{{/value}}
+{{#min}}
+  min=\\"\\"
+{{/min}}
+{{#max}}
+  max=\\"\\"
+{{/max}}
+{{#type}}
+  type=\\"{{type}}\\"
+{{/type}}
+{{#spellCheck}}
+  spellcheck=\\"{{#spellCheck}}spellCheck{{/spellCheck}}\\"
+{{/spellCheck}}
+{{#maxLength}}
+  maxlength=\\"\\"
+{{/maxLength}}
+{{#autoComplete}}
+  autocomplete=\\"{{autoComplete}}\\"
+{{/autoComplete}}
+/>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache mustache: jsxToUsageCode with boolean false 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import Ul from \\"@govtnz/ds/build/mustache/Ul.mustache\\";
+import Li from \\"@govtnz/ds/build/mustache/Li.mustache\\";
+
+// The variables Ul, Li are all strings that are mustache templates.
+
+export default \`\${Mustache.render(Ul, {
+  isBulleted: true,
+  children: \`\${Mustache.render(Li, {
+    children: \`Unordered item one\`
+  })}\${Mustache.render(Li, { children: \`Unordered item two\` })}\`
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: jsxToUsageCode with boolean false and inline HTML 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import Ul from \\"@govtnz/ds/build/mustache/Ul.mustache\\";
+import Li from \\"@govtnz/ds/build/mustache/Li.mustache\\";
+
+// The variables Ul, Li are all strings that are mustache templates.
+
+export default \`\${Mustache.render(Ul, {
+  isBulleted: true,
+  children: \`\${Mustache.render(Li, {
+    children: \`Unordered<a href=\\"http://zombo.com/\\">item one</a>\`
+  })}\${Mustache.render(Li, { children: \`Unordered item two\` })}\`
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: jsxToUsageCode with boolean true 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import Ul from \\"@govtnz/ds/build/mustache/Ul.mustache\\";
+import Li from \\"@govtnz/ds/build/mustache/Li.mustache\\";
+
+// The variables Ul, Li are all strings that are mustache templates.
+
+export default \`\${Mustache.render(Ul, {
+  isBulleted: true,
+  children: \`\${Mustache.render(Li, {
+    children: \`Unordered item one\`
+  })}\${Mustache.render(Li, { children: \`Unordered item two\` })}\`
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: jsxToUsageCode with enumerations 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import Div from \\"@govtnz/ds/build/mustache/Div.mustache\\";
+
+// The variables Div are all strings that are mustache templates.
+
+export default \`\${Mustache.render(Div, {
+  \\"containerType=fixed\\": true,
+  containerType: true
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: makeUsage 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import H1 from \\"@govtnz/ds/build/mustache/H1.mustache\\";
+import A from \\"@govtnz/ds/build/mustache/A.mustache\\";
+
+// The variables H1, A are all strings that are mustache templates.
+
+export default \`\${Mustache.render(H1, {
+  children: \`\${Mustache.render(A, {
+    href: \`https://html5zombo.com/\`,
+    children: \`Click me\`,
+    reversed: \`On\`
+  })}\`
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: makeUsage with booleans 1`] = `
+Object {
+  "mustache": "// Developer note: ensure your \\".mustache\\" files are imported as plain text. In Webpack you might use https://github.com/webpack-contrib/raw-loader
+import Mustache from \\"mustache\\";
+import H1 from \\"@govtnz/ds/build/mustache/H1.mustache\\";
+import A from \\"@govtnz/ds/build/mustache/A.mustache\\";
+
+// The variables H1, A are all strings that are mustache templates.
+
+export default \`\${Mustache.render(H1, {
+  children: \`\${Mustache.render(A, {
+    href: \`https://html5zombo.com/\`,
+    children: \`Click me\`,
+    isReversed: \`\`
+  })}\`
+})}\`;
+",
+}
+`;
+
+exports[`mustache mustache: renders aria-current 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/ariacurrent.mustache": "<a
+{{#ariaCurrent}}
+  aria-current=\\"{{ariaCurrent}}\\"
+{{/ariaCurrent}}
+{{#href}}
+  href=\\"{{href}}\\"
+{{/href}}
+{{#rel}}
+  rel=\\"{{rel}}\\"
+{{/rel}}
+{{#target}}
+  target=\\"{{target}}\\"
+{{/target}}
+>
+  test
+</a>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
+
+exports[`mustache mustache: retains name prop 1`] = `
+Object {
+  "disposeAll": [Function],
+  "metaTemplates": Array [
+    Object {
+      "files": Object {
+        "mustache/textboxes.mustache": "<input
+{{#yearId}}
+  id=\\"{{yearId}}\\"
+{{/yearId}}
+maxlength=\\"4\\"
+{{#yearName}}
+  name=\\"{{yearName}}\\"
+{{/yearName}}
+type=\\"text\\"
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#value}}
+  value=\\"{{value}}\\"
+{{/value}}
+{{#spellCheck}}
+  spellcheck=\\"{{#spellCheck}}spellCheck{{/spellCheck}}\\"
+{{/spellCheck}}
+{{#autoComplete}}
+  autocomplete=\\"{{autoComplete}}\\"
+{{/autoComplete}}
+/>
+  
+      
+<input
+{{#monthId}}
+  id=\\"{{monthId}}\\"
+{{/monthId}}
+maxlength=\\"2\\"
+{{#monthName}}
+  name=\\"{{monthName}}\\"
+{{/monthName}}
+type=\\"text\\"
+{{#value2}}
+  value=\\"{{value2}}\\"
+{{/value2}}
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#spellCheck}}
+  spellcheck=\\"{{#spellCheck}}spellCheck{{/spellCheck}}\\"
+{{/spellCheck}}
+{{#autoComplete}}
+  autocomplete=\\"{{autoComplete}}\\"
+{{/autoComplete}}
+/>
+  
+      
+<input
+{{#dayId}}
+  id=\\"{{dayId}}\\"
+{{/dayId}}
+maxlength=\\"2\\"
+{{#dayName}}
+  name=\\"{{dayName}}\\"
+{{/dayName}}
+type=\\"text\\"
+{{#value3}}
+  value=\\"{{value3}}\\"
+{{/value3}}
+{{#disabled}}
+  disabled=\\"{{#disabled}}disabled{{/disabled}}\\"
+{{/disabled}}
+{{#readOnly}}
+  readonly=\\"{{#readOnly}}readOnly{{/readOnly}}\\"
+{{/readOnly}}
+{{#autoFocus}}
+  autofocus=\\"{{#autoFocus}}autoFocus{{/autoFocus}}\\"
+{{/autoFocus}}
+{{#spellCheck}}
+  spellcheck=\\"{{#spellCheck}}spellCheck{{/spellCheck}}\\"
+{{/spellCheck}}
+{{#autoComplete}}
+  autocomplete=\\"{{autoComplete}}\\"
+{{/autoComplete}}
+/>",
+      },
+      "formatId": "mustache",
+    },
+  ],
+}
+`;
