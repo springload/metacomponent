@@ -44,8 +44,6 @@ export function cssSniff(
     }
   });
 
-  console.log("FOUND", JSON.stringify(matched));
-
   return matched;
 }
 
@@ -182,10 +180,7 @@ function _filterCSSRulesByElement(
 
             const isMatch = el.matches(normalizedSelector);
 
-            console.log("rule", normalizedSelector, isMatch);
-
             if (isMatch) {
-              console.log("rulea");
               const existingCSSSniffStyleRule = cssSniffStyleSheet[i];
               if (
                 existingCSSSniffStyleRule &&
@@ -193,7 +188,6 @@ function _filterCSSRulesByElement(
               ) {
                 throw Error("Rule can't change type");
               }
-              console.log("ruleaa");
               const cssSniffStyleRule: CSSSniffStyleRule = {
                 type: "CSSSniffStyleRule",
                 selectors: existingCSSSniffStyleRule
@@ -204,19 +198,15 @@ function _filterCSSRulesByElement(
                   cssStyleRule.cssText.lastIndexOf("}")
                 ),
               };
-              console.log("ruleb", cssSniffStyleRule.properties);
               if (!cssSniffStyleRule.selectors.includes(selector)) {
                 cssSniffStyleRule.selectors.push(selector);
               }
               cssSniffStyleSheet[i] = cssSniffStyleRule;
-
-              console.log("Added rule ", cssSniffStyleSheet[i]);
             }
           } catch (e) {
-            console.log(e);
-            const isCharset =
+            const isCharsetError =
               "@charset".indexOf(cssStyleRule.selectorText) !== -1;
-            if (isCharset) {
+            if (!isCharsetError) {
               console.error(
                 "ERROR",
                 cssStyleRule.type,
@@ -420,7 +410,6 @@ export function mergeMatches(matchedCSSArray: CSSSniffRoot[]): CSSSniffRoot {
 }
 
 export function serializeCSSMatches(matchedCSS: CSSSniffRoot): string {
-  console.log({ serialize: matchedCSS });
   let css = "";
 
   Object.keys(matchedCSS).map((sheetIndex: string) => {
@@ -478,7 +467,50 @@ export function serializeCSSMatchesAsProperties(
         })
         .join("");
     })
-    .join(";");
+    .join(";")
+    .trim();
+}
+
+export function cssRootDiff(a: CSSSniffRoot, b: CSSSniffRoot): CSSSniffRoot {
+  const diff: CSSSniffRoot = {};
+
+  Object.keys(b).forEach((bSheetIndex) => {
+    const bSheet = b[bSheetIndex];
+    Object.keys(bSheet).forEach((bRuleIndex) => {
+      const bRule = bSheet[bRuleIndex];
+      let diffStyleSheet: CSSSniffStyleSheet = diff[bSheetIndex] || {};
+      if (bRule.type === "CSSSniffStyleRule") {
+        if (!a[bSheetIndex] || !a[bSheetIndex][bRuleIndex]) {
+          diffStyleSheet[bRuleIndex] = bRule;
+          diff[bSheetIndex] = diffStyleSheet;
+        }
+      } else if (bRule.type === "CSSSniffMediaRule") {
+        const diffRule = diff[bSheetIndex] && diff[bSheetIndex][bRuleIndex];
+        if (diffRule && diffRule.type !== "CSSSniffMediaRule") {
+          throw Error(`Cannot change type of diff`);
+        }
+        const aRule = a[bSheetIndex] && a[bSheetIndex][bRuleIndex];
+        if (aRule && aRule.type !== "CSSSniffMediaRule") {
+          throw Error(`Cannot change type of (a)`);
+        }
+        const diffChildren = diffRule.children || {};
+        Object.keys(bRule.children).forEach((bRuleChildIndex) => {
+          if (!aRule || !aRule.children[bRuleChildIndex]) {
+            diffChildren[bRuleChildIndex] = bRule.children[bRuleChildIndex];
+          }
+        });
+        if (Object.keys(diffChildren).length > 0) {
+          diffStyleSheet[bRuleIndex] = {
+            ...bRule,
+            children: diffChildren,
+          };
+          diff[bSheetIndex] = diffStyleSheet;
+        }
+      }
+    });
+  });
+
+  return diff;
 }
 
 export function splitSelectors(selectors: string): string[] {

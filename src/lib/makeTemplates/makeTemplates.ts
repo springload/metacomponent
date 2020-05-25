@@ -3,13 +3,27 @@ import { TemplateFiles } from "../types";
 
 import { TemplateCSS } from "./TemplateCSS/TemplateCSS";
 import { TemplateHTML } from "./TemplateHTML/TemplateHTML";
+import { TemplateFormat } from "./TemplateFormat";
 
-export function makeTemplate(
-  templateId: string,
+export function makeTemplates(
+  componentId: string,
   metaHTML: MetaHTML
 ): TemplateFiles {
-  const instance = new TemplateHTML({ templateId });
+  return mergeTemplateFiles(
+    makeTemplate(componentId, metaHTML, new TemplateHTML({ componentId })),
+    makeTemplate(componentId, metaHTML, new TemplateCSS({ componentId }))
+  );
+}
 
+function mergeTemplateFiles(...obj: TemplateFiles[]): TemplateFiles {
+  return Object.assign({}, ...obj);
+}
+
+function makeTemplate(
+  componentId: string,
+  metaHTML: MetaHTML,
+  instance: TemplateFormat
+) {
   function walk(node: MetaHTML["nodes"][number]) {
     switch (node.type) {
       case "Element": {

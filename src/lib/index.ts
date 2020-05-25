@@ -1,18 +1,19 @@
 // MetaTemplate WebTemplateTranslator
 
-import { parseMetaHTMLString } from "./metaHTML/metaHTML";
-import { makeTemplate } from "./makeTemplate/makeTemplate";
+import { parseMetaHTMLString, MetaHTML } from "./metaHTML/metaHTML";
+import { makeTemplates } from "./makeTemplates/makeTemplates";
 import { TemplateFiles } from "./types";
 
-export default async function MetaTemplate(
-  dom: Window,
+export default function MetaTemplate(
+  domDocument: Document,
   templateId: string,
   metaHTMLString: string,
   cssString: string
-): Promise<TemplateFiles> {
-  const metaHTML = parseMetaHTMLString(dom, metaHTMLString, cssString);
+): { metaHTML: MetaHTML; files: TemplateFiles } {
+  const metaHTML = parseMetaHTMLString(domDocument, metaHTMLString, cssString);
 
-  console.log(JSON.stringify(metaHTML, null, 2));
-
-  return makeTemplate(templateId, metaHTML);
+  return {
+    metaHTML,
+    files: makeTemplates(templateId, metaHTML),
+  };
 }

@@ -7,7 +7,7 @@ import { TemplateFiles } from "../types";
 
 export interface TemplateFormat {
   dirname: string;
-  templateId: string;
+  componentId: string;
 
   onElement: (element: MetaHTMLElement) => string;
   onText: (text: MetaHTMLText) => void;
@@ -17,7 +17,7 @@ export interface TemplateFormat {
 }
 
 export type OnConstructor = {
-  templateId: string;
+  componentId: string;
   dirname?: string;
 };
 
@@ -31,12 +31,12 @@ type OnSerialize = {
 
 export class Template implements TemplateFormat {
   dirname: string;
-  templateId: string;
+  componentId: string;
 
   constructor(args: OnConstructor) {
-    const { templateId, dirname } = args;
+    const { componentId, dirname } = args;
     this.dirname = dirname || "";
-    this.templateId = templateId;
+    this.componentId = componentId;
   }
 
   onElement = (

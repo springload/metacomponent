@@ -19,17 +19,13 @@
 //
 // and rename the element after parsing
 export function parseHTMLWithoutInsertionMode(
-  window: Window,
+  domDocument: Document,
   metaHTMLString: string,
   cssString: string
-): Window {
-  console.log("p1");
+): void {
   const documentString = wrapBodyHtml(metaHTMLString, cssString);
-  console.log("p2", documentString);
-  window.document.documentElement.innerHTML = documentString;
-  console.log("p3", window.document.documentElement.outerHTML);
-  restoreParsingModeElements(window);
-  return window;
+  domDocument.documentElement.innerHTML = documentString;
+  restoreParsingModeElements(domDocument);
 }
 
 function wrapBodyHtml(metaHTMLString: string, cssString: string): string {
@@ -68,8 +64,8 @@ function aliasParsingModeElements(html: string): string {
   });
 }
 
-function restoreParsingModeElements(window: Window): void {
-  const doc = window.document;
+function restoreParsingModeElements(domDocument: Document): void {
+  const doc = domDocument;
   const aliases = Array.from(doc.querySelectorAll(MT_ALIAS_TAG));
   aliases.forEach((alias: Element) => {
     if (!alias) return;

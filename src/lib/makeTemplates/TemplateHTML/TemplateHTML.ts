@@ -1,4 +1,3 @@
-import prettier from "prettier";
 import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
 import { TemplateFiles } from "../../types";
 
@@ -6,7 +5,7 @@ export class TemplateHTML extends Template {
   html: string;
 
   constructor(args: OnConstructor) {
-    super({ templateId: args.templateId, dirname: "html" });
+    super({ componentId: args.componentId, dirname: "html" });
 
     this.html = "";
   }
@@ -52,12 +51,8 @@ export class TemplateHTML extends Template {
   serialize = (
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
   ): TemplateFiles => {
-    const formattedHTML = prettier.format(this.html, {
-      parser: "html",
-    });
-
     return {
-      [`${this.dirname}/${this.templateId}.html`]: formattedHTML,
+      [`${this.dirname}/${this.componentId}.html`]: this.html,
     };
   };
 }

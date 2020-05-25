@@ -6,19 +6,21 @@ import {
 import {
   cssSniff,
   serializeCSSMatches,
-  CSSSniffRoot,
   serializeCSSMatchesAsProperties,
+  cssRootDiff,
+  CSSSniffRoot,
 } from "../cssSniff/cssSniff";
 
 export function parseMetaHTMLString(
-  window: Window,
+  domDocument: Document,
   metaHTMLString: string,
   cssString: string
 ): MetaHTML {
-  console.log("in");
-  window = parseHTMLWithoutInsertionMode(window, metaHTMLString, cssString);
+  parseHTMLWithoutInsertionMode(domDocument, metaHTMLString, cssString);
+
   // now we have a DOM representing the original MetaHTMLString, so we need to build a MetaHTML
-  const bodyNodes = Array.from(window.document.body.childNodes);
+  const bodyNodes = Array.from(domDocument.body.childNodes);
+
   const nodes = bodyNodes.map(nodeToMetaHTMLNode);
 
   const metaHTML = {
@@ -84,9 +86,11 @@ function nodeToMetaHTMLNode(node: ChildNode): MetaHTMLNodeInternal {
   } else if (node.nodeType !== Node.ELEMENT_NODE) {
     throw Error(`Unhandled nodeType ${node.nodeType}`);
   }
+
   // @ts-ignore
   const htmlElement: HTMLElement = node;
-  const names = htmlElement.getAttributeNames();
+  const names = Array.from(htmlElement.getAttributeNames());
+  console.log(names);
   const attributes = names.reduce(
     (attributes: MetaHTMLElement["attributes"], name: string) => {
       const attributeValue = htmlElement.getAttribute(name);
@@ -94,16 +98,19 @@ function nodeToMetaHTMLNode(node: ChildNode): MetaHTMLNodeInternal {
       attributes[name] = parseAttributeValue(attributeValue);
       return attributes;
     },
-    {}
+    {} as MetaHTMLElement["attributes"]
   );
+
+  const cssProperties = getAllMatchingCSSProperties(htmlElement, attributes);
+  console.log("after get all ");
 
   return {
     type: "Element",
     nodeName: htmlElement.nodeName,
-    attributes,
+    attributes: attributes,
     node: htmlElement,
     children: Array.from(node.childNodes).map(nodeToMetaHTMLNode),
-    cssProperties: getAllMatchingCSSProperties(htmlElement, attributes),
+    cssProperties,
   };
 }
 
@@ -122,71 +129,66 @@ function getAllMatchingCSSProperties(
     cssPropertiesString: serializeCSSMatchesAsProperties(resetMatchedCSS),
   });
 
-  Object.keys(attributes).forEach((attributeName: string) => {
-    const resetValue = element.getAttribute(attributeName);
-    const attributeValues = attributes[attributeName];
-    attributeValues.forEach((attributeValue) => {
-      if (attributeValue.type === "MetaAttributeVariableOptions") {
-        Object.entries(attributeValue.options).forEach(
-          ([optionName, optionValue]) => {
-            element.setAttribute(
-              attributeName,
-              `${resetValue ? `${resetValue} ` : ""}${optionValue}`
-            );
+  Object.keys(attributes)
+    .filter(attributesThatCanBeSet)
+    .forEach((attributeName: string) => {
+      const resetValue = element.getAttribute(attributeName);
+      const attributeValues = attributes[attributeName];
+      attributeValues.forEach((attributeValue) => {
+        if (attributeValue.type === "MetaAttributeVariableOptions") {
+          Object.entries(attributeValue.options).forEach(
+            ([optionName, optionValue]) => {
+              element.setAttribute(
+                attributeName,
+                `${resetValue ? `${resetValue} ` : ""}${optionValue}`
+              );
 
-            const matchedCSS = cssSniff([element], { ignoreChildren: true });
+              const matchedCSS = cssSniff([element], { ignoreChildren: true });
 
-            const cssPropertiesString = cssPropertiesDiff(
-              resetMatchedCSS,
-              matchedCSS
-            );
+              const cssRoot = cssRootDiff(resetMatchedCSS, matchedCSS);
 
-            cssProperties.push({
-              type: "MetaCSSPropertiesConditionalNode",
-              condition: { id: attributeValue.id, equalsString: optionName },
-              cssPropertiesString,
-            });
-            if (resetValue) {
-              element.setAttribute(attributeName, resetValue);
+              const cssPropertiesString = serializeCSSMatchesAsProperties(
+                cssRoot
+              );
+
+              cssProperties.push({
+                type: "MetaCSSPropertiesConditionalNode",
+                condition: { id: attributeValue.id, equalsString: optionName },
+                cssPropertiesString,
+              });
+              if (resetValue) {
+                element.setAttribute(attributeName, resetValue);
+              }
             }
-          }
-        );
-      }
+          );
+        }
+      });
     });
-  });
 
   return cssProperties;
-}
-
-function cssPropertiesDiff(a: MatchedCSS, b: MatchedCSS): string {
-  let cssPropertiesString: string = "";
-  Object.keys(b).forEach((index) => {
-    if (a[index]) return;
-    if (!b[index].properties) return;
-    cssPropertiesString += b[index].properties;
-  });
-  return cssPropertiesString;
 }
 
 function resetElementAttributes(
   element: HTMLElement,
   attributes: MetaHTMLElement["attributes"]
 ): void {
-  Object.keys(attributes).forEach((name: string) => {
-    const attribute = attributes[name];
-    element.setAttribute(
-      name,
-      attribute
-        .map((metaAttribute) => {
-          if (metaAttribute.type === "MetaAttributeConstant") {
-            return ` ${metaAttribute.value}`;
-          }
-          // We can't predict what MetaAttributeVariable would be
-          return "";
-        })
-        .join(" ")
-    );
-  });
+  Object.keys(attributes)
+    .filter(attributesThatCanBeSet)
+    .forEach((name: string) => {
+      const attribute = attributes[name];
+      element.setAttribute(
+        name,
+        attribute
+          .map((metaAttribute) => {
+            if (metaAttribute.type === "MetaAttributeConstant") {
+              return ` ${metaAttribute.value}`;
+            }
+            // We can't predict what MetaAttributeVariable would be
+            return "";
+          })
+          .join(" ")
+      );
+    });
 }
 
 function internalToPublic(nodes: MetaHTMLNodeInternal[]): MetaHTMLNode[] {
@@ -209,10 +211,12 @@ function internalToPublic(nodes: MetaHTMLNodeInternal[]): MetaHTMLNode[] {
 function getAllMatchingCSSRulesRecursively(
   nodes: MetaHTMLNodeInternal[]
 ): string {
+  const matchedCSS: CSSSniffRoot = {};
+
   function getAllMatchingCSSRules(
     element: HTMLElement,
     attributes: MetaHTMLElement["attributes"],
-    matchedCSS: MatchedCSS
+    matchedCSS: CSSSniffRoot
   ) {
     // Set ALL classes on element so we can find matching CSS rules.
     //
@@ -224,37 +228,41 @@ function getAllMatchingCSSRulesRecursively(
     // In CSS the :not() could mean that adding other classes invalidates rules but MetaTemplate
     // doesn't support that.
 
-    if (attributes["class"]) {
-      element.className = attributes["class"]
-        .map((metaAttribute) => {
-          if (metaAttribute.type === "MetaAttributeConstant") {
-            return ` ${metaAttribute.value}`;
-          } else if (metaAttribute.type === "MetaAttributeVariableOptions") {
-            return ` ${Object.values(metaAttribute.options).join(" ")}`;
-          }
-          // Else, it's a MetaAttributeVariable.
-          // We can't predict what value MetaAttributeVariable would have so we can't
-          // support detecting CSS based on that
-          return "";
-        })
-        .join(" ");
-    }
+    Object.keys(attributes)
+      .filter(attributesThatCanBeSet)
+      .forEach((name: string) => {
+        const newValue = attributes[name]
+          .map((metaAttribute) => {
+            if (metaAttribute.type === "MetaAttributeConstant") {
+              return ` ${metaAttribute.value}`;
+            } else if (metaAttribute.type === "MetaAttributeVariableOptions") {
+              return ` ${Object.values(metaAttribute.options).join(" ")}`;
+            }
+            // Else, it's a MetaAttributeVariable.
+            // We can't predict what value MetaAttributeVariable would have so we can't
+            // support detecting CSS based on that
+            return "";
+          })
+          .join(" ");
+
+        element.setAttribute(name, newValue);
+      });
 
     cssSniff([element], { ignoreChildren: true }, matchedCSS);
   }
 
-  const matchedCSS: MatchedCSS = {};
-
   function walk(node: MetaHTMLNodeInternal): void {
     if (node.type !== "Element") return;
-    console.log("Checking CSS for ", node.node.nodeName);
     getAllMatchingCSSRules(node.node, node.attributes, matchedCSS);
     node.children.forEach(walk);
   }
 
   nodes.forEach(walk);
 
-  console.log({ end: matchedCSS });
-
   return serializeCSSMatches(matchedCSS);
+}
+
+function attributesThatCanBeSet(attr: string): boolean {
+  // setting any attribute can cause bugs in JSDOM
+  return ["class"].includes(attr);
 }

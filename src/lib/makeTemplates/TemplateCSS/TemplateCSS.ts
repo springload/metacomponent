@@ -1,10 +1,9 @@
-import prettier from "prettier";
 import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
 import { TemplateFiles } from "../../types";
 
 export class TemplateCSS extends Template {
   constructor(args: OnConstructor) {
-    super({ templateId: args.templateId, dirname: "css" });
+    super({ componentId: args.componentId, dirname: "css" });
   }
 
   onElement = (
@@ -24,12 +23,8 @@ export class TemplateCSS extends Template {
   ): TemplateFiles => {
     const { css } = onSerialize;
 
-    const formattedCSS = prettier.format(css, {
-      parser: "scss", // use scss regardless of whether we're doing scss or css because css is a subset of scss (afaik)
-    });
-
     return {
-      [`${this.dirname}/${this.templateId}.css`]: formattedCSS,
+      [`${this.dirname}/${this.componentId}.css`]: css,
     };
   };
 }

@@ -1,8 +1,12 @@
-export const parseAttributeValue = (value: string): MetaAttributeValue => {
+export const parseAttributeValue = (
+  metaHTMLAttributeValueString: string
+): MetaAttributeValue => {
   const response: MetaAttributeValue = [];
-  let remaining: string = value;
-  const start = "{{";
-  const end = "}}";
+  let remaining: string = metaHTMLAttributeValueString;
+  const start = "{{" as const;
+  const end = "}}" as const;
+
+  console.log("going in...");
 
   while (remaining.length) {
     const startIndex = remaining.indexOf(start);
@@ -13,9 +17,13 @@ export const parseAttributeValue = (value: string): MetaAttributeValue => {
         type: "MetaAttributeConstant",
         value: remaining,
       });
+      remaining = "";
     } else if (startIndex === 0) {
       // a MetaAttributeVariable
       const endIndex = remaining.indexOf(end, startIndex);
+      if (endIndex === -1) {
+        throw Error(`Attribute with ${start} but no ${end}.`);
+      }
       const dkString = remaining.substring(start.length, endIndex);
       const metaVariable = parseMetaVariable(dkString);
       response.push(metaVariable);
@@ -28,6 +36,8 @@ export const parseAttributeValue = (value: string): MetaAttributeValue => {
       });
       remaining = remaining.substring(startIndex);
     }
+
+    console.log(remaining.length);
   }
   return response;
 };
