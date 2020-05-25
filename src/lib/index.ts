@@ -11,9 +11,10 @@ export default function MetaTemplate(
   cssString: string
 ): { metaHTML: MetaHTML; files: TemplateFiles } {
   const metaHTML = parseMetaHTMLString(domDocument, metaHTMLString, cssString);
+  const files = makeTemplates(templateId, metaHTML);
 
   return {
     metaHTML,
-    files: makeTemplates(templateId, metaHTML),
+    files,
   };
 }

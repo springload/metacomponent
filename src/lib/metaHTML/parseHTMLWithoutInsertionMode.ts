@@ -70,10 +70,11 @@ function restoreParsingModeElements(domDocument: Document): void {
   aliases.forEach((alias: Element) => {
     if (!alias) return;
     const tagName = alias.getAttribute(MT_ALIAS_ATTR);
-    if (!tagName)
+    if (!tagName) {
       throw Error(
         `MetaTemplate: ${MT_ALIAS_TAG} missing ${MT_ALIAS_ATTR} attribute.`
       );
+    }
     const childNodes = Array.from(alias.childNodes);
     const unaliased = doc.createElement(tagName);
     if (!alias.parentNode) {

@@ -1,7 +1,7 @@
 textarea {
   display: block;
   width: 100%;
-  height: 100%;
+  height: 90%;
   background: #eeeeee;
   color: black;
   font-size: xx-small;
@@ -39,6 +39,5 @@ textarea {
   grid-template-rows: auto;
   grid-template-areas:
     "htmlC cssC"
-    "buttonC buttonC"
     "outputC outputC";
 }

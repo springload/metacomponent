@@ -48,6 +48,11 @@ export class TemplateHTML extends Template {
     this.html += value;
   };
 
+  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+    const { value } = onComment;
+    this.html += `<!--${value}-->`;
+  };
+
   serialize = (
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
   ): TemplateFiles => {

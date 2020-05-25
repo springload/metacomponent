@@ -1,6 +1,7 @@
 {
   "name": "@springload/metatemplate",
   "version": "2.0.0-alpha1",
+  "homepage": "/metatemplate/",
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

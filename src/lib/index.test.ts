@@ -42,7 +42,7 @@ function callMetaTemplate(
   const jsdomInstance = new JSDOM(``, { pretendToBeVisual: true });
   const result = metaTemplate(
     // @ts-ignore
-    jsdomInstance.window,
+    jsdomInstance.window.document,
     templateId,
     metaHTML,
     css

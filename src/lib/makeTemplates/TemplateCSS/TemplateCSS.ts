@@ -14,9 +14,17 @@ export class TemplateCSS extends Template {
 
   onCloseElement = (
     args: Parameters<TemplateFormat["onCloseElement"]>[0]
-  ): void => {};
+  ): void => {
+    // pass
+  };
 
-  onText = (onText: Parameters<TemplateFormat["onText"]>[0]): void => {};
+  onText = (onText: Parameters<TemplateFormat["onText"]>[0]): void => {
+    // pass
+  };
+
+  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+    // pass
+  };
 
   serialize = (
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]

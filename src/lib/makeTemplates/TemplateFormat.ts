@@ -55,7 +55,7 @@ export class Template implements TemplateFormat {
     throw Error("Not implemented");
   };
 
-  onComment = (onText: Parameters<TemplateFormat["onComment"]>[0]): void => {
+  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
     throw Error("Not implemented");
   };
 
