@@ -1,9 +1,9 @@
 import { MetaTemplate } from "../metaTemplate/metaTemplate";
 import { TemplateFiles } from "../types";
 
-import { CSS } from "./CSS/CSS";
-import { HTML } from "./HTML/HTML";
-import { TemplateFormat } from "./TemplateFormat";
+import { CSSTemplate } from "./CSS/CSS";
+import { HTMLTemplate } from "./HTML/HTML";
+import { Template } from "./Template";
 
 type MakeTemplatesProps = {
   templateId: string;
@@ -15,8 +15,8 @@ export function makeTemplates({
   metaTemplate,
 }: MakeTemplatesProps): TemplateFiles {
   return mergeTemplateFiles(
-    makeTemplate(templateId, metaTemplate, new HTML({ templateId })),
-    makeTemplate(templateId, metaTemplate, new CSS({ templateId }))
+    makeTemplate(templateId, metaTemplate, new HTMLTemplate({ templateId })),
+    makeTemplate(templateId, metaTemplate, new CSSTemplate({ templateId }))
   );
 }
 
@@ -27,7 +27,7 @@ function mergeTemplateFiles(...obj: TemplateFiles[]): TemplateFiles {
 function makeTemplate(
   templateId: string,
   metaTemplate: MetaTemplate,
-  instance: TemplateFormat
+  instance: Template
 ) {
   function walk(node: MetaTemplate["nodes"][number]) {
     switch (node.type) {

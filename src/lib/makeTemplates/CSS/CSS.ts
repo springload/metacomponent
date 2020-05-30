@@ -1,7 +1,7 @@
-import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
+import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 
-export class CSS extends Template {
+export class CSSTemplate extends Template {
   constructor(args: OnConstructor) {
     super({ templateId: args.templateId, dirname: "css" });
   }

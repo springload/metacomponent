@@ -35,7 +35,9 @@ export function parseHTMLWithoutInsertionMode({
 }: Props): void {
   const documentString = wrapBodyHtml(metaHTMLString, cssString);
   domDocument.documentElement.innerHTML = documentString;
+
   restoreParsingModeElements(domDocument, log);
+  moveChildlessElements(domDocument);
 }
 
 function wrapBodyHtml(metaHTMLString: string, cssString: string): string {
@@ -106,5 +108,21 @@ function restoreParsingModeElements(domDocument: Document, log: Log): void {
       unaliased.setAttribute(attr, previousAttributeValue);
     });
     alias.parentNode.removeChild(alias);
+  });
+}
+
+function moveChildlessElements(domDocument: Document) {
+  const childlessElementNames = ["mt-variable"];
+  childlessElementNames.forEach((childlessElementName: string): void => {
+    Array.from(domDocument.querySelectorAll(childlessElementName)).forEach(
+      (childlessElement: Element) => {
+        while (childlessElement.lastChild) {
+          childlessElement.parentNode?.insertBefore(
+            childlessElement.lastChild,
+            childlessElement.nextElementSibling
+          );
+        }
+      }
+    );
   });
 }

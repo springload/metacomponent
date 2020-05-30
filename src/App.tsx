@@ -3,7 +3,7 @@ import { generateTemplates } from "./lib";
 import "./App.css";
 
 const defaultValues = {
-  html: `<p class="my-style">test</p>`,
+  html: `<p class="my-style">test <mt-variable id="my-id"> things </p>`,
   css: `.my-style { background: red; }\n .treeShake { color: green; }`,
 };
 

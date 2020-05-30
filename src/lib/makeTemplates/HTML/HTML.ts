@@ -1,7 +1,7 @@
-import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
+import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 
-export class HTML extends Template {
+export class HTMLTemplate extends Template {
   html: string;
 
   constructor(args: OnConstructor) {

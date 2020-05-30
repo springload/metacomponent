@@ -94,7 +94,11 @@ export type MetaHTMLText = { type: "Text"; value: string };
 
 export type MetaHTMLComment = { type: "Comment"; value: string };
 
-export type MetaHTMLVariable = { type: "Variable"; id: string };
+export type MetaHTMLVariable = {
+  type: "Variable";
+  id: string;
+  optional: boolean;
+};
 
 type MetaHTMLIfBase = {
   type: "If";
@@ -147,7 +151,7 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
   const nodeName = htmlElement.nodeName.toLowerCase();
 
   if (nodeName === "mt-variable") {
-    return parseMetaVariable(htmlElement);
+    return parseMetaVariable({ htmlElement, log });
   } else if (nodeName === "mt-if") {
     return {
       ...parseMetaHTMLIf({ htmlElement, log }),
