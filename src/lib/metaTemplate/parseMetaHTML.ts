@@ -1,3 +1,4 @@
+import { Log } from "../log";
 // Combine metaHTML and CSS in an HTML document string, and restore parsing mode
 // problems.
 //
@@ -18,14 +19,23 @@
 // </mt-alias-select>
 //
 // and rename the element after parsing
-export function parseHTMLWithoutInsertionMode(
-  domDocument: Document,
-  metaHTMLString: string,
-  cssString: string
-): void {
+
+type Props = {
+  domDocument: Document;
+  metaHTMLString: string;
+  cssString: string;
+  log: Log;
+};
+
+export function parseHTMLWithoutInsertionMode({
+  domDocument,
+  metaHTMLString,
+  cssString,
+  log,
+}: Props): void {
   const documentString = wrapBodyHtml(metaHTMLString, cssString);
   domDocument.documentElement.innerHTML = documentString;
-  restoreParsingModeElements(domDocument);
+  restoreParsingModeElements(domDocument, log);
 }
 
 function wrapBodyHtml(metaHTMLString: string, cssString: string): string {
@@ -49,7 +59,7 @@ function aliasParsingModeElements(html: string): string {
     "option",
   ];
 
-  return html.replace(/<([\/]?)([^ >]+)/gi, (match, closingTag, tagName) => {
+  return html.replace(/<([/]?)([^ >]+)/gi, (match, closingTag, tagName) => {
     const isClosingTag = !!closingTag;
     let response = `<${isClosingTag ? "/" : ""}`;
     if (parsingModeTags.includes(tagName)) {
@@ -64,21 +74,21 @@ function aliasParsingModeElements(html: string): string {
   });
 }
 
-function restoreParsingModeElements(domDocument: Document): void {
+function restoreParsingModeElements(domDocument: Document, log: Log): void {
   const doc = domDocument;
   const aliases = Array.from(doc.querySelectorAll(MT_ALIAS_TAG));
   aliases.forEach((alias: Element) => {
     if (!alias) return;
     const tagName = alias.getAttribute(MT_ALIAS_ATTR);
     if (!tagName) {
-      throw Error(
-        `MetaTemplate: ${MT_ALIAS_TAG} missing ${MT_ALIAS_ATTR} attribute.`
-      );
+      log(`MetaTemplate: ${MT_ALIAS_TAG} missing ${MT_ALIAS_ATTR} attribute.`);
+      return;
     }
     const childNodes = Array.from(alias.childNodes);
     const unaliased = doc.createElement(tagName);
     if (!alias.parentNode) {
-      throw Error("MetaTemplate parsing mode element must not be top-level.");
+      log("MetaTemplate parsing mode element must not be top-level.");
+      return;
     }
     alias.parentNode.insertBefore(unaliased, alias);
     childNodes.forEach((childNode) => {
@@ -90,7 +100,8 @@ function restoreParsingModeElements(domDocument: Document): void {
     attrs.forEach((attr) => {
       const previousAttributeValue = alias.getAttribute(attr);
       if (!previousAttributeValue) {
-        throw Error("MetaTemplate: must have a previous attribute value");
+        log("MetaTemplate: must have a previous attribute value");
+        return;
       }
       unaliased.setAttribute(attr, previousAttributeValue);
     });

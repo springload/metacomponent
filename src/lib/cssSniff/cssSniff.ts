@@ -412,10 +412,10 @@ export function mergeMatches(matchedCSSArray: CSSSniffRoot[]): CSSSniffRoot {
 export function serializeCSSMatches(matchedCSS: CSSSniffRoot): string {
   let css = "";
 
-  Object.keys(matchedCSS).map((sheetIndex: string) => {
+  Object.keys(matchedCSS).forEach((sheetIndex: string) => {
     const sheet = matchedCSS[sheetIndex];
 
-    Object.keys(sheet).map((ruleIndex: string) => {
+    Object.keys(sheet).forEach((ruleIndex: string) => {
       const rule = sheet[ruleIndex];
       if (rule.type === "CSSSniffStyleRule") {
         css += rule.selectors.join(",");
@@ -425,7 +425,7 @@ export function serializeCSSMatches(matchedCSS: CSSSniffRoot): string {
       } else if (rule.type === "CSSSniffMediaRule") {
         css += rule.before;
         css += "{";
-        Object.keys(rule.children).map((childRuleIndex: string) => {
+        Object.keys(rule.children).forEach((childRuleIndex: string) => {
           const childRule = rule.children[childRuleIndex];
           if (childRule.type === "CSSSniffStyleRule") {
             css += childRule.selectors.join(",");

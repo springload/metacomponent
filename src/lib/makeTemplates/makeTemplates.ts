@@ -1,17 +1,22 @@
-import { MetaHTML } from "../metaHTML/metaHTML";
+import { MetaTemplate } from "../metaTemplate/metaTemplate";
 import { TemplateFiles } from "../types";
 
-import { TemplateCSS } from "./TemplateCSS/TemplateCSS";
-import { TemplateHTML } from "./TemplateHTML/TemplateHTML";
+import { CSS } from "./CSS/CSS";
+import { HTML } from "./HTML/HTML";
 import { TemplateFormat } from "./TemplateFormat";
 
-export function makeTemplates(
-  componentId: string,
-  metaHTML: MetaHTML
-): TemplateFiles {
+type MakeTemplatesProps = {
+  templateId: string;
+  metaTemplate: MetaTemplate;
+};
+
+export function makeTemplates({
+  templateId,
+  metaTemplate,
+}: MakeTemplatesProps): TemplateFiles {
   return mergeTemplateFiles(
-    makeTemplate(componentId, metaHTML, new TemplateHTML({ componentId })),
-    makeTemplate(componentId, metaHTML, new TemplateCSS({ componentId }))
+    makeTemplate(templateId, metaTemplate, new HTML({ templateId })),
+    makeTemplate(templateId, metaTemplate, new CSS({ templateId }))
   );
 }
 
@@ -20,11 +25,11 @@ function mergeTemplateFiles(...obj: TemplateFiles[]): TemplateFiles {
 }
 
 function makeTemplate(
-  componentId: string,
-  metaHTML: MetaHTML,
+  templateId: string,
+  metaTemplate: MetaTemplate,
   instance: TemplateFormat
 ) {
-  function walk(node: MetaHTML["nodes"][number]) {
+  function walk(node: MetaTemplate["nodes"][number]) {
     switch (node.type) {
       case "Element": {
         const openingElement = instance.onElement(node);
@@ -43,7 +48,7 @@ function makeTemplate(
     }
   }
 
-  metaHTML.nodes.forEach(walk);
+  metaTemplate.nodes.forEach(walk);
 
-  return instance.serialize({ css: metaHTML.cssString });
+  return instance.serialize({ css: metaTemplate.cssString });
 }

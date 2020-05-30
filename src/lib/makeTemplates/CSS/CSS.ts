@@ -1,9 +1,9 @@
 import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
 import { TemplateFiles } from "../../types";
 
-export class TemplateCSS extends Template {
+export class CSS extends Template {
   constructor(args: OnConstructor) {
-    super({ componentId: args.componentId, dirname: "css" });
+    super({ templateId: args.templateId, dirname: "css" });
   }
 
   onElement = (
@@ -32,7 +32,7 @@ export class TemplateCSS extends Template {
     const { css } = onSerialize;
 
     return {
-      [`${this.dirname}/${this.componentId}.css`]: css,
+      [`${this.dirname}/${this.templateId}.css`]: css,
     };
   };
 }

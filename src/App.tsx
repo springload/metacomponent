@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import metaTemplate from "./lib";
+import { generateTemplates } from "./lib";
 import "./App.css";
 
 const defaultValues = {
@@ -22,14 +22,15 @@ function App() {
     metaHtmlEl.value = defaultValues.html;
     cssEl.value = defaultValues.css;
     const rebuild = () => {
-      const document = iframeEl.contentWindow?.document;
-      if (!document) throw Error("Unable to find iframe window's document");
-      const result = metaTemplate(
-        document,
-        "myTemplateId",
-        metaHtmlEl.value,
-        cssEl.value
-      );
+      const domDocument = iframeEl.contentWindow?.document;
+      if (!domDocument) throw Error("Unable to find iframe window's document");
+      const result = generateTemplates({
+        domDocument,
+        templateId: "myTemplateId",
+        metaHTMLString: metaHtmlEl.value,
+        cssString: cssEl.value,
+        haltOnErrors: false,
+      });
       outputEl.value = JSON.stringify(result, null, 2);
     };
 
@@ -57,6 +58,7 @@ function App() {
         id="iframe"
         src="./iframe.html"
         className="iframe_container"
+        title="MetaTemplate iframe"
       ></iframe>
 
       <fieldset className="output_container">

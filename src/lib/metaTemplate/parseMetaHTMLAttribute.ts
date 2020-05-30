@@ -6,8 +6,6 @@ export const parseAttributeValue = (
   const start = "{{" as const;
   const end = "}}" as const;
 
-  console.log("going in...");
-
   while (remaining.length) {
     const startIndex = remaining.indexOf(start);
 
@@ -25,7 +23,7 @@ export const parseAttributeValue = (
         throw Error(`Attribute with ${start} but no ${end}.`);
       }
       const dkString = remaining.substring(start.length, endIndex);
-      const metaVariable = parseMetaVariable(dkString);
+      const metaVariable = parseMetaAttributeVariable(dkString);
       response.push(metaVariable);
       remaining = remaining.substring(endIndex + end.length);
     } else {
@@ -36,13 +34,11 @@ export const parseAttributeValue = (
       });
       remaining = remaining.substring(startIndex);
     }
-
-    console.log(remaining.length);
   }
   return response;
 };
 
-export const parseMetaVariable = (
+export const parseMetaAttributeVariable = (
   dk: string
 ): MetaAttributeVariable | MetaAttributeVariableOptions => {
   const SEPARATOR = ":";

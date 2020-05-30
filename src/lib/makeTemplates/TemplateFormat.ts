@@ -2,12 +2,12 @@ import {
   MetaHTMLElement,
   MetaHTMLText,
   MetaHTMLComment,
-} from "../metaHTML/metaHTML";
+} from "../metaTemplate/metaTemplate";
 import { TemplateFiles } from "../types";
 
 export interface TemplateFormat {
   dirname: string;
-  componentId: string;
+  templateId: string;
 
   onElement: (element: MetaHTMLElement) => string;
   onText: (text: MetaHTMLText) => void;
@@ -17,7 +17,7 @@ export interface TemplateFormat {
 }
 
 export type OnConstructor = {
-  componentId: string;
+  templateId: string;
   dirname?: string;
 };
 
@@ -31,12 +31,12 @@ type OnSerialize = {
 
 export class Template implements TemplateFormat {
   dirname: string;
-  componentId: string;
+  templateId: string;
 
   constructor(args: OnConstructor) {
-    const { componentId, dirname } = args;
+    const { templateId, dirname } = args;
     this.dirname = dirname || "";
-    this.componentId = componentId;
+    this.templateId = templateId;
   }
 
   onElement = (

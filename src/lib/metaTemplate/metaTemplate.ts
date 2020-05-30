@@ -1,8 +1,9 @@
-import { parseHTMLWithoutInsertionMode } from "./parseHTMLWithoutInsertionMode";
+import { parseHTMLWithoutInsertionMode } from "./parseMetaHTML";
 import {
   parseAttributeValue,
   MetaAttributeValue,
 } from "./parseMetaHTMLAttribute";
+import { parseMetaVariable } from "./parseMetaVariable";
 import {
   cssSniff,
   serializeCSSMatches,
@@ -10,19 +11,31 @@ import {
   cssRootDiff,
   CSSSniffRoot,
 } from "../cssSniff/cssSniff";
+import { parseMetaHTMLIf } from "./parseMetaHTMLIf";
+import { Log } from "../log";
 
-export function parseMetaHTMLString(
-  domDocument: Document,
-  metaHTMLString: string,
-  cssString: string
-): MetaHTML {
-  parseHTMLWithoutInsertionMode(domDocument, metaHTMLString, cssString);
+type ParseMetaTemplateStringProps = {
+  domDocument: Document;
+  metaHTMLString: string;
+  cssString: string;
+  log: Log;
+};
 
+export function parseMetaTemplateString({
+  domDocument,
+  metaHTMLString,
+  cssString,
+  log,
+}: ParseMetaTemplateStringProps): MetaTemplate {
+  parseHTMLWithoutInsertionMode({
+    domDocument,
+    metaHTMLString,
+    cssString,
+    log,
+  });
   // now we have a DOM representing the original MetaHTMLString, so we need to build a MetaHTML
   const bodyNodes = Array.from(domDocument.body.childNodes);
-
-  const nodes = bodyNodes.map(nodeToMetaHTMLNode);
-
+  const nodes = bodyNodes.map((node) => nodeToMetaNode({ node, log }));
   const metaHTML = {
     cssString: getAllMatchingCSSRulesRecursively(nodes),
     nodes: internalToPublic(nodes),
@@ -30,33 +43,36 @@ export function parseMetaHTMLString(
   return metaHTML;
 }
 
-export type MetaHTML = {
+export type MetaTemplate = {
   cssString: string;
-  nodes: MetaHTMLNode[];
+  nodes: MetaNode[];
 };
 
-export type MetaHTMLNode = MetaHTMLElement | MetaHTMLText | MetaHTMLComment;
+export type MetaNode =
+  | MetaHTMLElement
+  | MetaHTMLText
+  | MetaHTMLComment
+  | MetaHTMLVariable
+  | MetaHTMLIf;
 
-export type MetaHTMLNodeInternal =
+export type MetaNodeInternal =
   | MetaHTMLElementInternal
   | MetaHTMLText
-  | MetaHTMLComment;
-
-export type MetaHTMLElementInternal = {
-  type: "Element";
-  nodeName: string;
-  attributes: Record<string, MetaAttributeValue>;
-  children: MetaHTMLNodeInternal[];
-  node: HTMLElement;
-  cssProperties: MetaCSSPropertiesNode[];
-};
+  | MetaHTMLComment
+  | MetaHTMLVariable
+  | MetaHTMLIfInternal;
 
 export type MetaHTMLElement = {
   type: "Element";
   nodeName: string;
   attributes: Record<string, MetaAttributeValue>;
-  children: MetaHTMLNode[];
+  children: MetaNode[];
   cssProperties: MetaCSSPropertiesNode[];
+};
+
+export type MetaHTMLElementInternal = Omit<MetaHTMLElement, "children"> & {
+  children: MetaNodeInternal[];
+  node: HTMLElement;
 };
 
 export type MetaCSSPropertiesNode =
@@ -78,7 +94,45 @@ export type MetaHTMLText = { type: "Text"; value: string };
 
 export type MetaHTMLComment = { type: "Comment"; value: string };
 
-function nodeToMetaHTMLNode(node: ChildNode): MetaHTMLNodeInternal {
+export type MetaHTMLVariable = { type: "Variable"; id: string };
+
+type MetaHTMLIfBase = {
+  type: "If";
+  optional: boolean;
+  children: MetaNode[];
+};
+
+export type MetaHTMLIfSuccess = MetaHTMLIfBase & {
+  parseError: false;
+  testAsJavaScriptExpression: string; // a string of codegen'd JS that can be used directly.
+  // Other languages should be added. PRs welcome.
+};
+
+export type MetaHTMLIfFailure = MetaHTMLIfBase & {
+  parseError: true;
+  error: string;
+};
+
+export type MetaHTMLIf = MetaHTMLIfSuccess | MetaHTMLIfFailure;
+
+export type MetaHTMLIfSuccessInternal = Omit<MetaHTMLIfSuccess, "children"> & {
+  children: MetaNodeInternal[];
+};
+
+export type MetaHTMLIfFailureInternal = Omit<MetaHTMLIfFailure, "children"> & {
+  children: MetaNodeInternal[];
+};
+
+export type MetaHTMLIfInternal =
+  | MetaHTMLIfSuccessInternal
+  | MetaHTMLIfFailureInternal;
+
+type NodeToMetaNodeProps = {
+  node: ChildNode;
+  log: Log;
+};
+
+function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
   if (node.nodeType === Node.TEXT_NODE) {
     return { type: "Text", value: node.textContent || "" };
   } else if (node.nodeType === Node.COMMENT_NODE) {
@@ -90,7 +144,19 @@ function nodeToMetaHTMLNode(node: ChildNode): MetaHTMLNodeInternal {
   // @ts-ignore
   const htmlElement: HTMLElement = node;
   const names = Array.from(htmlElement.getAttributeNames());
-  console.log(names);
+  const nodeName = htmlElement.nodeName.toLowerCase();
+
+  if (nodeName === "mt-variable") {
+    return parseMetaVariable(htmlElement);
+  } else if (nodeName === "mt-if") {
+    return {
+      ...parseMetaHTMLIf({ htmlElement, log }),
+      children: Array.from(node.childNodes).map((node) =>
+        nodeToMetaNode({ node, log })
+      ),
+    };
+  }
+
   const attributes = names.reduce(
     (attributes: MetaHTMLElement["attributes"], name: string) => {
       const attributeValue = htmlElement.getAttribute(name);
@@ -102,14 +168,15 @@ function nodeToMetaHTMLNode(node: ChildNode): MetaHTMLNodeInternal {
   );
 
   const cssProperties = getAllMatchingCSSProperties(htmlElement, attributes);
-  console.log("after get all ");
 
   return {
     type: "Element",
-    nodeName: htmlElement.nodeName,
+    nodeName,
     attributes: attributes,
     node: htmlElement,
-    children: Array.from(node.childNodes).map(nodeToMetaHTMLNode),
+    children: Array.from(node.childNodes).map((node) =>
+      nodeToMetaNode({ node, log })
+    ),
     cssProperties,
   };
 }
@@ -142,15 +209,11 @@ function getAllMatchingCSSProperties(
                 attributeName,
                 `${resetValue ? `${resetValue} ` : ""}${optionValue}`
               );
-
               const matchedCSS = cssSniff([element], { ignoreChildren: true });
-
               const cssRoot = cssRootDiff(resetMatchedCSS, matchedCSS);
-
               const cssPropertiesString = serializeCSSMatchesAsProperties(
                 cssRoot
               );
-
               cssProperties.push({
                 type: "MetaCSSPropertiesConditionalNode",
                 condition: { id: attributeValue.id, equalsString: optionName },
@@ -191,26 +254,47 @@ function resetElementAttributes(
     });
 }
 
-function internalToPublic(nodes: MetaHTMLNodeInternal[]): MetaHTMLNode[] {
-  function walk(node: MetaHTMLNodeInternal): MetaHTMLNode {
-    if (node.type !== "Element") {
-      return node;
+function internalToPublic(nodes: MetaNodeInternal[]): MetaNode[] {
+  // discards the Node variable which shouldn't be exposed to consumers
+  function walk(node: MetaNodeInternal): MetaNode {
+    switch (node.type) {
+      case "Comment":
+      case "Text":
+      case "Variable":
+        return node;
+      case "If":
+        if (node.parseError) {
+          return {
+            type: "If",
+            parseError: true,
+            optional: node.optional,
+            error: node.error,
+            children: node.children.map(walk),
+          };
+        } else {
+          return {
+            type: "If",
+            parseError: false,
+            testAsJavaScriptExpression: node.testAsJavaScriptExpression,
+            optional: node.optional,
+            children: node.children.map(walk),
+          };
+        }
+      case "Element":
+        return {
+          type: "Element",
+          nodeName: node.nodeName,
+          attributes: node.attributes,
+          children: node.children.map(walk),
+          cssProperties: node.cssProperties,
+        };
     }
-    return {
-      type: "Element",
-      nodeName: node.nodeName.toLowerCase(), // because it will be uppercase and who wants that?
-      attributes: node.attributes,
-      children: node.children.map(walk),
-      cssProperties: node.cssProperties,
-    };
   }
 
   return nodes.map(walk);
 }
 
-function getAllMatchingCSSRulesRecursively(
-  nodes: MetaHTMLNodeInternal[]
-): string {
+function getAllMatchingCSSRulesRecursively(nodes: MetaNodeInternal[]): string {
   const matchedCSS: CSSSniffRoot = {};
 
   function getAllMatchingCSSRules(
@@ -251,7 +335,7 @@ function getAllMatchingCSSRulesRecursively(
     cssSniff([element], { ignoreChildren: true }, matchedCSS);
   }
 
-  function walk(node: MetaHTMLNodeInternal): void {
+  function walk(node: MetaNodeInternal): void {
     if (node.type !== "Element") return;
     getAllMatchingCSSRules(node.node, node.attributes, matchedCSS);
     node.children.forEach(walk);
@@ -263,6 +347,7 @@ function getAllMatchingCSSRulesRecursively(
 }
 
 function attributesThatCanBeSet(attr: string): boolean {
-  // setting any attribute can cause bugs in JSDOM
+  // used to filter setting attributes on the real DOM
+  // we don't really care about any other attributes
   return ["class"].includes(attr);
 }

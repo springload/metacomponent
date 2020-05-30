@@ -1,12 +1,11 @@
 import { Template, TemplateFormat, OnConstructor } from "../TemplateFormat";
 import { TemplateFiles } from "../../types";
 
-export class TemplateHTML extends Template {
+export class HTML extends Template {
   html: string;
 
   constructor(args: OnConstructor) {
-    super({ componentId: args.componentId, dirname: "html" });
-
+    super({ templateId: args.templateId, dirname: "html" });
     this.html = "";
   }
 
@@ -16,7 +15,7 @@ export class TemplateHTML extends Template {
     const { nodeName, attributes } = onElement;
 
     this.html += `<${nodeName}`;
-    Object.keys(attributes).map((name) => {
+    Object.keys(attributes).forEach((name) => {
       const attributeValues = attributes[name];
       this.html += ` ${name}="${attributeValues
         .map((attributeValue) => {
@@ -32,7 +31,6 @@ export class TemplateHTML extends Template {
         .join(" ")}"`;
     });
     this.html += ">";
-
     return nodeName;
   };
 
@@ -57,7 +55,25 @@ export class TemplateHTML extends Template {
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
   ): TemplateFiles => {
     return {
-      [`${this.dirname}/${this.componentId}.html`]: this.html,
+      [`${this.dirname}/${this.templateId}.html`]: this.html,
     };
   };
 }
+
+// Via http://xahlee.info/js/html5_non-closing_tag.html
+export const SELF_CLOSING_HTML_ELEMENTS = [
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
+];
