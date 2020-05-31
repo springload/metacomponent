@@ -1,10 +1,38 @@
+body {
+  background: black;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+fieldset {
+  color: white;
+  border: none;
+  min-height: 40vh;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+fieldset legend {
+  font-weight: 300;
+}
+
 textarea {
   display: block;
   width: 100%;
-  height: 90%;
-  background: #eeeeee;
-  color: black;
+  height: 100%;
+  background: #333;
+  color: #ccc;
+  border: none;
   font-size: xx-small;
+  margin: 0px;
+  resize: none;
+}
+
+textarea:focus {
+  background: #393939;
 }
 
 .html_container {
@@ -17,6 +45,15 @@ textarea {
 
 .makeTemplates_container {
   grid-area: buttonC;
+}
+
+.title_container {
+  grid-area: titleC;
+  color: white;
+  font-weight: 300;
+  padding: 0.3em 0px 0px 0.1em;
+  margin: 0px;
+  font-size: large;
 }
 
 .iframe_container {
@@ -35,9 +72,34 @@ textarea {
 .MetaTemplateDemo {
   display: grid;
   min-height: 100vh;
+  width: 100%;
+  min-width: 100vw;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
+  grid-column-gap: 5px;
+  grid-row-gap: 0px;
+
   grid-template-areas:
-    "htmlC cssC"
-    "outputC outputC";
+    "titleC titleC"
+    "htmlC outputC"
+    "cssC outputC";
+}
+
+select {
+  background: black;
+  color: white;
+  font-size: xx-small;
+  border: solid 1px #999;
+}
+
+.tab {
+  background: black;
+  color: white;
+  font-size: xx-small;
+  border: none;
+  margin-right: 1px;
+}
+
+.tab--selected {
+  outline: solid 1px white;
 }

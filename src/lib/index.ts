@@ -15,7 +15,10 @@ type Props = {
   haltOnErrors: boolean;
 };
 
-type MetaTemplates = { metaTemplate: MetaTemplate; files: TemplateFiles };
+export type MetaTemplates = {
+  metaTemplate: MetaTemplate;
+  files: TemplateFiles;
+};
 
 export function generateTemplates({
   domDocument,
