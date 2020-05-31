@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { generateTemplates, MetaTemplates } from "./lib";
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-json";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-css";
+import "ace-builds/src-noconflict/theme-monokai";
 import "./App.css";
+
+const theme = "monokai";
 
 const defaultValues = {
   metaHTML: `<p class="my-style">test <mt-variable id="my-id"> things </p>`,
-  css: `.my-style { background: red; }\n .treeShake { color: green; }`,
+  css: `.my-style { background: red; }\n.treeShake { color: green; }`,
 };
 
 function App() {
@@ -53,32 +61,35 @@ function App() {
       : ""
     : "";
 
+  const outputMode =
+    resultIndex === 0 ? "json" : pathType(filePaths[resultIndex - 1]);
+
   return (
     <div className="MetaTemplateDemo">
       <h1 className="title_container">MetaTemplate REPL</h1>
       <fieldset className="html_container">
         <legend>MetaHTML</legend>
-        <textarea
-          id="metaHtml"
+        <AceEditor
+          mode="html"
+          theme={theme}
+          onChange={(val) => setMetaHTML(val)}
+          name="html"
           value={metaHTML}
-          onChange={(e) => setMetaHTML(e.target.value)}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        ></textarea>
+          width="100%"
+          height="100%"
+        />
       </fieldset>
 
       <fieldset className="css_container">
         <legend>CSS</legend>
-        <textarea
-          id="css"
+        <AceEditor
+          mode="css"
+          theme={theme}
+          onChange={(val) => setCSS(val)}
+          name="css"
           value={css}
-          onChange={(e) => setCSS(e.target.value)}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
+          width="100%"
+          height="100%"
         />
       </fieldset>
 
@@ -92,7 +103,7 @@ function App() {
 
       <fieldset className="output_container">
         <legend>
-          Output{" "}
+          Output &nbsp;
           <button
             role="tab"
             aria-selected={resultIndex === 0}
@@ -119,23 +130,29 @@ function App() {
                     setResultIndex(fileIndex + 1);
                   }}
                 >
-                  {file.substring(0, file.indexOf("/"))}
+                  {pathType(file)}
                 </button>
               ))
             : null}
         </legend>
-        <textarea
-          id="output"
+
+        <AceEditor
+          mode={outputMode}
+          theme={theme}
+          name="output"
           value={outputValue}
           readOnly
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
+          width="100%"
+          height="100%"
+          showGutter={false}
         />
       </fieldset>
     </div>
   );
+}
+
+function pathType(file: string) {
+  return file.substring(0, file.indexOf("/"));
 }
 
 export default App;

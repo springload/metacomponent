@@ -12,6 +12,7 @@ import {
   CSSSniffRoot,
 } from "../cssSniff/cssSniff";
 import { parseMetaHTMLIf } from "./parseMetaHTMLIf";
+import { getProps, Props } from "./getProps";
 import { Log } from "../log";
 
 type ParseMetaTemplateStringProps = {
@@ -36,16 +37,18 @@ export function parseMetaTemplateString({
   // now we have a DOM representing the original MetaHTMLString, so we need to build a MetaHTML
   const bodyNodes = Array.from(domDocument.body.childNodes);
   const nodes = bodyNodes.map((node) => nodeToMetaNode({ node, log }));
-  const metaHTML = {
+  const metaTemplate = {
     cssString: getAllMatchingCSSRulesRecursively(nodes),
+    props: getProps(nodes, log),
     nodes: internalToPublic(nodes),
   };
-  return metaHTML;
+  return metaTemplate;
 }
 
 export type MetaTemplate = {
   cssString: string;
   nodes: MetaNode[];
+  props: Props;
 };
 
 export type MetaNode =
@@ -108,6 +111,7 @@ type MetaHTMLIfBase = {
 
 export type MetaHTMLIfSuccess = MetaHTMLIfBase & {
   parseError: false;
+  ids: string[];
   testAsJavaScriptExpression: string; // a string of codegen'd JS that can be used directly.
   // Other languages should be added. PRs welcome.
 };
@@ -267,31 +271,13 @@ function internalToPublic(nodes: MetaNodeInternal[]): MetaNode[] {
       case "Variable":
         return node;
       case "If":
-        if (node.parseError) {
-          return {
-            type: "If",
-            parseError: true,
-            optional: node.optional,
-            error: node.error,
-            children: node.children.map(walk),
-          };
-        } else {
-          return {
-            type: "If",
-            parseError: false,
-            testAsJavaScriptExpression: node.testAsJavaScriptExpression,
-            optional: node.optional,
-            children: node.children.map(walk),
-          };
-        }
       case "Element":
         return {
-          type: "Element",
-          nodeName: node.nodeName,
-          attributes: node.attributes,
+          ...node,
           children: node.children.map(walk),
-          cssProperties: node.cssProperties,
         };
+      default:
+        throw Error(`Unrecognised node ${node}. ${JSON.stringify(node)}`);
     }
   }
 

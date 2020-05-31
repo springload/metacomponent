@@ -1,5 +1,6 @@
 body {
   background: black;
+  color: white;
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
@@ -13,22 +14,12 @@ fieldset {
   margin: 0px;
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 fieldset legend {
+  font-size: x-large;
   font-weight: 300;
-}
-
-textarea {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #333;
-  color: #ccc;
-  border: none;
-  font-size: xx-small;
-  margin: 0px;
-  resize: none;
 }
 
 textarea:focus {
@@ -85,19 +76,14 @@ textarea:focus {
     "cssC outputC";
 }
 
-select {
-  background: black;
-  color: white;
-  font-size: xx-small;
-  border: solid 1px #999;
-}
-
 .tab {
   background: black;
   color: white;
-  font-size: xx-small;
+  font-size: small;
   border: none;
   margin-right: 1px;
+  padding: 0.2em 0.5em;
+  vertical-align: middle;
 }
 
 .tab--selected {

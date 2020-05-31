@@ -27,19 +27,39 @@ export const parseMetaHTMLIf = ({
   }
 
   try {
-    let normalizedCode = "";
+    let testAsJavaScriptExpression = "";
+    let ids: string[] = [];
     if (test) {
       const AST = parseExpression(test);
-      normalizedCode = generate(AST).code;
+      ids = findIdentifiers(AST);
+      testAsJavaScriptExpression = generate(AST).code;
     }
     return {
       type: "If",
+      ids,
+      testAsJavaScriptExpression,
       optional,
       parseError: false,
-      testAsJavaScriptExpression: normalizedCode,
     };
   } catch (e) {
     log(`JS Expression:\n\t${test}\n`, e);
     return { type: "If", optional, parseError: true, error: e.toString() };
   }
 };
+
+function findIdentifiers(AST: ReturnType<typeof parseExpression>): string[] {
+  const ids: string[] = [];
+
+  const walk = (node: any) => {
+    if (node.type === "Identifier" && node.name) {
+      ids.push(node.name);
+    } else if (node.identifierName) {
+      ids.push(node.identifierName);
+    }
+    // Object.keys(node).forEach((name) => walk(node[name]));
+  };
+  // @ts-ignore
+  Object.keys(AST).forEach((name) => walk(AST[name]));
+
+  return ids;
+}
