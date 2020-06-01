@@ -21,10 +21,10 @@ const resultIndex = resultIndexString ? parseInt(resultIndexString, 10) : 0;
 const defaultValues = {
   metaHTML:
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-    `<p class="my-style">test <mt-variable id="my-id"> things </p>`,
+    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <mt-variable id="children">\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
-    `.my-style { background: red; }\n.treeShake { color: green; }`,
+    `.my-style { padding: 5px }\n.my-style--blue{ background: blue }\n.my-style--red{ background: red }\n/* this CSS isn't used and will be tree shaken */\n.treeShake { color: green; }`,
   resultIndex,
 };
 

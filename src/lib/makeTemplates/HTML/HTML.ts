@@ -35,7 +35,7 @@ export class HTMLTemplate extends Template {
           return "";
         })
         .filter((value) => value.length > 0)
-        .join(" ")}"`;
+        .join("")}"`;
     });
     this.html += ">";
     return nodeName;
