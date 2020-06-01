@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { generateTemplates, MetaTemplates } from "./lib";
+import { localStorageWrapper } from "./storage";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-json";
@@ -8,18 +9,32 @@ import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/theme-monokai";
 import "./App.css";
 
+const STORAGE_METAHTML = "STORAGE_METAHTML";
+const STORAGE_CSS = "STORAGE_CSS";
+const STORAGE_RESULT_INDEX = "STORAGE_RESULT_INDEX";
+
 const theme = "monokai";
 
+const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
+const resultIndex = resultIndexString ? parseInt(resultIndexString, 10) : 0;
+
 const defaultValues = {
-  metaHTML: `<p class="my-style">test <mt-variable id="my-id"> things </p>`,
-  css: `.my-style { background: red; }\n.treeShake { color: green; }`,
+  metaHTML:
+    localStorageWrapper.getItem(STORAGE_METAHTML) ||
+    `<p class="my-style">test <mt-variable id="my-id"> things </p>`,
+  css:
+    localStorageWrapper.getItem(STORAGE_CSS) ||
+    `.my-style { background: red; }\n.treeShake { color: green; }`,
+  resultIndex,
 };
 
 function App() {
   const [metaHTML, setMetaHTML] = useState<string>(defaultValues.metaHTML);
   const [css, setCSS] = useState<string>(defaultValues.css);
   const [metaTemplates, setMetaTemplates] = useState<MetaTemplates>();
-  const [resultIndex, setResultIndex] = useState(0);
+  const [resultIndex, setResultIndex] = useState<number>(
+    defaultValues.resultIndex
+  );
   const [debounceTime, setDebounceTime] = useState(100);
   const iframeRef = useRef(null);
 
@@ -37,7 +52,7 @@ function App() {
       const startTime = Date.now();
       const result = generateTemplates({
         domDocument,
-        templateId: "myTemplateId",
+        templateId: "MyComponent",
         metaHTMLString: metaHTML,
         cssString: css,
         haltOnErrors: false,
@@ -62,7 +77,11 @@ function App() {
     : "";
 
   const outputMode =
-    resultIndex === 0 ? "json" : pathType(filePaths[resultIndex - 1]);
+    resultIndex === 0
+      ? "json"
+      : filePaths[resultIndex - 1]
+      ? aceMode(filePaths[resultIndex - 1])
+      : "json";
 
   return (
     <div className="MetaTemplateDemo">
@@ -72,7 +91,10 @@ function App() {
         <AceEditor
           mode="html"
           theme={theme}
-          onChange={(val) => setMetaHTML(val)}
+          onChange={(val) => {
+            setMetaHTML(val);
+            localStorageWrapper.setItem(STORAGE_METAHTML, val);
+          }}
           name="html"
           value={metaHTML}
           width="100%"
@@ -85,7 +107,10 @@ function App() {
         <AceEditor
           mode="css"
           theme={theme}
-          onChange={(val) => setCSS(val)}
+          onChange={(val) => {
+            setCSS(val);
+            localStorageWrapper.setItem(STORAGE_CSS, val);
+          }}
           name="css"
           value={css}
           width="100%"
@@ -111,7 +136,12 @@ function App() {
             aria-controls="output"
             id="tab-0"
             onClick={(e) => {
-              setResultIndex(0);
+              const resultIndex = 0;
+              setResultIndex(resultIndex);
+              localStorageWrapper.setItem(
+                STORAGE_RESULT_INDEX,
+                resultIndex.toString()
+              );
             }}
           >
             Everything
@@ -127,7 +157,12 @@ function App() {
                   aria-controls="output"
                   id={`tab-${fileIndex + 1}`}
                   onClick={(e) => {
-                    setResultIndex(fileIndex + 1);
+                    const resultIndex = fileIndex + 1;
+                    setResultIndex(resultIndex);
+                    localStorageWrapper.setItem(
+                      STORAGE_RESULT_INDEX,
+                      resultIndex.toString()
+                    );
                   }}
                 >
                   {pathType(file)}
@@ -149,6 +184,14 @@ function App() {
       </fieldset>
     </div>
   );
+}
+
+function aceMode(file: string) {
+  const dirname = file.substring(0, file.indexOf("/"));
+  if (dirname === "react") {
+    return "javascript";
+  }
+  return dirname;
 }
 
 function pathType(file: string) {

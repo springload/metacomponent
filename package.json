@@ -10,6 +10,7 @@
     "@types/jsdom": "^16.2.3",
     "@types/lodash": "^4.14.153",
     "@types/node": "^12.0.0",
+    "@types/prettier": "^2.0.1",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "gh-pages": "^3.0.0",
@@ -46,6 +47,7 @@
     "@babel/parser": "^7.10.1",
     "lodash": "^4.17.15",
     "postcss-selector-parser": "^6.0.2",
+    "prettier": "^2.0.5",
     "react-ace": "^9.0.0"
   }
 }

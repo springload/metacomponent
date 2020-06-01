@@ -3,8 +3,8 @@ import { Log } from "../log";
 export const parseAttributeValue = (
   metaHTMLAttributeValueString: string,
   log: Log
-): MetaAttributeValue => {
-  const response: MetaAttributeValue = [];
+): MetaAttributeValues => {
+  const response: MetaAttributeValues = [];
   let remaining: string = metaHTMLAttributeValueString;
   const start = "{{" as const;
   const end = "}}" as const;
@@ -118,8 +118,9 @@ export type MetaAttributeConstant = {
   value: string;
 };
 
-export type MetaAttributeValue = (
+export type MetaAttributeValue =
   | MetaAttributeConstant
   | MetaAttributeVariable
-  | MetaAttributeVariableOptions
-)[];
+  | MetaAttributeVariableOptions;
+
+export type MetaAttributeValues = MetaAttributeValue[];

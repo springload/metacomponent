@@ -1,5 +1,6 @@
 import { MetaNodeInternal } from "./metaTemplate";
 import { Log } from "../log";
+import { MetaAttributeVariableOptions } from "./parseMetaHTMLAttribute";
 
 type PropTypeAttributeValue = {
   type: "PropTypeAttributeValue";
@@ -8,19 +9,23 @@ type PropTypeAttributeValue = {
   attributeName: string;
 };
 
-type PropTypeAttributeValueOptions = PropTypeAttributeValue & {
-  options: Record<string, string>;
+type PropTypeAttributeValueOptions = {
+  type: "PropTypeAttributeValueOptions";
+  required: boolean;
+  nodeName: string;
+  attributeName: string;
+  options: MetaAttributeVariableOptions["options"];
 };
 
-type PropTypeValue = {
-  type: "PropTypeValue";
+type PropTypeVariable = {
+  type: "PropTypeVariable";
   required: boolean;
 };
 
 // These are return props not the props given to this function
 export type Props = Record<
   string,
-  PropTypeAttributeValue | PropTypeAttributeValueOptions | PropTypeValue
+  PropTypeAttributeValue | PropTypeAttributeValueOptions | PropTypeVariable
 >;
 
 export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
@@ -43,6 +48,13 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
                   );
                   return;
                 }
+                if (
+                  props[attributeValuePart.id] &&
+                  props[attributeValuePart.id].type ===
+                    "PropTypeAttributeValueOptions"
+                ) {
+                  return; // don't clobber with a less-specific typing than options
+                }
                 props[attributeValuePart.id] = {
                   type: "PropTypeAttributeValue",
                   required: attributeValuePart.required,
@@ -61,7 +73,7 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
                   return;
                 }
                 props[attributeValuePart.id] = {
-                  type: "PropTypeAttributeValue",
+                  type: "PropTypeAttributeValueOptions",
                   required: attributeValuePart.required,
                   nodeName: node.nodeName,
                   attributeName,
@@ -80,8 +92,10 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
               log(`Ignoring empty prop id from ${JSON.stringify(node)}`);
               return;
             }
+            if (props[id]) return; // don't clobber a more specific typing
+
             props[id] = {
-              type: "PropTypeValue",
+              type: "PropTypeVariable",
               required: !node.optional,
             };
           });
@@ -92,8 +106,9 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
           log(`Ignoring empty prop id from ${JSON.stringify(node)}`);
           break;
         }
+        if (props[node.id]) return; // don't clobber a more specific typing
         props[node.id] = {
-          type: "PropTypeValue",
+          type: "PropTypeVariable",
           required: !node.optional,
         };
         break;

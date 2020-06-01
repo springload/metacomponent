@@ -3,7 +3,8 @@ import { TemplateFiles } from "../types";
 
 import { CSSTemplate } from "./CSS/CSS";
 import { HTMLTemplate } from "./HTML/HTML";
-import { Template } from "./Template";
+import { ReactTemplate } from "./React/React";
+import { Template, OnConstructor } from "./Template";
 
 type MakeTemplatesProps = {
   templateId: string;
@@ -14,9 +15,15 @@ export function makeTemplates({
   templateId,
   metaTemplate,
 }: MakeTemplatesProps): TemplateFiles {
+  const args: OnConstructor = {
+    props: metaTemplate.props,
+    templateId,
+    hasMultipleRootNodes: metaTemplate.nodes.length > 1,
+  };
   return mergeTemplateFiles(
-    makeTemplate(templateId, metaTemplate, new HTMLTemplate({ templateId })),
-    makeTemplate(templateId, metaTemplate, new CSSTemplate({ templateId }))
+    makeTemplate(templateId, metaTemplate, new HTMLTemplate(args)),
+    makeTemplate(templateId, metaTemplate, new CSSTemplate(args)),
+    makeTemplate(templateId, metaTemplate, new ReactTemplate(args))
   );
 }
 
@@ -45,10 +52,22 @@ function makeTemplate(
         instance.onComment(node);
         break;
       }
+      case "Variable": {
+        instance.onVariable(node);
+        break;
+      }
+      case "If": {
+        instance.onIf(node);
+        node.children.forEach(walk);
+        instance.onCloseIf();
+        break;
+      }
     }
   }
 
   metaTemplate.nodes.forEach(walk);
+
+  instance.onFinalise();
 
   return instance.serialize({ css: metaTemplate.cssString });
 }

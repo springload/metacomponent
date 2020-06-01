@@ -1,9 +1,11 @@
+import prettier from "prettier/standalone";
+import parserPostCSS from "prettier/parser-postcss";
 import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 
 export class CSSTemplate extends Template {
   constructor(args: OnConstructor) {
-    super({ templateId: args.templateId, dirname: "css" });
+    super({ ...args, dirname: "css" });
   }
 
   onElement = (
@@ -26,13 +28,41 @@ export class CSSTemplate extends Template {
     // pass
   };
 
+  onVariable = (variable: Parameters<TemplateFormat["onVariable"]>[0]) => {
+    // pass
+  };
+
+  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
+    // pass
+  };
+
+  onCloseIf = () => {
+    // pass
+  };
+
+  onFinalise = () => {
+    // pass
+  };
+
   serialize = (
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
   ): TemplateFiles => {
     const { css } = onSerialize;
 
+    let newCSS = css;
+    try {
+      newCSS = prettier.format(newCSS, {
+        parser: "scss",
+        printWidth: 80,
+        plugins: [parserPostCSS],
+      });
+    } catch (e) {
+      // pass
+      console.log(e);
+    }
+
     return {
-      [`${this.dirname}/${this.templateId}.css`]: css,
+      [`${this.dirname}/${this.templateId}.css`]: newCSS,
     };
   };
 }

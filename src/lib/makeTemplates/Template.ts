@@ -2,8 +2,11 @@ import {
   MetaHTMLElement,
   MetaHTMLText,
   MetaHTMLComment,
+  MetaHTMLIf,
+  MetaHTMLVariable,
 } from "../metaTemplate/metaTemplate";
 import { TemplateFiles } from "../types";
+import { Props } from "../metaTemplate/getProps";
 
 export interface TemplateFormat {
   dirname: string;
@@ -13,12 +16,17 @@ export interface TemplateFormat {
   onText: (text: MetaHTMLText) => void;
   onComment: (text: MetaHTMLComment) => void;
   onCloseElement: (closeElement: OnCloseElement) => void;
+  onVariable: (onVariable: MetaHTMLVariable) => void;
+  onIf: (onIf: MetaHTMLIf) => void;
+  onCloseIf: () => void;
   serialize: (args: OnSerialize) => TemplateFiles;
 }
 
 export type OnConstructor = {
   templateId: string;
   dirname?: string;
+  props: Props;
+  hasMultipleRootNodes: boolean;
 };
 
 type OnCloseElement = {
@@ -32,11 +40,15 @@ type OnSerialize = {
 export class Template implements TemplateFormat {
   dirname: string;
   templateId: string;
+  props: Props;
+  hasMultipleRootNodes: boolean;
 
   constructor(args: OnConstructor) {
-    const { templateId, dirname } = args;
+    const { templateId, dirname, props, hasMultipleRootNodes } = args;
     this.dirname = dirname || "";
     this.templateId = templateId;
+    this.props = props;
+    this.hasMultipleRootNodes = hasMultipleRootNodes;
   }
 
   onElement = (
@@ -56,6 +68,24 @@ export class Template implements TemplateFormat {
   };
 
   onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+    throw Error("Not implemented");
+  };
+
+  onVariable = (
+    onVariable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): void => {
+    throw Error("Not implemented");
+  };
+
+  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]): void => {
+    throw Error("Not implemented");
+  };
+
+  onCloseIf = (): void => {
+    throw Error("Not implemented");
+  };
+
+  onFinalise = (): void => {
     throw Error("Not implemented");
   };
 

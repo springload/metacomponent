@@ -1,7 +1,7 @@
 import { parseHTMLWithoutInsertionMode } from "./parseMetaHTML";
 import {
   parseAttributeValue,
-  MetaAttributeValue,
+  MetaAttributeValues,
 } from "./parseMetaHTMLAttribute";
 import { parseMetaVariable } from "./parseMetaVariable";
 import {
@@ -68,7 +68,7 @@ export type MetaNodeInternal =
 export type MetaHTMLElement = {
   type: "Element";
   nodeName: string;
-  attributes: Record<string, MetaAttributeValue>;
+  attributes: Record<string, MetaAttributeValues>;
   children: MetaNode[];
   cssProperties: MetaCSSPropertiesNode[];
 };

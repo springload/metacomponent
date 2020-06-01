@@ -1,3 +1,5 @@
+import prettier from "prettier/standalone";
+import parserHTML from "prettier/parser-html";
 import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 
@@ -5,7 +7,7 @@ export class HTMLTemplate extends Template {
   html: string;
 
   constructor(args: OnConstructor) {
-    super({ templateId: args.templateId, dirname: "html" });
+    super({ ...args, dirname: "html" });
     this.html = "";
   }
 
@@ -54,6 +56,30 @@ export class HTMLTemplate extends Template {
   onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
     const { value } = onComment;
     this.html += `<!--${value}-->`;
+  };
+
+  onVariable = (variable: Parameters<TemplateFormat["onVariable"]>[0]) => {
+    this.html += `<!-- '${variable.id}' goes here -->`;
+  };
+
+  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
+    // pass
+  };
+
+  onCloseIf = () => {
+    // pass
+  };
+
+  onFinalise = () => {
+    try {
+      this.html = prettier.format(this.html, {
+        parser: "html",
+        printWidth: 80,
+        plugins: [parserHTML],
+      });
+    } catch (e) {
+      // pass
+    }
   };
 
   serialize = (

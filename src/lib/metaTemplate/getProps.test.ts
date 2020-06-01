@@ -10,7 +10,7 @@ test("Parsing document with mt-variable should generate props", () => {
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["someId"]).toEqual({
     required: true,
-    type: "PropTypeValue",
+    type: "PropTypeVariable",
   });
 });
 
@@ -24,7 +24,7 @@ test("Parsing document with mt-variable should generate optional props", () => {
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["someId"]).toEqual({
     required: false,
-    type: "PropTypeValue",
+    type: "PropTypeVariable",
   });
 });
 
@@ -38,7 +38,7 @@ test("Parsing document with mt-if should generate props", () => {
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["aThing"]).toEqual({
     required: true,
-    type: "PropTypeValue",
+    type: "PropTypeVariable",
   });
 });
 
@@ -52,7 +52,7 @@ test("Parsing document with mt-if should generate props", () => {
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["aThing"]).toEqual({
     required: false,
-    type: "PropTypeValue",
+    type: "PropTypeVariable",
   });
 });
 
@@ -97,7 +97,7 @@ test("Parsing document with attribute props that are options, without 'as' nice 
   );
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["href"]).toEqual({
-    type: "PropTypeAttributeValue",
+    type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
     required: true,
@@ -116,7 +116,7 @@ test("Parsing document with attribute props that are options, with 'as' nice nam
   );
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["href"]).toEqual({
-    type: "PropTypeAttributeValue",
+    type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
     required: true,
@@ -135,7 +135,7 @@ test("Parsing document with attribute props that are multiple options, with 'as'
   );
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["href"]).toEqual({
-    type: "PropTypeAttributeValue",
+    type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
     required: true,
@@ -155,10 +155,70 @@ test("Parsing document with attribute props that are optional, with multiple opt
   );
   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
   expect(result.metaTemplate.props["href"]).toEqual({
-    type: "PropTypeAttributeValue",
+    type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
     required: false,
+    options: {
+      Zombo: "http://zombo.com/",
+      Holloway: "https://holloway.nz",
+    },
+  });
+});
+
+test("Props with same id are prioritised", () => {
+  const result = callMetaTemplate(
+    "mt-variable-makes-props",
+    `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "",
+    true
+  );
+  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
+  expect(result.metaTemplate.props["href"]).toEqual({
+    type: "PropTypeAttributeValueOptions",
+    attributeName: "href",
+    nodeName: "a",
+    required: false,
+    options: {
+      Zombo: "http://zombo.com/",
+      Holloway: "https://holloway.nz",
+    },
+  });
+});
+
+test("Props with same id are prioritised, and have correct required status", () => {
+  const result = callMetaTemplate(
+    "mt-variable-makes-props",
+    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "",
+    true
+  );
+  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
+  expect(result.metaTemplate.props["href"]).toEqual({
+    type: "PropTypeAttributeValueOptions",
+    attributeName: "href",
+    nodeName: "a",
+    required: true,
+    options: {
+      Zombo: "http://zombo.com/",
+      Holloway: "https://holloway.nz",
+    },
+  });
+});
+
+test("Props with same id are prioritised, and have correct required status", () => {
+  const result = callMetaTemplate(
+    "mt-variable-makes-props",
+    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "",
+    true
+  );
+  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
+  expect(result.metaTemplate.props["href"]).toEqual({
+    type: "PropTypeAttributeValueOptions",
+    attributeName: "href",
+    nodeName: "a",
+    required: true,
     options: {
       Zombo: "http://zombo.com/",
       Holloway: "https://holloway.nz",
@@ -180,6 +240,6 @@ test("Parsing document with attribute props that are optional, with multiple opt
 //   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
 //   expect(result.metaTemplate.props["aThing"]).toEqual({
 //     required: false,
-//     type: "PropTypeValue",
+//     type: "PropTypeVariable",
 //   });
 // });
