@@ -1,5 +1,8 @@
+import { Log } from "../log";
+
 export const parseAttributeValue = (
-  metaHTMLAttributeValueString: string
+  metaHTMLAttributeValueString: string,
+  log: Log
 ): MetaAttributeValue => {
   const response: MetaAttributeValue = [];
   let remaining: string = metaHTMLAttributeValueString;
@@ -20,7 +23,8 @@ export const parseAttributeValue = (
       // a MetaAttributeVariable
       const endIndex = remaining.indexOf(end, startIndex);
       if (endIndex === -1) {
-        throw Error(`Attribute with ${start} but no ${end}.`);
+        log(`Attribute with ${start} but no ${end}.`);
+        return response;
       }
       const dkString = remaining.substring(start.length, endIndex);
       const metaVariable = parseMetaAttributeVariable(dkString);
@@ -82,7 +86,9 @@ export const parseMetaAttributeVariable = (
       // 1 or 2 array items.
       const parts: string[] = option.split(" as ");
       const name = parts.length === 2 ? parts[1].trim() : parts[0].trim();
-      options[name] = parts[0].trim();
+      if (name.length > 0) {
+        options[name] = parts[0].trim();
+      }
       return options;
     }, {});
 

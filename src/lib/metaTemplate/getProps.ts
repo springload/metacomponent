@@ -1,5 +1,4 @@
 import { MetaNodeInternal } from "./metaTemplate";
-import { MetaAttributeVariable } from "./parseMetaHTMLAttribute";
 import { Log } from "../log";
 
 type PropTypeAttributeValue = {

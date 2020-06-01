@@ -169,7 +169,7 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
     (attributes: MetaHTMLElement["attributes"], name: string) => {
       const attributeValue = htmlElement.getAttribute(name);
       if (attributeValue === null) throw Error(`Expected attribute value.`);
-      attributes[name] = parseAttributeValue(attributeValue);
+      attributes[name] = parseAttributeValue(attributeValue, log);
       return attributes;
     },
     {} as MetaHTMLElement["attributes"]

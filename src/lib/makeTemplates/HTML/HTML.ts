@@ -22,8 +22,13 @@ export class HTMLTemplate extends Template {
           if (attributeValue.type === "MetaAttributeConstant") {
             return attributeValue.value;
           } else if (attributeValue.type === "MetaAttributeVariableOptions") {
-            const firstKey = Object.keys(attributeValue.options)[0];
-            return attributeValue.options[firstKey];
+            const optionKeys = Object.keys(attributeValue.options);
+            if (optionKeys.length > 0) {
+              const firstKey = optionKeys[0];
+              const firstValue = attributeValue.options[firstKey];
+              return firstValue;
+            }
+            return "";
           }
           return "";
         })
