@@ -60,6 +60,7 @@ function App() {
       const endTime = Date.now();
       let newDebounceTime = endTime - startTime;
       newDebounceTime = newDebounceTime < 15 ? 15 : newDebounceTime;
+      console.log(`Debouncing calling MetaTemplate at ${newDebounceTime}ms`);
       setDebounceTime(newDebounceTime);
       setMetaTemplates(result);
     }, debounceTime);
