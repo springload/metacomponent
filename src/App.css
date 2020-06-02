@@ -25,8 +25,18 @@ fieldset {
 }
 
 fieldset legend {
-  font-size: x-large;
+  display: block;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  font-size: medium;
   font-weight: 300;
+}
+
+@media only screen and (min-width: 700px) {
+  fieldset legend {
+    font-size: x-large;
+    font-weight: 300;
+  }
 }
 
 textarea:focus {
@@ -52,9 +62,16 @@ textarea:focus {
   padding: 0.3em 0px 0px 0.2em;
   margin: 0px;
   color: #bbb;
-  font-size: medium;
+  font-size: small;
 
   text-align: left;
+}
+
+@media only screen and (min-width: 700px) {
+  .title_container {
+    font-size: medium;
+    font-weight: 400;
+  }
 }
 
 .iframe_container {
@@ -70,34 +87,60 @@ textarea:focus {
   grid-area: outputC;
 }
 
+#button_tray_container {
+  grid-area: menuC;
+}
+
 .MetaComponentDemo {
   display: grid;
   min-height: 100vh;
-  width: 100%;
-  min-width: 100vw;
-  grid-template-columns: 1fr 1fr;
+
+  grid-template-columns: 1fr;
   grid-template-rows: auto;
   grid-column-gap: 5px;
   grid-row-gap: 0px;
 
   grid-template-areas:
-    "titleC titleC"
-    "htmlC outputC"
-    "cssC outputC";
+    "titleC"
+    "menuC"
+    "htmlC"
+    "cssC"
+    "outputC";
+}
+
+@media only screen and (min-width: 700px) {
+  .MetaComponentDemo {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "titleC menuC"
+      "htmlC outputC"
+      "cssC outputC";
+  }
 }
 
 .tab {
   background: black;
   color: white;
-  font-size: small;
+  font-size: xx-small;
   border: solid 1px black;
   margin-right: 1px;
   padding: 0.2em 0.5em;
   vertical-align: middle;
 }
 
+.tab:hover {
+  background: #ccc;
+  color: #333;
+}
+
+@media only screen and (min-width: 700px) {
+  .tab {
+    font-size: x-small;
+  }
+}
+
 .tab--selected {
-  border: solid 1px #999;
+  border: solid 1px #777;
   border-bottom: none;
 }
 
@@ -119,7 +162,7 @@ button {
 
 .modal-content__body {
   position: absolute;
-  right: 0px;
+  right: 50px;
   top: 0px;
   max-width: 400px;
   padding: 20px 20px 100px 20px;
@@ -128,6 +171,7 @@ button {
   border: solid 1px #787;
   line-height: 1.4;
 }
+
 .modal-content__body ul {
   margin: 0px 0px 0px 1em;
   padding: 0px;
@@ -155,6 +199,11 @@ button {
   font-size: small;
 }
 
+.what-button:hover {
+  background: #ccc;
+  color: #333;
+}
+
 .close_button {
   background: black;
   color: white;
@@ -165,10 +214,13 @@ button {
   border: inset 1px #000;
 }
 
+.close_button:hover {
+  background: #ccc;
+  color: #000;
+}
+
 .button-tray {
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  text-align: right;
 }
 
 .button-tray__link {

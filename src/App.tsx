@@ -146,17 +146,17 @@ function App() {
         contentLabel="What is MetaHTML?"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="modal-content" onClick={closeWhatModal}>
+        <div className="modal-content" onClick={closeWhatModal} id="what-modal">
           <div
             className="modal-content__body"
             onClick={(e) => e.stopPropagation()}
           >
             <button onClick={closeWhatModal} className="close_button">
-              close ✘
+              close <span aria-hidden> ✘</span>
             </button>
             <div dangerouslySetInnerHTML={{ __html: whatIsMetaHTML }}></div>
             <button onClick={closeWhatModal} className="close_button">
-              close ✘
+              close <span aria-hidden> ✘</span>
             </button>
           </div>
         </div>
@@ -168,25 +168,30 @@ function App() {
         contentLabel="Why is MetaComponent?"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="modal-content" onClick={closeWhatModal}>
+        <div className="modal-content" onClick={closeWhatModal} id="why-modal">
           <div
             className="modal-content__body"
             onClick={(e) => e.stopPropagation()}
           >
             <button onClick={closeWhyModal} className="close_button">
-              close ✘
+              close <span aria-hidden> ✘</span>
             </button>
             <div dangerouslySetInnerHTML={{ __html: whyIsMetaComponent }}></div>
 
             <button onClick={closeWhyModal} className="close_button">
-              close ✘
+              close <span aria-hidden> ✘</span>
             </button>
           </div>
         </div>
       </Modal>
       <div className="MetaComponentDemo">
-        <div className="button-tray">
-          <button onClick={openWhyModal} className="button-tray__link">
+        <div id="button_tray_container" className="button-tray">
+          <button
+            onClick={openWhyModal}
+            className="button-tray__link"
+            aria-expanded={isWhyOpen}
+            aria-controls="why-modal"
+          >
             Why MetaComponent?
           </button>
           <a
@@ -202,8 +207,14 @@ function App() {
         <fieldset className="html_container">
           <legend>
             MetaHTML
-            <button onClick={openWhatModal} className="what-button">
-              (Why MetaHTML?)
+            <button
+              onClick={openWhatModal}
+              className="what-button"
+              aria-label="Why MetaHTML?"
+              aria-expanded={isWhatOpen}
+              aria-controls="what-modal"
+            >
+              ?
             </button>
           </legend>
           <AceEditor
@@ -332,41 +343,45 @@ export default App;
 const whatIsMetaHTML = marked(`
 ## MetaHTML ?
 
-The reason why we need non-standard HTML is to mark which parts should be configurable, as variables.
+The reason we need non-standard HTML is to mark which parts should be configurable, as variables.
 
 MetaHTML is standard HTML with two types of variables, for attributes and elements:
 
 - attributes:
-  - For making a required variable string write \`{{ variableName }}\` eg \`<span class="{{ class }}">\`
-    - Use a \`?\` after the variable name to make it optional \`{{ someVariable? }}\`.
-    - Multiple variables can exist in an attribute value, write them like \`<span class="{{ class }}{{ otherClass }}">\`
-  - You can make enumerations like \`{{ variableName:
-    option1 | option2
-  }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate React TypeScript to require that variable.
-  - You can make enumerations with friendly by adding \`as name\` to each option. Eg  \`{{ variableName: box--color-red as Red | box--color-blue as Blue }}\`
+  - \`<span class="{{ someVariable }}">\`
+    - \`?\` makes it optional \`{{ someVariable? }}\`.
+    - multiple variables \`<span class="{{ class }}{{ otherClass }}">\`
+  - enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate React TypeScript to require that option.
+  - label enumerations with friendly names with \`as FriendlyName\` eg  \`{{ variableName: box--color-red as Red | box--color-blue as Blue }}\`. Enumerations may only be strings.
+- elements:
+  - \`<mt-variable id="variableName">\` eg \`<div><mt-variable key="children"></div>\`
+  - conditional logic \`<mt-if test="isShown">thing to show</mt-if>\`. JavaScript expressions are supported and normalized. It should be possible to convert basic JavaScript expressions into equivalents in other languages.
 
-- elements
-  - Use \`<mt-variable key="variableName">\` to insert a variable such as \`children\` eg \`<div><mt-variable key="children"></div>\`
-  - if you want conditional logic there is \`<mt-if test="isShown">thing to show</mt-if>\`. JavaScript expressions are supported and normalized. It would be possible to convert basic JavaScript expressions into equivalents in other template languages.
+MetaHTML is for generating stateless components, just the HTML and CSS. Logic should be in a higher-order components (HOC).
 
+MetaComponent is for _the very front of the front-end_
 `);
 
 const whyIsMetaComponent = marked(`
 ## Why MetaComponent?
 
-It's often the case that large organisations and governments, for a variety of reasons, have a large variety of frontend technology.
+It's often the case that large organisations and governments, for a variety of reasons, have a large variety of web template technology.
 
-They use React, Angular, Vue, Handlebars, Jinja2, Twig, and more.
+They use React, Vue, Angular, Handlebars, Jinja2, Twig, and many, many more.
 
-As a result, their organisation's websites behave and look very differently.
+As a result, websites feel quite different.
 
-If you wanted to unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems (Pattern Libraries) to publish advice and components.
+If you wanted to unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems (and Pattern Libraries) where you'd publish advice, and components.
 
-It would be a lot of manual work to support all of those web frameworks, so typically Design Systems choose HTML/CSS and only one additional format that they write manually, by hand. Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and technology stacks that don't support that format are left to implement the HTML/CSS manually.
+It would be a lot of manual work to support all of those web frameworks, and so typically Design Systems choose HTML/CSS and only one additional component format that they write manually by hand.
 
-This approach solves one problem but it also creates a technical barrier that may hinder adoption of their Design System.
+Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and technology stacks that don't support that format are left to fend for themselves by implementing the HTML/CSS manually by hand.
 
-MetaComponent tries to complement Design Systems by generating components for each framework to make it easiser to adopt.
+Design Systems often solves one problem (standardising HTML/CSS) while creating new technical barriers that may hinder adoption.
 
-_it's the very front of the front-end_
+If you consider situations like governments or large organisations with many different technology stacks, it may not be practical to converge template formats, or there might be good reasons for divergence.
+
+MetaComponent tries to complement Design Systems by generating components for many frameworks to make it easiser to adopt.
+
+MetaComponent is for _the very front of the front-end_
 `);
