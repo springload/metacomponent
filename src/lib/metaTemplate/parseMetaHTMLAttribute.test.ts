@@ -198,11 +198,11 @@ test("MetaAttribute variable with options with 'as'", () => {
   expect(index1.options["Frush"]).toEqual("frush");
 });
 
-test("MetaAttribute css properties conditional", () => {
+test("MetaAttribute cssProperties conditional", () => {
   const result = callMetaTemplate(
     "meta attribute",
     `<h1 class="{{ colour?: my-style--blue as blue }}">test</h1>`,
-    "my-style--blue { color: blue }",
+    ".my-style--blue { color: blue }",
     true
   );
   const node = result.metaTemplate.nodes[0];
@@ -215,7 +215,7 @@ test("MetaAttribute css properties conditional", () => {
   expect(cssProperties[0].type).toBe("MetaCSSPropertiesConditionalNode");
 });
 
-test("MetaAttribute css properties constant", () => {
+test("MetaAttribute cssProperties constant", () => {
   const result = callMetaTemplate(
     "meta attribute",
     `<h1 class="thing">test</h1>`,
@@ -230,4 +230,36 @@ test("MetaAttribute css properties constant", () => {
   const cssProperties = node.cssProperties;
   expect(cssProperties.length).toBe(1);
   expect(cssProperties[0].type).toBe("MetaCSSPropertiesConstantNode");
+});
+
+test("MetaAttribute cssProperties constant is treeshaken when not matching", () => {
+  const result = callMetaTemplate(
+    "meta attribute",
+    `<h1 class="thing">test</h1>`,
+    "",
+    true
+  );
+  const node = result.metaTemplate.nodes[0];
+  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  if (node.type !== "Element") {
+    throw Error("Should be 'Element'."); // narrowing TS typing
+  }
+  const cssProperties = node.cssProperties;
+  expect(cssProperties.length).toBe(0);
+});
+
+test("MetaAttribute cssProperties conditional is treeshaken when not matching", () => {
+  const result = callMetaTemplate(
+    "meta attribute",
+    `<h1 class="{{ thing: blah }}">test</h1>`,
+    "",
+    true
+  );
+  const node = result.metaTemplate.nodes[0];
+  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  if (node.type !== "Element") {
+    throw Error("Should be 'Element'."); // narrowing TS typing
+  }
+  const cssProperties = node.cssProperties;
+  expect(cssProperties.length).toBe(0);
 });

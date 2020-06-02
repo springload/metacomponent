@@ -58,7 +58,6 @@ export class CSSTemplate extends Template {
       });
     } catch (e) {
       // pass
-      console.log(e);
     }
 
     return {

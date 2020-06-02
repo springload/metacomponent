@@ -240,11 +240,16 @@ function getAllMatchingCSSProperties(
               const cssPropertiesString = serializeCSSMatchesAsProperties(
                 cssRoot
               );
-              cssProperties.push({
-                type: "MetaCSSPropertiesConditionalNode",
-                condition: { id: attributeValue.id, equalsString: optionName },
-                cssPropertiesString,
-              });
+              if (cssPropertiesString) {
+                cssProperties.push({
+                  type: "MetaCSSPropertiesConditionalNode",
+                  condition: {
+                    id: attributeValue.id,
+                    equalsString: optionName,
+                  },
+                  cssPropertiesString,
+                });
+              }
               if (resetValue) {
                 element.setAttribute(attributeName, resetValue);
               }
