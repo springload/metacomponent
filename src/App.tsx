@@ -189,6 +189,7 @@ function App() {
           <button
             onClick={openWhyModal}
             className="button-tray__link"
+            aria-label="Open modal explaining MetaComponent"
             aria-expanded={isWhyOpen}
             aria-controls="why-modal"
           >
@@ -199,8 +200,9 @@ function App() {
             target="_blank"
             rel="noreferrer noopener"
             className="button-tray__link"
+            aria-label="GitHub Repo"
           >
-            repo
+            Repo
           </a>
         </div>
         <h1 className="title_container">MetaComponent REPL </h1>

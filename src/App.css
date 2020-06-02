@@ -226,15 +226,17 @@ button {
 .button-tray__link {
   background: none;
   border: none;
-  padding: 5px 2em;
-  font-size: xx-small;
-  color: #39f;
+  padding: 1em 2em;
+  font-size: x-small;
+  color: #7cf;
+  font-weight: 600;
   text-decoration: none;
 }
 
 .button-tray__link:focus,
 .button-tray__link:hover {
   text-decoration: underline;
+  text-underline-offset: 0.5em;
   text-decoration-color: white;
 }
 
