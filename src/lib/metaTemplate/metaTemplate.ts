@@ -211,10 +211,16 @@ function getAllMatchingCSSProperties(
 
   const resetMatchedCSS = cssSniff([element], { ignoreChildren: true });
 
-  cssProperties.push({
-    type: "MetaCSSPropertiesConstantNode",
-    cssPropertiesString: serializeCSSMatchesAsProperties(resetMatchedCSS),
-  });
+  const cssPropertiesStringConstants = serializeCSSMatchesAsProperties(
+    resetMatchedCSS
+  );
+
+  if (cssPropertiesStringConstants) {
+    cssProperties.push({
+      type: "MetaCSSPropertiesConstantNode",
+      cssPropertiesString: cssPropertiesStringConstants,
+    });
+  }
 
   Object.keys(attributes)
     .filter(attributesThatCanBeSet)
