@@ -1,44 +1,60 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MetaComponent 🦚
 
-## Available Scripts
+MetaComponent is a web template generator that can take a single component definition and output...
 
-In the project directory, you can run:
+- [*] CSS
+- [*] HTML
+- [*] React (TypeScript)
+- [*] React with Styled-Components
+- [ ] Vue _(beta)_
+- [ ] Angular _(beta)_
+- [ ] Mustache/Handlebars _(beta)_
+- [ ] Twig (Drupal / PHP) _(beta)_
 
-### `yarn start`
+This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## :gift: Features
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- [+] Single-source template generator.
+- [+] MetaComponent bundles only the CSS relevant to your HTML, so give it your whole CSS file and then MetaComponent will try to 'tree shake' your CSS, SCSS, and Styled Components declarations.
+- [ ] It can generate code examples to show example usage of these component formats.
 
-### `yarn test`
+## Install
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`npm i @springload/MetaComponent` or `yarn add @springload/MetaComponent`.
 
-### `yarn build`
+## :crystal_ball: Future
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- More template formats... contribute your favourite!
+- Better CSS support.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## :warning: Limitations
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- The CSS 'tree shaking' can't handle complicated CSS such as `:not(.class)` and probably other features too, so check the output formats yourself. Instead it prefers a BEM approach.
 
-### `yarn eject`
+## :satellite: API
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+TypeScript types are provided.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+_TODO_
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### MetaHTML ?
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The reason why we need to use non-standard HTML is to know which parts should be configurable, as variables.
 
-## Learn More
+MetaHTML is standard HTML with two types of template variables:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Those variables in attribute values:
+  - For making a required variable string: `{{ variableName }}` eg `<span class="{{ class }}">`
+    - Use a `?` after the variable name to make it optional
+    - Multiple variables can exist in an attribute value, write them like `<span class="{{ class }}{{ otherClass }}">`
+  - For making a required variable with enumerations `{{ variableName: option1 | option2 }}` eg `<span class="{{ color: class-red | class-blue }}">`
+  - For making a variable with enumerations that have friendly names `{{ variableName: option1 as Option1 | option2 as Option2 }}` eg `&lt;span class="{{ color: class-red as Red | class-blue as Blue }}"&gt;`
+- Those variables that are childNodes between elements:
+  - Use `<mt-variable key="variableName">default value</mt-variable>` eg if you want a component variable named "children" in an `&lt;h1&gt;` you'd write `<h1><mt-variable key="children">placeholder</mt-variable></h1>`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+There is also template `if` support as `<mt-if key="isShown">thing to show</mt-if>`.
+
+# Out of scope
+
+- Loops. We support `children` values (childNodes) so you could just nest other components instead. Maybe we don't need this.
