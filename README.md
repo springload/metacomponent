@@ -2,22 +2,26 @@
 
 MetaComponent is a web template generator that can take a single component definition and output...
 
-- [*] CSS
-- [*] HTML
-- [*] React (TypeScript)
-- [*] React with Styled-Components
-- [ ] Vue _(beta)_
-- [ ] Angular _(beta)_
-- [ ] Mustache/Handlebars _(beta)_
-- [ ] Twig (Drupal / PHP) _(beta)_
+- [x] HTML
+- [x] CSS
+- [x] React (TypeScript)
+- [x] React with Styled-Components
+- [ ] Vue
+- [ ] Angular
+- [ ] Mustache/Handlebars
+- [ ] Twig (Drupal / PHP)
 
 This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
 
 ## :gift: Features
 
-- [+] Single-source template generator.
-- [+] MetaComponent bundles only the CSS relevant to your HTML, so give it your whole CSS file and then MetaComponent will try to 'tree shake' your CSS, SCSS, and Styled Components declarations.
+- [x] Single-source template generator.
+- [x] MetaComponent bundles only the CSS relevant to your HTML, so give it your whole CSS file and then MetaComponent will try to 'tree shake' your CSS, SCSS, and Styled Components declarations.
 - [ ] It can generate code examples to show example usage of these component formats.
+
+## DEMO
+
+Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 
 ## Install
 
@@ -36,7 +40,7 @@ This is particularly useful for Design Systems and Pattern Libraries where a sin
 
 TypeScript types are provided.
 
-_TODO_
+_Docs TODO_
 
 #### MetaHTML ?
 
