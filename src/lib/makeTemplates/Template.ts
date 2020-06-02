@@ -37,7 +37,7 @@ type OnSerialize = {
   css: string;
 };
 
-export class Template implements TemplateFormat {
+export class Template {
   dirname: string;
   templateId: string;
   props: Props;
@@ -51,47 +51,43 @@ export class Template implements TemplateFormat {
     this.hasMultipleRootNodes = hasMultipleRootNodes;
   }
 
-  onElement = (
+  onElement(
     onElement: Parameters<TemplateFormat["onElement"]>[0]
-  ): ReturnType<TemplateFormat["onElement"]>[0] => {
+  ): ReturnType<TemplateFormat["onElement"]>[0] {
     throw Error("Not implemented");
-  };
+  }
 
-  onCloseElement = (
-    args: Parameters<TemplateFormat["onCloseElement"]>[0]
-  ): void => {
+  onCloseElement(args: Parameters<TemplateFormat["onCloseElement"]>[0]): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onText = (onText: Parameters<TemplateFormat["onText"]>[0]): void => {
+  onText(onText: Parameters<TemplateFormat["onText"]>[0]): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+  onComment(onComment: Parameters<TemplateFormat["onComment"]>[0]): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onVariable = (
-    onVariable: Parameters<TemplateFormat["onVariable"]>[0]
-  ): void => {
+  onVariable(onVariable: Parameters<TemplateFormat["onVariable"]>[0]): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]): void => {
+  onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onCloseIf = (): void => {
+  onCloseIf(): void {
     throw Error("Not implemented");
-  };
+  }
 
-  onFinalise = (): void => {
+  onFinalise(): void {
     throw Error("Not implemented");
-  };
+  }
 
-  serialize = (
+  serialize(
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles => {
+  ): TemplateFiles {
     throw Error("Not implemented");
-  };
+  }
 }

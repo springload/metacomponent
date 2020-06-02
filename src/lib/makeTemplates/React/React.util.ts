@@ -25,6 +25,12 @@ export function attributeNameTransform(attributeName: string): string {
 export function getTypeScriptElementName(tagName: string): string {
   switch (tagName) {
     case "p":
+    case "h1":
+    case "h2":
+    case "h3":
+    case "h4":
+    case "h5":
+    case "h6":
       return "";
     case "a": {
       return "Anchor";

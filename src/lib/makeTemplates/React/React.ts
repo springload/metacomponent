@@ -10,26 +10,39 @@ import {
 import { validJavaScriptIdentifer } from "../utils";
 
 export class ReactTemplate extends Template {
+  imports: string;
   render: string;
   typeScript: string;
+  constants: string;
   fileData: string;
 
   constructor(args: OnConstructor) {
-    super({ ...args, dirname: "react" });
+    super({ ...args, dirname: args.dirname || "react" });
 
+    this.imports = "";
     this.render = "";
     this.typeScript = "";
     this.fileData = "";
-    this.renderTypeScript();
+    this.constants = "";
+
+    this.setTypeScript = this.setTypeScript.bind(this);
+    this.renderPropType = this.renderPropType.bind(this);
+
+    this.setImports();
+    this.setTypeScript();
     this.renderRenderFunction();
   }
 
-  renderTypeScript = () => {
-    const props = Object.keys(this.props).map(this.getPropType).join("\n  ");
-    this.typeScript = `type Props = {\n  ${props}\n};`;
-  };
+  setImports() {
+    this.imports += `import React from 'react';\n`;
+  }
 
-  getPropType = (propId: string): string => {
+  setTypeScript() {
+    const props = Object.keys(this.props).map(this.renderPropType).join("\n  ");
+    this.typeScript = `type Props = {\n  ${props}\n};`;
+  }
+
+  renderPropType(propId: string): string {
     const prop = this.props[propId];
     let propString = "";
 
@@ -66,9 +79,9 @@ export class ReactTemplate extends Template {
     }
 
     return propString;
-  };
+  }
 
-  renderRenderFunction = () => {
+  renderRenderFunction() {
     const propIds = Object.keys(this.props);
     const containsInvalidIdentifiers = propIds.some(
       (propId) => !validJavaScriptIdentifer.test(propId)
@@ -90,11 +103,11 @@ export class ReactTemplate extends Template {
     if (this.hasMultipleRootNodes) {
       this.render += `<React.Fragment>`;
     }
-  };
+  }
 
-  onElement = (
+  onElement(
     onElement: Parameters<TemplateFormat["onElement"]>[0]
-  ): ReturnType<TemplateFormat["onElement"]>[0] => {
+  ): ReturnType<TemplateFormat["onElement"]>[0] {
     const { nodeName, attributes } = onElement;
     this.render += `<${nodeName}`;
     Object.keys(attributes).forEach((attributeName) => {
@@ -102,12 +115,12 @@ export class ReactTemplate extends Template {
     });
     this.render += ">";
     return nodeName;
-  };
+  }
 
-  renderAttribute = (
+  renderAttribute(
     attributeName: string,
     attributeValues: MetaAttributeValues
-  ): void => {
+  ): void {
     // TODO: escape attribute values and keys
     const reactAttributeName = attributeNameTransform(attributeName);
     this.render += ` ${reactAttributeName}=`;
@@ -147,9 +160,9 @@ export class ReactTemplate extends Template {
     } else {
       this.render += '"';
     }
-  };
+  }
 
-  renderAttributeValue = (attributeValue: MetaAttributeValue) => {
+  renderAttributeValue(attributeValue: MetaAttributeValue) {
     switch (attributeValue.type) {
       case "MetaAttributeConstant": {
         this.render += attributeValue.value;
@@ -174,51 +187,51 @@ export class ReactTemplate extends Template {
         )}})[${identifier}]`;
       }
     }
-  };
+  }
 
-  onCloseElement = (
+  onCloseElement(
     onCloseElement: Parameters<TemplateFormat["onCloseElement"]>[0]
-  ): void => {
+  ): void {
     const { openingElement } = onCloseElement;
     this.render += `\n</${openingElement}>\n`;
-  };
+  }
 
-  onText = (onText: Parameters<TemplateFormat["onText"]>[0]): void => {
+  onText(onText: Parameters<TemplateFormat["onText"]>[0]): void {
     const { value } = onText;
     this.render += value;
-  };
+  }
 
-  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+  onComment(onComment: Parameters<TemplateFormat["onComment"]>[0]): void {
     const { value } = onComment;
     this.render += `<!--${value}-->`;
-  };
+  }
 
-  onVariable = (variable: Parameters<TemplateFormat["onVariable"]>[0]) => {
+  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     this.render += `{${
       validJavaScriptIdentifer.test(variable.id)
         ? variable.id
         : `props["${variable.id}"]`
     }}`;
-  };
+  }
 
-  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
+  onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {
     if (onIf.parseError === false) {
       this.render += `{${onIf.testAsJavaScriptExpression} && (<React.Fragment>`;
     } else {
       this.render += `{false && (<React.Fragment>`;
     }
-  };
+  }
 
-  onCloseIf = () => {
+  onCloseIf() {
     this.render += `</React.Fragment>)}`;
-  };
+  }
 
-  onFinalise = () => {
+  onFinalise() {
     if (this.hasMultipleRootNodes) {
       this.render += `</React.Fragment>`;
     }
 
-    this.fileData = `import React from 'react';\n\n${this.typeScript}\n\n${this.render}\n  )\n};\n`;
+    this.fileData = `${this.imports}\n${this.typeScript}\n\n${this.constants}\n\n${this.render}\n  )\n};\n`;
 
     try {
       this.fileData = prettier.format(this.fileData, {
@@ -229,13 +242,13 @@ export class ReactTemplate extends Template {
     } catch (e) {
       // pass
     }
-  };
+  }
 
-  serialize = (
+  serialize(
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles => {
+  ): TemplateFiles {
     return {
       [`${this.dirname}/${this.templateId}.tsx`]: this.fileData,
     };
-  };
+  }
 }

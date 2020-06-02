@@ -26,9 +26,11 @@ const defaultValues = {
     `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <mt-variable id="children">\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
-    `.my-style { padding: 5px }\n.my-style--blue{ background: blue }\n.my-style--red{ background: red }\n/* this CSS isn't used and will be tree shaken */\n.treeShake { color: green; }`,
+    `.my-style { padding: 5px }\n.my-style--blue{ color: blue }\n.my-style--red{ color: red }\n/* this CSS isn't used and will be tree shaken */\n.treeShake { color: green; }`,
   resultIndex,
 };
+
+const templateId = "MyComponent";
 
 function App() {
   const [metaHTML, setMetaHTML] = useState<string>(defaultValues.metaHTML);
@@ -54,7 +56,7 @@ function App() {
       const startTime = Date.now();
       const result = generateTemplates({
         domDocument,
-        templateId: "MyComponent",
+        templateId,
         metaHTMLString: metaHTML,
         cssString: css,
         haltOnErrors: false,
@@ -87,6 +89,30 @@ function App() {
       ? aceMode(filePaths[resultIndex - 1])
       : "json";
 
+  const markers = [];
+  if (
+    resultIndex > 0 &&
+    filePaths[resultIndex - 1] &&
+    pathType(filePaths[resultIndex - 1]).includes("react")
+  ) {
+    const templateIdIndex = outputValue.indexOf(templateId);
+    const outputValueBefore = outputValue.substring(0, templateIdIndex);
+    const rowIndex =
+      outputValueBefore.length - outputValueBefore.replace(/\n/g, "").length;
+
+    const startCol = outputValue.split("\n")[rowIndex].indexOf(templateId);
+
+    markers.push({
+      startRow: rowIndex,
+      startCol,
+      endRow: rowIndex,
+      endCol: startCol + templateId.length - 1,
+      className: "mt-tooltip",
+      type: "text" as const,
+      inFront: true,
+    });
+  }
+
   return (
     <div className="MetaTemplateDemo">
       <h1 className="title_container">MetaTemplate REPL</h1>
@@ -107,7 +133,7 @@ function App() {
       </fieldset>
 
       <fieldset className="css_container">
-        <legend>CSS</legend>
+        <legend>Standard CSS</legend>
         <AceEditor
           mode="css"
           theme={theme}
@@ -184,6 +210,7 @@ function App() {
           width="100%"
           height="100%"
           showGutter={false}
+          markers={markers}
         />
       </fieldset>
     </div>

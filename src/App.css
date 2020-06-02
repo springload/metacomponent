@@ -89,3 +89,10 @@ textarea:focus {
 .tab--selected {
   outline: solid 1px white;
 }
+
+.mt-tooltip {
+  background: rgba(255, 255, 0, 0.1);
+  color: black;
+  padding: 3px;
+  position: absolute;
+}

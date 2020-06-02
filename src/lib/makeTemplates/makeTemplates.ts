@@ -4,6 +4,7 @@ import { TemplateFiles } from "../types";
 import { CSSTemplate } from "./CSS/CSS";
 import { HTMLTemplate } from "./HTML/HTML";
 import { ReactTemplate } from "./React/React";
+import { ReactStyledComponentsTemplate } from "./ReactStyledComponents/ReactStyledComponents";
 import { Template, OnConstructor } from "./Template";
 
 type MakeTemplatesProps = {
@@ -23,7 +24,12 @@ export function makeTemplates({
   return mergeTemplateFiles(
     makeTemplate(templateId, metaTemplate, new HTMLTemplate(args)),
     makeTemplate(templateId, metaTemplate, new CSSTemplate(args)),
-    makeTemplate(templateId, metaTemplate, new ReactTemplate(args))
+    makeTemplate(templateId, metaTemplate, new ReactTemplate(args)),
+    makeTemplate(
+      templateId,
+      metaTemplate,
+      new ReactStyledComponentsTemplate(args)
+    )
   );
 }
 
