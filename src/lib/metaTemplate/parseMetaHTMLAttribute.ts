@@ -3,8 +3,8 @@ import { Log } from "../log";
 export const parseAttributeValue = (
   metaHTMLAttributeValueString: string,
   log: Log
-): MetaAttributeValues => {
-  const response: MetaAttributeValues = [];
+): MetaAttributeValuesInternal => {
+  const response: MetaAttributeValuesInternal = [];
   let remaining: string = metaHTMLAttributeValueString;
   const start = "{{" as const;
   const end = "}}" as const;
@@ -44,7 +44,7 @@ export const parseAttributeValue = (
 
 export const parseMetaAttributeVariable = (
   dk: string
-): MetaAttributeVariable | MetaAttributeVariableOptions => {
+): MetaAttributeVariableInternal | MetaAttributeVariableOptionsInternal => {
   const SEPARATOR = ":";
   const ENUM_SEPARATOR = "|";
   const OPTIONAL = "?";
@@ -103,13 +103,11 @@ export const parseMetaAttributeVariable = (
 export type MetaAttributeVariable = {
   type: "MetaAttributeVariable";
   id: string;
-  required: boolean;
 };
 
 export type MetaAttributeVariableOptions = {
   type: "MetaAttributeVariableOptions";
   id: string;
-  required: boolean;
   options: Record<string, string>;
 };
 
@@ -117,6 +115,20 @@ export type MetaAttributeConstant = {
   type: "MetaAttributeConstant";
   value: string;
 };
+
+type MetaAttributeVariableInternal = MetaAttributeVariable & {
+  required: boolean;
+};
+type MetaAttributeVariableOptionsInternal = MetaAttributeVariableOptions & {
+  required: boolean;
+};
+
+export type MetaAttributeValueInternal =
+  | MetaAttributeConstant
+  | MetaAttributeVariableInternal
+  | MetaAttributeVariableOptionsInternal;
+
+export type MetaAttributeValuesInternal = MetaAttributeValueInternal[];
 
 export type MetaAttributeValue =
   | MetaAttributeConstant

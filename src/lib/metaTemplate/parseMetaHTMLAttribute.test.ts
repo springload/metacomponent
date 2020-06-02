@@ -42,7 +42,8 @@ test("MetaAttribute with constant and variable", () => {
       `Expected index1 to be "MetaAttributeVariable" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props).toHaveProperty("frogs");
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
 });
 
@@ -68,7 +69,8 @@ test("MetaAttribute variable with incomplete options", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props).toHaveProperty("frogs");
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(0);
 });
@@ -95,7 +97,8 @@ test("MetaAttribute variable with incomplete with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props).toHaveProperty("frogs");
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(2);
   expect(index1.options).toHaveProperty("Froggy");
@@ -126,7 +129,7 @@ test("MetaAttribute variable with option without 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(1);
   expect(index1.options).toHaveProperty("froggy");
@@ -155,7 +158,8 @@ test("MetaAttribute variable with option with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props).toHaveProperty("frogs");
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(1);
   expect(index1.options).toHaveProperty("Froggy");
@@ -184,7 +188,8 @@ test("MetaAttribute variable with options with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(index1.required).toBe(true);
+  expect(result.metaTemplate.props).toHaveProperty("frogs");
+  expect(result.metaTemplate.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(2);
   expect(index1.options).toHaveProperty("Froggy");

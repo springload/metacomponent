@@ -26,7 +26,7 @@ test("Optional false", () => {
   const node = result.metaTemplate.nodes[0];
   expect(result.metaTemplate.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
-  expect(node.optional).toBe(false);
+  expect(result.metaTemplate.props["frog"].required).toBe(true);
 });
 
 test("Optional true", () => {
@@ -39,7 +39,7 @@ test("Optional true", () => {
   const node = result.metaTemplate.nodes[0];
   expect(result.metaTemplate.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
-  expect(node.optional).toBe(true);
+  expect(result.metaTemplate.props["frog"].required).toBe(false);
 });
 
 test("Throws on syntax error with haltOnErrors=true", () => {

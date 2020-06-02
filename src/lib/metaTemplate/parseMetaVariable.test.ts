@@ -10,7 +10,7 @@ test("MetaVariable", () => {
   const node = result.metaTemplate.nodes[0];
   expect(node.type).toBe("Variable");
   if (node.type !== "Variable") throw Error("Should be 'Variable'."); // narrowing TS typing
-  expect(node.optional).toBe(false);
+  expect(result.metaTemplate.props["thing"].required).toBe(true);
 });
 
 test("MetaVariable", () => {
@@ -23,7 +23,7 @@ test("MetaVariable", () => {
   const node = result.metaTemplate.nodes[0];
   expect(node.type).toBe("Variable");
   if (node.type !== "Variable") throw Error("Should be 'Variable'."); // narrowing TS typing
-  expect(node.optional).toBe(true);
+  expect(result.metaTemplate.props["thing"].required).toBe(false);
   expect(node.id).toBe("thing");
 });
 
@@ -37,7 +37,7 @@ test("MetaVariable", () => {
   const node = result.metaTemplate.nodes[0];
   expect(node.type).toBe("Variable");
   if (node.type !== "Variable") throw Error("Should be 'Variable'."); // narrowing TS typing
-  expect(node.optional).toBe(true);
+  expect(result.metaTemplate.props["thing"].required).toBe(false);
   expect(node.id).toBe("thing");
 });
 

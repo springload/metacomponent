@@ -162,13 +162,16 @@ export class ReactTemplate extends Template {
         break;
       }
       case "MetaAttributeVariableOptions": {
+        const identifier = validJavaScriptIdentifer.test(attributeValue.id)
+          ? attributeValue.id
+          : `props["${attributeValue.id}"]`;
+
+        if (!this.props[attributeValue.id].required) {
+          this.render += `${identifier} && `;
+        }
         this.render += `({${Object.keys(attributeValue.options).map(
           (optionKey) => `"${optionKey}":"${attributeValue.options[optionKey]}"`
-        )}})[${
-          validJavaScriptIdentifer.test(attributeValue.id)
-            ? attributeValue.id
-            : `props["${attributeValue.id}"]`
-        }]`;
+        )}})[${identifier}]`;
       }
     }
   };

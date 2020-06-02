@@ -1,7 +1,9 @@
 import { parseHTMLWithoutInsertionMode } from "./parseMetaHTML";
 import {
   parseAttributeValue,
+  MetaAttributeValue,
   MetaAttributeValues,
+  MetaAttributeValuesInternal,
 } from "./parseMetaHTMLAttribute";
 import { parseMetaVariable } from "./parseMetaVariable";
 import {
@@ -62,7 +64,7 @@ export type MetaNodeInternal =
   | MetaHTMLElementInternal
   | MetaHTMLText
   | MetaHTMLComment
-  | MetaHTMLVariable
+  | MetaHTMLVariableInternal
   | MetaHTMLIfInternal;
 
 export type MetaHTMLElement = {
@@ -73,8 +75,12 @@ export type MetaHTMLElement = {
   cssProperties: MetaCSSPropertiesNode[];
 };
 
-export type MetaHTMLElementInternal = Omit<MetaHTMLElement, "children"> & {
+export type MetaHTMLElementInternal = Omit<
+  MetaHTMLElement,
+  "children" | "attributes"
+> & {
   children: MetaNodeInternal[];
+  attributes: Record<string, MetaAttributeValuesInternal>;
   node: HTMLElement;
 };
 
@@ -100,12 +106,16 @@ export type MetaHTMLComment = { type: "Comment"; value: string };
 export type MetaHTMLVariable = {
   type: "Variable";
   id: string;
+};
+
+export type MetaHTMLVariableInternal = {
+  type: "Variable";
+  id: string;
   optional: boolean;
 };
 
 type MetaHTMLIfBase = {
   type: "If";
-  optional: boolean;
   children: MetaNode[];
 };
 
@@ -125,10 +135,12 @@ export type MetaHTMLIf = MetaHTMLIfSuccess | MetaHTMLIfFailure;
 
 export type MetaHTMLIfSuccessInternal = Omit<MetaHTMLIfSuccess, "children"> & {
   children: MetaNodeInternal[];
+  optional: boolean;
 };
 
 export type MetaHTMLIfFailureInternal = Omit<MetaHTMLIfFailure, "children"> & {
   children: MetaNodeInternal[];
+  optional: boolean;
 };
 
 export type MetaHTMLIfInternal =
@@ -166,13 +178,13 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
   }
 
   const attributes = names.reduce(
-    (attributes: MetaHTMLElement["attributes"], name: string) => {
+    (attributes: MetaHTMLElementInternal["attributes"], name: string) => {
       const attributeValue = htmlElement.getAttribute(name);
       if (attributeValue === null) throw Error(`Expected attribute value.`);
       attributes[name] = parseAttributeValue(attributeValue, log);
       return attributes;
     },
-    {} as MetaHTMLElement["attributes"]
+    {} as MetaHTMLElementInternal["attributes"]
   );
 
   const cssProperties = getAllMatchingCSSProperties(htmlElement, attributes);
@@ -254,7 +266,7 @@ function resetElementAttributes(
             if (metaAttribute.type === "MetaAttributeConstant") {
               return ` ${metaAttribute.value}`;
             }
-            // We can't predict what MetaAttributeVariable would be
+            // We can't predict what MetaAttributeVariable might be
             return "";
           })
           .join(" ")
@@ -268,18 +280,81 @@ function internalToPublic(nodes: MetaNodeInternal[]): MetaNode[] {
     switch (node.type) {
       case "Comment":
       case "Text":
-      case "Variable":
         return node;
+      case "Variable":
+        return {
+          type: node.type,
+          id: node.id,
+        };
       case "If":
+        if (node.parseError) {
+          return {
+            type: node.type,
+            parseError: node.parseError,
+            children: node.children,
+            error: node.error,
+          };
+        } else {
+          return {
+            type: node.type,
+            parseError: node.parseError,
+            ids: node.ids,
+            children: node.children,
+            testAsJavaScriptExpression: node.testAsJavaScriptExpression,
+          };
+        }
       case "Element":
         return {
-          ...node,
+          type: node.type,
+          nodeName: node.nodeName,
+          attributes: walkAttributes(node.attributes),
+          cssProperties: node.cssProperties,
           children: node.children.map(walk),
         };
       default:
         throw Error(`Unrecognised node ${node}. ${JSON.stringify(node)}`);
     }
   }
+
+  const walkAttributes = (
+    internalAttributes: MetaHTMLElementInternal["attributes"]
+  ): MetaHTMLElement["attributes"] => {
+    const keys = Object.keys(internalAttributes);
+    return keys.reduce(
+      (
+        attributes: MetaHTMLElement["attributes"],
+        key: string
+      ): MetaHTMLElement["attributes"] => {
+        const values = internalAttributes[key];
+        const newAttributeValues = values.map(
+          (value): MetaAttributeValue => {
+            switch (value.type) {
+              case "MetaAttributeConstant": {
+                return value;
+              }
+              case "MetaAttributeVariable": {
+                return {
+                  type: value.type,
+                  id: value.id,
+                };
+              }
+              case "MetaAttributeVariableOptions": {
+                return {
+                  type: value.type,
+                  id: value.id,
+                  options: value.options,
+                };
+              }
+            }
+            return assertUnreachable(value);
+          }
+        );
+        attributes[key] = newAttributeValues;
+        return attributes;
+      },
+      {} as MetaHTMLElement["attributes"]
+    );
+  };
 
   return nodes.map(walk);
 }
@@ -340,4 +415,8 @@ function attributesThatCanBeSet(attr: string): boolean {
   // used to filter setting attributes on the real DOM
   // we don't really care about any other attributes
   return ["class"].includes(attr);
+}
+
+function assertUnreachable(x: never): never {
+  throw new Error("Didn't expect to get here");
 }

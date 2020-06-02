@@ -13,6 +13,8 @@ const STORAGE_METAHTML = "STORAGE_METAHTML";
 const STORAGE_CSS = "STORAGE_CSS";
 const STORAGE_RESULT_INDEX = "STORAGE_RESULT_INDEX";
 
+const oneFrameMs = 15;
+
 const theme = "monokai";
 
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
@@ -35,7 +37,7 @@ function App() {
   const [resultIndex, setResultIndex] = useState<number>(
     defaultValues.resultIndex
   );
-  const [debounceTime, setDebounceTime] = useState(100);
+  const debounceTime = useRef<number>(100);
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -59,13 +61,14 @@ function App() {
       });
       const endTime = Date.now();
       let newDebounceTime = endTime - startTime;
-      newDebounceTime = newDebounceTime < 15 ? 15 : newDebounceTime;
+      newDebounceTime =
+        newDebounceTime < oneFrameMs ? oneFrameMs : newDebounceTime;
       console.log(`Debouncing calling MetaTemplate at ${newDebounceTime}ms`);
-      setDebounceTime(newDebounceTime);
+      debounceTime.current = newDebounceTime;
       setMetaTemplates(result);
-    }, debounceTime);
+    }, debounceTime.current);
     return () => clearTimeout(handler);
-  }, [debounceTime, metaHTML, css]);
+  }, [metaHTML, css]);
 
   const filePaths = metaTemplates ? Object.keys(metaTemplates.files) : [];
 

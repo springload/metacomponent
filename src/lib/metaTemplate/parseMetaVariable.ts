@@ -1,4 +1,4 @@
-import { MetaHTMLVariable } from "./metaTemplate";
+import { MetaHTMLVariableInternal } from "./metaTemplate";
 import { Log } from "../log";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 export const parseMetaVariable = ({
   htmlElement,
   log,
-}: Props): MetaHTMLVariable => {
+}: Props): MetaHTMLVariableInternal => {
   let id = htmlElement.getAttribute("id") || htmlElement.getAttribute("key"); // 'key' is legacy from MetaTemplate v1
   if (!id) {
     log(
