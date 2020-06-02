@@ -2,7 +2,7 @@ import { Log } from "../log";
 import {
   MetaHTMLIfSuccessInternal,
   MetaHTMLIfFailureInternal,
-} from "./metaTemplate";
+} from "./metaComponent";
 import { parseExpression } from "@babel/parser";
 import generate from "@babel/generator";
 
@@ -19,7 +19,7 @@ export const parseMetaHTMLIf = ({
   | Omit<MetaHTMLIfFailureInternal, "children"> => {
   const optional = !!htmlElement.hasAttribute("optional");
   const test =
-    htmlElement.getAttribute("test") || htmlElement.getAttribute("key"); // 'key' is legacy from MetaTemplate v1
+    htmlElement.getAttribute("test") || htmlElement.getAttribute("key"); // 'key' is legacy from MetaComponent v1
   if (!test) {
     log(
       `Expected to find 'test' (or 'key' for legacy support) attribute on mt-if`

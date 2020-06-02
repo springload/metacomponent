@@ -1,4 +1,9 @@
+<center>
 # MetaComponent 🦚
+
+_the very front of the front-end._
+
+</center>
 
 MetaComponent is a web template generator that can take a single component definition and output...
 

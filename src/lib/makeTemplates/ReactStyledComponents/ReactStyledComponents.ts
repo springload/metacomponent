@@ -1,7 +1,7 @@
 import uniq from "lodash/uniq";
 import { ReactTemplate } from "../React/React";
 import { TemplateFormat, OnConstructor } from "../Template";
-import { MetaCSSPropertiesNode } from "../../metaTemplate/metaTemplate";
+import { MetaCSSPropertiesNode } from "../../metaComponent/metaComponent";
 import { validJavaScriptIdentifer } from "../utils";
 
 export class ReactStyledComponentsTemplate extends ReactTemplate {

@@ -17,19 +17,19 @@ import { parseMetaHTMLIf } from "./parseMetaHTMLIf";
 import { getProps, Props } from "./getProps";
 import { Log } from "../log";
 
-type ParseMetaTemplateStringProps = {
+type ParseMetaComponentStringProps = {
   domDocument: Document;
   metaHTMLString: string;
   cssString: string;
   log: Log;
 };
 
-export function parseMetaTemplateString({
+export function parseMetaComponentString({
   domDocument,
   metaHTMLString,
   cssString,
   log,
-}: ParseMetaTemplateStringProps): MetaTemplate {
+}: ParseMetaComponentStringProps): MetaComponent {
   parseHTMLWithoutInsertionMode({
     domDocument,
     metaHTMLString,
@@ -39,15 +39,15 @@ export function parseMetaTemplateString({
   // now we have a DOM representing the original MetaHTMLString, so we need to build a MetaHTML
   const bodyNodes = Array.from(domDocument.body.childNodes);
   const nodes = bodyNodes.map((node) => nodeToMetaNode({ node, log }));
-  const metaTemplate = {
+  const metaComponent = {
     cssString: getAllMatchingCSSRulesRecursively(nodes),
     props: getProps(nodes, log),
     nodes: internalToPublic(nodes),
   };
-  return metaTemplate;
+  return metaComponent;
 }
 
-export type MetaTemplate = {
+export type MetaComponent = {
   cssString: string;
   nodes: MetaNode[];
   props: Props;
@@ -385,7 +385,7 @@ function getAllMatchingCSSRulesRecursively(nodes: MetaNodeInternal[]): string {
     // so we want to turn that into a string of,
     //   "thing class1 class2 class3 class4"
     //
-    // In CSS the :not() could mean that adding other classes invalidates rules but MetaTemplate
+    // In CSS the :not() could mean that adding other classes invalidates rules but MetaComponent
     // doesn't support that.
 
     Object.keys(attributes)

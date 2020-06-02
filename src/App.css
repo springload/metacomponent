@@ -49,9 +49,12 @@ textarea:focus {
   grid-area: titleC;
   color: white;
   font-weight: 300;
-  padding: 0.3em 0px 0px 0.1em;
+  padding: 0.3em 0px 0px 0.2em;
   margin: 0px;
-  font-size: large;
+  color: #bbb;
+  font-size: medium;
+
+  text-align: left;
 }
 
 .iframe_container {
@@ -67,7 +70,7 @@ textarea:focus {
   grid-area: outputC;
 }
 
-.MetaTemplateDemo {
+.MetaComponentDemo {
   display: grid;
   min-height: 100vh;
   width: 100%;
@@ -124,11 +127,31 @@ button {
   color: #fff;
   border: solid 1px #787;
 }
+.modal-content__body ul {
+  margin: 0px 0px 0px 1em;
+  padding: 0px;
+}
+
+.modal-content__body li {
+  margin: 0px;
+  padding: 0px;
+}
+
+.modal-content__body code {
+  background: #000;
+  color: white;
+  border: solid 1px #444;
+  white-space: pre-wrap;
+  padding: 0.2em;
+  color: #ee6;
+}
 
 .what-button {
   background: black;
-  color: white;
+  color: #ccc;
   border: solid 1px #666;
+  margin-left: 0.8em;
+  font-size: small;
 }
 
 .close_button {
@@ -139,4 +162,20 @@ button {
   padding: 10px;
   font-weight: bold;
   border: inset 1px #000;
+}
+
+.github-link {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 5px 2em;
+  font-size: xx-small;
+  color: #39f;
+  text-decoration: none;
+}
+
+.github-link:focus,
+.github-link:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
 }

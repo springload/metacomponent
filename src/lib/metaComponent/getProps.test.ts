@@ -1,70 +1,70 @@
-import { callMetaTemplate } from "../testHelpers";
+import { callMetaComponent } from "../testHelpers";
 
 test("Parsing document with mt-variable should generate props", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<mt-variable id="someId"><p>stuff</p>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["someId"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["someId"]).toEqual({
     required: true,
     type: "PropTypeVariable",
   });
 });
 
 test("Parsing document with mt-variable should generate optional props", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<mt-variable id="someId" optional><p>stuff</p>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["someId"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["someId"]).toEqual({
     required: false,
     type: "PropTypeVariable",
   });
 });
 
 test("Parsing document with mt-if should generate props", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<mt-if test="aThing"><p>stuff</p></mt-if>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["aThing"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["aThing"]).toEqual({
     required: true,
     type: "PropTypeVariable",
   });
 });
 
 test("Parsing document with mt-if should generate props", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<mt-if test="aThing" optional><p>stuff</p></mt-if>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["aThing"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["aThing"]).toEqual({
     required: false,
     type: "PropTypeVariable",
   });
 });
 
 test("Parsing document with attribute props that are required", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValue",
     attributeName: "href",
     nodeName: "a",
@@ -73,14 +73,14 @@ test("Parsing document with attribute props that are required", () => {
 });
 
 test("Parsing document with attribute props that are optional", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href? }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValue",
     attributeName: "href",
     nodeName: "a",
@@ -89,14 +89,14 @@ test("Parsing document with attribute props that are optional", () => {
 });
 
 test("Parsing document with attribute props that are options, without 'as' nice names", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -108,14 +108,14 @@ test("Parsing document with attribute props that are options, without 'as' nice 
 });
 
 test("Parsing document with attribute props that are options, with 'as' nice names", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -127,14 +127,14 @@ test("Parsing document with attribute props that are options, with 'as' nice nam
 });
 
 test("Parsing document with attribute props that are multiple options, with 'as' nice names", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -147,14 +147,14 @@ test("Parsing document with attribute props that are multiple options, with 'as'
 });
 
 test("Parsing document with attribute props that are optional, with multiple options, with 'as' nice names", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -167,14 +167,14 @@ test("Parsing document with attribute props that are optional, with multiple opt
 });
 
 test("Props with same id are prioritised", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -187,14 +187,14 @@ test("Props with same id are prioritised", () => {
 });
 
 test("Props with same id are prioritised, and have correct required status", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -207,14 +207,14 @@ test("Props with same id are prioritised, and have correct required status", () 
 });
 
 test("Props with same id are prioritised, and have correct required status", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><mt-if test="href">a thing</mt-if>`,
     "",
     true
   );
-  expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-  expect(result.metaTemplate.props["href"]).toEqual({
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
     type: "PropTypeAttributeValueOptions",
     attributeName: "href",
     nodeName: "a",
@@ -230,15 +230,15 @@ test("Props with same id are prioritised, and have correct required status", () 
 // probably better to provide upgrade advice
 //
 // test("Parsing document with mt-if should generate props", () => {
-//   const result = callMetaTemplate(
+//   const result = callMetaComponent(
 //     "mt-variable-makes-props",
 //     `<mt-if test="aThing?"><p>stuff</p></mt-if>`,
 //     "",
 //     true
 //   );
 //   console.log(JSON.stringify(result, null, 2));
-//   expect(Object.keys(result.metaTemplate.props).length).toBe(1);
-//   expect(result.metaTemplate.props["aThing"]).toEqual({
+//   expect(Object.keys(result.metaComponent.props).length).toBe(1);
+//   expect(result.metaComponent.props["aThing"]).toEqual({
 //     required: false,
 //     type: "PropTypeVariable",
 //   });

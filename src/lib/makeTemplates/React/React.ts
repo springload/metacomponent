@@ -6,7 +6,7 @@ import { attributeNameTransform, getTypeScriptElementName } from "./React.util";
 import {
   MetaAttributeValues,
   MetaAttributeValue,
-} from "../../metaTemplate/parseMetaHTMLAttribute";
+} from "../../metaComponent/parseMetaHTMLAttribute";
 import { validJavaScriptIdentifer } from "../utils";
 
 export class ReactTemplate extends Template {

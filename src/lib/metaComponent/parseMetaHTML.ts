@@ -83,13 +83,13 @@ function restoreParsingModeElements(domDocument: Document, log: Log): void {
     if (!alias) return;
     const tagName = alias.getAttribute(MT_ALIAS_ATTR);
     if (!tagName) {
-      log(`MetaTemplate: ${MT_ALIAS_TAG} missing ${MT_ALIAS_ATTR} attribute.`);
+      log(`MetaComponent: ${MT_ALIAS_TAG} missing ${MT_ALIAS_ATTR} attribute.`);
       return;
     }
     const childNodes = Array.from(alias.childNodes);
     const unaliased = doc.createElement(tagName);
     if (!alias.parentNode) {
-      log("MetaTemplate parsing mode element must not be top-level.");
+      log("MetaComponent parsing mode element must not be top-level.");
       return;
     }
     alias.parentNode.insertBefore(unaliased, alias);
@@ -102,7 +102,7 @@ function restoreParsingModeElements(domDocument: Document, log: Log): void {
     attrs.forEach((attr) => {
       const previousAttributeValue = alias.getAttribute(attr);
       if (!previousAttributeValue) {
-        log("MetaTemplate: must have a previous attribute value");
+        log("MetaComponent: must have a previous attribute value");
         return;
       }
       unaliased.setAttribute(attr, previousAttributeValue);

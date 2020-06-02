@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useRef, useEffect } from "react";
 import marked from "marked";
 import Modal from "react-modal";
-import { generateTemplates, MetaTemplates } from "./lib";
+import { generateTemplates, MetaComponents } from "./lib";
 import { localStorageWrapper } from "./storage";
 import AceEditor from "react-ace";
 
@@ -49,16 +49,20 @@ Modal.setAppElement("#root");
 function App() {
   const [metaHTML, setMetaHTML] = useState<string>(defaultValues.metaHTML);
   const [css, setCSS] = useState<string>(defaultValues.css);
-  const [metaTemplates, setMetaTemplates] = useState<MetaTemplates>();
+  const [metaComponents, setMetaComponents] = useState<MetaComponents>();
   const [resultIndex, setResultIndex] = useState<number>(
     defaultValues.resultIndex
   );
-  const [isWhatOpen, setIsWhatOpen] = useState<boolean>(true);
+  const [isWhatOpen, setIsWhatOpen] = useState<boolean>(false);
+  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(true);
   const debounceTime = useRef<number>(100);
   const iframeRef = useRef(null);
 
   const openWhatModal = () => setIsWhatOpen(true);
   const closeWhatModal = () => setIsWhatOpen(false);
+
+  const openWhyModal = () => setIsWhyOpen(true);
+  const closeWhyModal = () => setIsWhyOpen(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -83,20 +87,20 @@ function App() {
       let newDebounceTime = endTime - startTime;
       newDebounceTime =
         newDebounceTime < oneFrameMs ? oneFrameMs : newDebounceTime;
-      console.log(`Debouncing calling MetaTemplate at ${newDebounceTime}ms`);
+      console.log(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
       debounceTime.current = newDebounceTime;
-      setMetaTemplates(result);
+      setMetaComponents(result);
     }, debounceTime.current);
     return () => clearTimeout(handler);
   }, [metaHTML, css]);
 
-  const filePaths = metaTemplates ? Object.keys(metaTemplates.files) : [];
+  const filePaths = metaComponents ? Object.keys(metaComponents.files) : [];
 
-  const outputValue = metaTemplates
+  const outputValue = metaComponents
     ? resultIndex === 0
-      ? JSON.stringify(metaTemplates, null, 2)
+      ? JSON.stringify(metaComponents, null, 2)
       : filePaths[resultIndex - 1]
-      ? metaTemplates.files[filePaths[resultIndex - 1]]
+      ? metaComponents.files[filePaths[resultIndex - 1]]
       : ""
     : "";
 
@@ -146,22 +150,57 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <button onClick={closeWhatModal} className="close_button">
-              ✘close
+              close ✘
             </button>
             <div dangerouslySetInnerHTML={{ __html: whatIsMetaHTML }}></div>
             <button onClick={closeWhatModal} className="close_button">
-              ✘close
+              close ✘
             </button>
           </div>
         </div>
       </Modal>
-      <div className="MetaTemplateDemo">
-        <h1 className="title_container">MetaTemplate REPL</h1>
+      <Modal
+        isOpen={isWhyOpen}
+        onRequestClose={closeWhyModal}
+        style={modalStyles}
+        contentLabel="Why is MetaComponent?"
+        shouldCloseOnOverlayClick={true}
+      >
+        <div className="modal-content" onClick={closeWhatModal}>
+          <div
+            className="modal-content__body"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={closeWhyModal} className="close_button">
+              close ✘
+            </button>
+            <div dangerouslySetInnerHTML={{ __html: whyIsMetaComponent }}></div>
+            <button onClick={closeWhyModal} className="close_button">
+              close ✘
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <div className="MetaComponentDemo">
+        <a
+          href="https://github.com/springload/metacomponent"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="github-link"
+        >
+          repo
+        </a>
+        <h1 className="title_container">
+          MetaComponent REPL{" "}
+          <button onClick={openWhyModal} className="what-button">
+            (Why MetaComponent?)
+          </button>
+        </h1>
         <fieldset className="html_container">
           <legend>
             MetaHTML
             <button onClick={openWhatModal} className="what-button">
-              (MetaHTML?)
+              (Why MetaHTML?)
             </button>
           </legend>
           <AceEditor
@@ -202,7 +241,7 @@ function App() {
           id="iframe"
           src="./iframe.html"
           className="iframe_container"
-          title="MetaTemplate iframe"
+          title="MetaComponent iframe"
           ref={iframeRef}
         ></iframe>
 
@@ -228,8 +267,8 @@ function App() {
             >
               Everything
             </button>
-            {metaTemplates
-              ? Object.keys(metaTemplates.files).map((file, fileIndex) => (
+            {metaComponents
+              ? Object.keys(metaComponents.files).map((file, fileIndex) => (
                   <button
                     role="tab"
                     aria-selected={resultIndex === fileIndex + 1}
@@ -288,25 +327,41 @@ function pathType(file: string) {
 export default App;
 
 const whatIsMetaHTML = marked(`
-#### MetaHTML ?
+## MetaHTML ?
 
-The reason why we need to use non-standard HTML is to know which parts should be configurable, as variables.
+The reason why we need non-standard HTML is to mark which parts should be configurable, as variables.
 
 MetaHTML is standard HTML with two types of variables, for attributes and elements:
 
-- in attributes:
+- attributes:
   - For making a required variable string write \`{{ variableName }}\` eg \`<span class="{{ class }}">\`
     - Use a \`?\` after the variable name to make it optional \`{{ someVariable? }}\`.
     - Multiple variables can exist in an attribute value, write them like \`<span class="{{ class }}{{ otherClass }}">\`
-  - For making a required variable with enumerations \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\`
-  - For making a variable with enumerations that have friendly names \`{{ variableName: option1 as Option1 | option2 as Option2 }}\` eg \`&lt;span class="{{ color: class-red as Red | class-blue as Blue }}">\`
+  - You can make enumerations like \`{{ variableName:
+    option1 | option2
+  }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate React TypeScript to require that variable.
+  - You can make enumerations with friendly by adding \`as name\` to each option. Eg  \`{{ variableName: box--color-red as Red | box--color-blue as Blue }}\`
 
-- Those variables that are childNodes between elements:
-  - Use \`<mt-variable key="variableName">default value</mt-variable>\` eg if you want a component variable named "children" in an \`&lt;h1>\` you'd write \`<h1><mt-variable key="children">placeholder</mt-variable></h1>\`
+- elements
+  - Use \`<mt-variable key="variableName">\` to insert a variable such as \`children\` eg \`<div><mt-variable key="children"></div>\`
+  - if you want conditional logic there is \`<mt-if test="isShown">thing to show</mt-if>\`. JavaScript expressions are supported and normalized. It would be possible to convert basic JavaScript expressions into equivalents in other template languages.
 
-There is also template \`if\` support as \`<mt-if test="isShown">thing to show</mt-if>\`.
-
-MetaTemplate is only supposed to make stateless components. All variables are 
 `);
 
-console.log(whatIsMetaHTML);
+const whyIsMetaComponent = marked(`
+## Why MetaComponent?
+
+It's often the case that large organisations and governments, for a variety of reasons, have a large variety of frontend technology.
+
+They use React, Angular, Vue, Handlebars, Jinja2, Twig, and more.
+
+As a result, their organisation's websites behave and look different.
+
+If your organisation wanted to unify that behaviour and appearance (HTML and CSS) of parts of their web platforms they might look to Design Systems (Pattern Libraries) and make a Design System website with components.
+
+It would be a lot of manual work to support all those web frameworks, so typically Design Systems choose HTML/CSS and only one additional format that they write manually, by hand. Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and stacks that don't support that format are left to implement the HTML/CSS manually.
+
+This approach solves one problem but it also creates a technical barrier that may hinder adoption of their Design System*.
+
+MetaComponent tries to complement Design Systems by generating components for each framework to make it easiser to adopt.
+`);

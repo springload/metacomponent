@@ -1,6 +1,6 @@
 {
   "name": "metacomponent",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "/metacomponent/",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -36,6 +36,14 @@
     "deploy": "gh-pages -d build",
     "predeploy": "yarn build",
     "build-lib": "tsc --build ./src/lib/tsconfig.json"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/springload/metacomponent/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/springload/metacomponent.git"
   },
   "eslintConfig": {
     "extends": "react-app"

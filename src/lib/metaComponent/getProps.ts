@@ -1,4 +1,4 @@
-import { MetaNodeInternal } from "./metaTemplate";
+import { MetaNodeInternal } from "./metaComponent";
 import { Log } from "../log";
 import { MetaAttributeVariableOptions } from "./parseMetaHTMLAttribute";
 

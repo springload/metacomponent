@@ -1,7 +1,7 @@
 import { generateTemplates } from "./index";
 import jsdom from "jsdom";
 
-export function callMetaTemplate(
+export function callMetaComponent(
   templateId: string,
   metaHTMLString: string,
   cssString: string,

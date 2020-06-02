@@ -4,9 +4,9 @@ import {
   MetaHTMLComment,
   MetaHTMLIf,
   MetaHTMLVariable,
-} from "../metaTemplate/metaTemplate";
+} from "../metaComponent/metaComponent";
 import { TemplateFiles } from "../types";
-import { Props } from "../metaTemplate/getProps";
+import { Props } from "../metaComponent/getProps";
 
 export interface TemplateFormat {
   dirname: string;

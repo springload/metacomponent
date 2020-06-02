@@ -1,14 +1,14 @@
-import { callMetaTemplate } from "../testHelpers";
+import { callMetaComponent } from "../testHelpers";
 
 test("MetaAttribute with constant", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }
@@ -19,14 +19,14 @@ test("MetaAttribute with constant", () => {
 });
 
 test("MetaAttribute with constant and variable", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }
@@ -42,20 +42,20 @@ test("MetaAttribute with constant and variable", () => {
       `Expected index1 to be "MetaAttributeVariable" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props).toHaveProperty("frogs");
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props).toHaveProperty("frogs");
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
 });
 
 test("MetaAttribute variable with incomplete options", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs: }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") throw Error("Should be 'Element'."); // narrowing TS typing
   const classAttribute = node.attributes.class;
   expect(classAttribute).toBeTruthy();
@@ -69,21 +69,21 @@ test("MetaAttribute variable with incomplete options", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props).toHaveProperty("frogs");
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props).toHaveProperty("frogs");
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(0);
 });
 
 test("MetaAttribute variable with incomplete with 'as'", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs: froggy as Froggy | frush as Frush }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") throw Error("Should be 'Element'."); // narrowing TS typing
   const classAttribute = node.attributes.class;
   expect(classAttribute).toBeTruthy();
@@ -97,8 +97,8 @@ test("MetaAttribute variable with incomplete with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props).toHaveProperty("frogs");
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props).toHaveProperty("frogs");
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(2);
   expect(index1.options).toHaveProperty("Froggy");
@@ -108,14 +108,14 @@ test("MetaAttribute variable with incomplete with 'as'", () => {
 });
 
 test("MetaAttribute variable with option without 'as'", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs: froggy }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") throw Error("Should be 'Element'."); // narrowing TS typing
   const classAttribute = node.attributes.class;
   expect(classAttribute).toBeTruthy();
@@ -129,7 +129,7 @@ test("MetaAttribute variable with option without 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(1);
   expect(index1.options).toHaveProperty("froggy");
@@ -137,14 +137,14 @@ test("MetaAttribute variable with option without 'as'", () => {
 });
 
 test("MetaAttribute variable with option with 'as'", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs: froggy as Froggy }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") throw Error("Should be 'Element'."); // narrowing TS typing
   const classAttribute = node.attributes.class;
   expect(classAttribute).toBeTruthy();
@@ -158,8 +158,8 @@ test("MetaAttribute variable with option with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props).toHaveProperty("frogs");
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props).toHaveProperty("frogs");
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(1);
   expect(index1.options).toHaveProperty("Froggy");
@@ -167,14 +167,14 @@ test("MetaAttribute variable with option with 'as'", () => {
 });
 
 test("MetaAttribute variable with options with 'as'", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<p class="thing {{ frogs: froggy as Froggy | frush as Frush }}"/>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") throw Error("Should be 'Element'."); // narrowing TS typing
   const classAttribute = node.attributes.class;
   expect(classAttribute).toBeTruthy();
@@ -188,8 +188,8 @@ test("MetaAttribute variable with options with 'as'", () => {
       `Expected index1 to be "MetaAttributeVariableOptions" was ${index1.type}`
     );
   }
-  expect(result.metaTemplate.props).toHaveProperty("frogs");
-  expect(result.metaTemplate.props["frogs"].required).toBe(true);
+  expect(result.metaComponent.props).toHaveProperty("frogs");
+  expect(result.metaComponent.props["frogs"].required).toBe(true);
   expect(index1.id).toBe("frogs");
   expect(Object.keys(index1.options).length).toBe(2);
   expect(index1.options).toHaveProperty("Froggy");
@@ -199,14 +199,14 @@ test("MetaAttribute variable with options with 'as'", () => {
 });
 
 test("MetaAttribute cssProperties conditional", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<h1 class="{{ colour?: my-style--blue as blue }}">test</h1>`,
     ".my-style--blue { color: blue }",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }
@@ -216,14 +216,14 @@ test("MetaAttribute cssProperties conditional", () => {
 });
 
 test("MetaAttribute cssProperties constant", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<h1 class="thing">test</h1>`,
     ".thing { color: green } ",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }
@@ -233,14 +233,14 @@ test("MetaAttribute cssProperties constant", () => {
 });
 
 test("MetaAttribute cssProperties constant is treeshaken when not matching", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<h1 class="thing">test</h1>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }
@@ -249,14 +249,14 @@ test("MetaAttribute cssProperties constant is treeshaken when not matching", () 
 });
 
 test("MetaAttribute cssProperties conditional is treeshaken when not matching", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "meta attribute",
     `<h1 class="{{ thing: blah }}">test</h1>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("Element");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("Element");
   if (node.type !== "Element") {
     throw Error("Should be 'Element'."); // narrowing TS typing
   }

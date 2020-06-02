@@ -1,8 +1,8 @@
-// MetaTemplate WebTemplateTranslator
+// MetaComponent WebTemplateTranslator
 import {
-  parseMetaTemplateString,
-  MetaTemplate,
-} from "./metaTemplate/metaTemplate";
+  parseMetaComponentString,
+  MetaComponent,
+} from "./metaComponent/metaComponent";
 import { makeTemplates } from "./makeTemplates/makeTemplates";
 import { TemplateFiles } from "./types";
 import { logFactory } from "./log";
@@ -15,8 +15,8 @@ type Props = {
   haltOnErrors: boolean;
 };
 
-export type MetaTemplates = {
-  metaTemplate: MetaTemplate;
+export type MetaComponents = {
+  metaComponent: MetaComponent;
   files: TemplateFiles;
 };
 
@@ -26,8 +26,8 @@ export function generateTemplates({
   metaHTMLString,
   cssString,
   haltOnErrors,
-}: Props): MetaTemplates {
-  const metaTemplate = parseMetaTemplateString({
+}: Props): MetaComponents {
+  const metaComponent = parseMetaComponentString({
     domDocument,
     metaHTMLString,
     cssString,
@@ -35,7 +35,7 @@ export function generateTemplates({
   });
 
   return {
-    metaTemplate,
-    files: makeTemplates({ templateId, metaTemplate }),
+    metaComponent,
+    files: makeTemplates({ templateId, metaComponent }),
   };
 }

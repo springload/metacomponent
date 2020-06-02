@@ -1,7 +1,7 @@
-import { callMetaTemplate } from "./testHelpers";
+import { callMetaComponent } from "./testHelpers";
 
 test("Can render without errors", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "paragraph",
     "<p>hello</p>",
     "p { color: red }",
@@ -11,7 +11,7 @@ test("Can render without errors", () => {
 });
 
 test("Can tree shake", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "paragraph",
     "<p>hello</p>",
     "p { color: red } .treeShake { background: blue} ",
@@ -23,7 +23,7 @@ test("Can tree shake", () => {
 
 test("Can associate by class name", () => {
   // .frog { color: red } .penguin { color: blue}
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "paragraph",
     `<p class="frog">hello</p>`,
     ".frog { color: blue } .tree-shake { background: yellow } ",

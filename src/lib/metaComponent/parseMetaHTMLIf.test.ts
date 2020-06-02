@@ -1,14 +1,14 @@
-import { callMetaTemplate } from "../testHelpers";
+import { callMetaComponent } from "../testHelpers";
 
 test("Can generate logical branches", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-if",
     `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("If");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
   expect(node.parseError).toBe(false);
   if (node.parseError !== false) throw Error("Shouldn't be a parse error"); // narrowing TS typing
@@ -17,34 +17,34 @@ test("Can generate logical branches", () => {
 });
 
 test("Optional false", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-if-optional",
     `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("If");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
-  expect(result.metaTemplate.props["frog"].required).toBe(true);
+  expect(result.metaComponent.props["frog"].required).toBe(true);
 });
 
 test("Optional true", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-if-optional",
     `<mt-if optional test="frog !== 'frush'   ">hello</mt-if>`,
     "",
     true
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("If");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
-  expect(result.metaTemplate.props["frog"].required).toBe(false);
+  expect(result.metaComponent.props["frog"].required).toBe(false);
 });
 
 test("Throws on syntax error with haltOnErrors=true", () => {
   expect(() => {
-    callMetaTemplate(
+    callMetaComponent(
       "mt-if",
       `<mt-if test="frog ================ 'frush'   ">hello</mt-if>`,
       "",
@@ -54,14 +54,14 @@ test("Throws on syntax error with haltOnErrors=true", () => {
 });
 
 test("Can gracefully handle syntax errors without throwing with haltOnErrors=false", () => {
-  const result = callMetaTemplate(
+  const result = callMetaComponent(
     "mt-if",
     `<mt-if test="frog ================ 'frush'   ">hello</mt-if>`,
     "",
     false
   );
-  const node = result.metaTemplate.nodes[0];
-  expect(result.metaTemplate.nodes[0].type).toBe("If");
+  const node = result.metaComponent.nodes[0];
+  expect(result.metaComponent.nodes[0].type).toBe("If");
   if (node.type !== "If") throw Error("Should be 'If'."); // narrowing TS typing
   expect(node.parseError).toBe(true);
   if (node.parseError !== true) throw Error("Should be a parse error"); // narrowing TS typing

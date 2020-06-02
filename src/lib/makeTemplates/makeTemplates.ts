@@ -1,4 +1,4 @@
-import { MetaTemplate } from "../metaTemplate/metaTemplate";
+import { MetaComponent } from "../metaComponent/metaComponent";
 import { TemplateFiles } from "../types";
 
 import { CSSTemplate } from "./CSS/CSS";
@@ -9,25 +9,25 @@ import { Template, OnConstructor } from "./Template";
 
 type MakeTemplatesProps = {
   templateId: string;
-  metaTemplate: MetaTemplate;
+  metaComponent: MetaComponent;
 };
 
 export function makeTemplates({
   templateId,
-  metaTemplate,
+  metaComponent,
 }: MakeTemplatesProps): TemplateFiles {
   const args: OnConstructor = {
-    props: metaTemplate.props,
+    props: metaComponent.props,
     templateId,
-    hasMultipleRootNodes: metaTemplate.nodes.length > 1,
+    hasMultipleRootNodes: metaComponent.nodes.length > 1,
   };
   return mergeTemplateFiles(
-    makeTemplate(templateId, metaTemplate, new HTMLTemplate(args)),
-    makeTemplate(templateId, metaTemplate, new CSSTemplate(args)),
-    makeTemplate(templateId, metaTemplate, new ReactTemplate(args)),
+    makeTemplate(templateId, metaComponent, new HTMLTemplate(args)),
+    makeTemplate(templateId, metaComponent, new CSSTemplate(args)),
+    makeTemplate(templateId, metaComponent, new ReactTemplate(args)),
     makeTemplate(
       templateId,
-      metaTemplate,
+      metaComponent,
       new ReactStyledComponentsTemplate(args)
     )
   );
@@ -39,10 +39,10 @@ function mergeTemplateFiles(...obj: TemplateFiles[]): TemplateFiles {
 
 function makeTemplate(
   templateId: string,
-  metaTemplate: MetaTemplate,
+  metaComponent: MetaComponent,
   instance: Template
 ) {
-  function walk(node: MetaTemplate["nodes"][number]) {
+  function walk(node: MetaComponent["nodes"][number]) {
     switch (node.type) {
       case "Element": {
         const openingElement = instance.onElement(node);
@@ -71,9 +71,9 @@ function makeTemplate(
     }
   }
 
-  metaTemplate.nodes.forEach(walk);
+  metaComponent.nodes.forEach(walk);
 
   instance.onFinalise();
 
-  return instance.serialize({ css: metaTemplate.cssString });
+  return instance.serialize({ css: metaComponent.cssString });
 }
