@@ -5,7 +5,23 @@ _the very front of the front-end._
 
 </center>
 
-MetaComponent is a web template generator that can take a single component definition and output...
+## Why MetaComponent?
+
+It's often the case that large organisations and governments, for a variety of reasons, have a large variety of frontend technology.
+
+They use React, Angular, Vue, Handlebars, Jinja2, Twig, and more.
+
+As a result, their organisation's websites feel very different.
+
+If you wanted to unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems (Pattern Libraries) to publish advice and components.
+
+It would be a lot of manual work to support all of those web frameworks, so typically Design Systems choose HTML/CSS and only one additional format that they write manually, by hand. Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and technology stacks that don't support that format are left to implement the HTML/CSS manually.
+
+This approach solves one problem but it also creates a technical barrier that may hinder adoption of their Design System.
+
+MetaComponent tries to complement Design Systems by generating components for each framework to make it easiser to adopt.
+
+MetaComponent is a web component template generator that can take a single component definition and output components in...
 
 - [x] HTML
 - [x] CSS

@@ -38,10 +38,12 @@ const modalStyles = {
   overlay: {
     backgroundColor: "rgba(0,0,0,0.5)",
     zIndex: 10,
+    border: "none",
   },
   content: {
     background: "none",
     inset: "0px",
+    border: "none",
   },
 } as const;
 Modal.setAppElement("#root");
@@ -54,7 +56,7 @@ function App() {
     defaultValues.resultIndex
   );
   const [isWhatOpen, setIsWhatOpen] = useState<boolean>(false);
-  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(true);
+  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(false);
   const debounceTime = useRef<number>(100);
   const iframeRef = useRef(null);
 
@@ -175,6 +177,7 @@ function App() {
               close ✘
             </button>
             <div dangerouslySetInnerHTML={{ __html: whyIsMetaComponent }}></div>
+
             <button onClick={closeWhyModal} className="close_button">
               close ✘
             </button>
@@ -182,20 +185,20 @@ function App() {
         </div>
       </Modal>
       <div className="MetaComponentDemo">
-        <a
-          href="https://github.com/springload/metacomponent"
-          target="_blank"
-          rel="noreferrer noopener"
-          className="github-link"
-        >
-          repo
-        </a>
-        <h1 className="title_container">
-          MetaComponent REPL{" "}
-          <button onClick={openWhyModal} className="what-button">
-            (Why MetaComponent?)
+        <div className="button-tray">
+          <button onClick={openWhyModal} className="button-tray__link">
+            Why MetaComponent?
           </button>
-        </h1>
+          <a
+            href="https://github.com/springload/metacomponent"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="button-tray__link"
+          >
+            repo
+          </a>
+        </div>
+        <h1 className="title_container">MetaComponent REPL </h1>
         <fieldset className="html_container">
           <legend>
             MetaHTML
@@ -355,13 +358,15 @@ It's often the case that large organisations and governments, for a variety of r
 
 They use React, Angular, Vue, Handlebars, Jinja2, Twig, and more.
 
-As a result, their organisation's websites behave and look different.
+As a result, their organisation's websites behave and look very differently.
 
-If your organisation wanted to unify that behaviour and appearance (HTML and CSS) of parts of their web platforms they might look to Design Systems (Pattern Libraries) and make a Design System website with components.
+If you wanted to unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems (Pattern Libraries) to publish advice and components.
 
-It would be a lot of manual work to support all those web frameworks, so typically Design Systems choose HTML/CSS and only one additional format that they write manually, by hand. Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and stacks that don't support that format are left to implement the HTML/CSS manually.
+It would be a lot of manual work to support all of those web frameworks, so typically Design Systems choose HTML/CSS and only one additional format that they write manually, by hand. Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and technology stacks that don't support that format are left to implement the HTML/CSS manually.
 
-This approach solves one problem but it also creates a technical barrier that may hinder adoption of their Design System*.
+This approach solves one problem but it also creates a technical barrier that may hinder adoption of their Design System.
 
 MetaComponent tries to complement Design Systems by generating components for each framework to make it easiser to adopt.
+
+_it's the very front of the front-end_
 `);
