@@ -1,4 +1,11 @@
 body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   background: black;
   color: white;
   padding: 0px;
@@ -80,14 +87,15 @@ textarea:focus {
   background: black;
   color: white;
   font-size: small;
-  border: none;
+  border: solid 1px black;
   margin-right: 1px;
   padding: 0.2em 0.5em;
   vertical-align: middle;
 }
 
 .tab--selected {
-  outline: solid 1px white;
+  border: solid 1px #999;
+  border-bottom: none;
 }
 
 .mt-tooltip {
@@ -95,4 +103,40 @@ textarea:focus {
   color: black;
   padding: 3px;
   position: absolute;
+}
+
+button {
+  cursor: pointer;
+}
+
+.modal-content {
+  position: relative;
+  background: none;
+}
+
+.modal-content__body {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  max-width: 400px;
+  padding: 20px 20px 100px 20px;
+  background: #333;
+  color: #fff;
+  border: solid 1px #787;
+}
+
+.what-button {
+  background: black;
+  color: white;
+  border: solid 1px #666;
+}
+
+.close_button {
+  background: black;
+  color: white;
+  position: absolute;
+  right: 10px;
+  padding: 10px;
+  font-weight: bold;
+  border: inset 1px #000;
 }

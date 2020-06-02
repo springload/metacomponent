@@ -18,13 +18,13 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
   onElement(
     onElement: Parameters<TemplateFormat["onElement"]>[0]
   ): ReturnType<TemplateFormat["onElement"]>[0] {
-    let counter = 0;
+    let counter = 1;
     let styledName;
     do {
       styledName = `Styled${onElement.nodeName
         .substring(0, 1)
         .toUpperCase()}${onElement.nodeName.substring(1)}${
-        counter === 0 ? "" : counter
+        counter === 1 ? "" : `_${counter}`
       }`;
       counter++;
     } while (this.styledConstants.includes(styledName));
@@ -32,12 +32,13 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
 
     const pickedProps = this.renderCSSPropertyProps(onElement.cssProperties);
     const styledProps = `${styledName}Props`;
+
     this.constants += `type ${styledProps} = ${pickedProps};\n`;
     this.constants += `const ${styledName} = styled.${
       onElement.nodeName
     }<${styledProps}>\`\n  ${onElement.cssProperties
       .map((cssProperty) => this.renderCSSProperty(cssProperty, styledProps))
-      .join("\n  ")}\n\``;
+      .join("\n  ")}\n\`;\n\n`;
     const styledAttributes = {
       ...onElement.attributes,
     };
@@ -74,7 +75,6 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
           cssPropertiesNode.condition.id
         );
         let conditional = "${";
-
         if (isValidIdentifier) {
           conditional += `({${cssPropertiesNode.condition.id}}: ${styledProps}) => (${cssPropertiesNode.condition.id}`;
         } else {

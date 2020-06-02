@@ -4,7 +4,8 @@ test("Can render without errors", () => {
   const result = callMetaTemplate(
     "paragraph",
     "<p>hello</p>",
-    "p { color: red }"
+    "p { color: red }",
+    false
   );
   expect(Object.values(result.files).length).toBeGreaterThan(0);
 });
@@ -13,7 +14,8 @@ test("Can tree shake", () => {
   const result = callMetaTemplate(
     "paragraph",
     "<p>hello</p>",
-    "p { color: red } .treeShake { background: blue} "
+    "p { color: red } .treeShake { background: blue} ",
+    false
   );
   const filesString = JSON.stringify(result.files);
   expect(filesString.includes("treeShake")).toBeFalsy();
@@ -24,7 +26,8 @@ test("Can associate by class name", () => {
   const result = callMetaTemplate(
     "paragraph",
     `<p class="frog">hello</p>`,
-    ".frog { color: blue } .tree-shake { background: yellow } "
+    ".frog { color: blue } .tree-shake { background: yellow } ",
+    false
   );
   const filesString = JSON.stringify(result, null, 2);
   expect(filesString.includes(".frog")).toBeTruthy();

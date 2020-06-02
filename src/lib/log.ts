@@ -7,6 +7,6 @@ export function logFactory(haltOnErrors: boolean): Log {
         .map((arg) => arg.toString())
         .join("\n");
     }
-    console.log(...args);
+    console.log(...args, "");
   };
 }
