@@ -19,26 +19,28 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
     onElement: Parameters<TemplateFormat["onElement"]>[0]
   ): ReturnType<TemplateFormat["onElement"]>[0] {
     let counter = 1;
-    let styledName;
-    do {
-      styledName = `Styled${onElement.nodeName
-        .substring(0, 1)
-        .toUpperCase()}${onElement.nodeName.substring(1)}${
-        counter === 1 ? "" : `_${counter}`
-      }`;
-      counter++;
-    } while (this.styledConstants.includes(styledName));
-    this.styledConstants.push(styledName);
+    let styledName = onElement.nodeName;
+    if (onElement.cssProperties.length) {
+      do {
+        styledName = `Styled${onElement.nodeName
+          .substring(0, 1)
+          .toUpperCase()}${onElement.nodeName.substring(1)}${
+          counter === 1 ? "" : `_${counter}`
+        }`;
+        counter++;
+      } while (this.styledConstants.includes(styledName));
+      this.styledConstants.push(styledName);
 
-    const pickedProps = this.renderCSSPropertyProps(onElement.cssProperties);
-    const styledProps = `${styledName}Props`;
+      const pickedProps = this.renderCSSPropertyProps(onElement.cssProperties);
+      const styledProps = `${styledName}Props`;
 
-    this.constants += `type ${styledProps} = ${pickedProps};\n`;
-    this.constants += `const ${styledName} = styled.${
-      onElement.nodeName
-    }<${styledProps}>\`\n  ${onElement.cssProperties
-      .map((cssProperty) => this.renderCSSProperty(cssProperty, styledProps))
-      .join("\n  ")}\n\`;\n\n`;
+      this.constants += `type ${styledProps} = ${pickedProps};\n`;
+      this.constants += `const ${styledName} = styled.${
+        onElement.nodeName
+      }<${styledProps}>\`\n  ${onElement.cssProperties
+        .map((cssProperty) => this.renderCSSProperty(cssProperty, styledProps))
+        .join("\n  ")}\n\`;\n\n`;
+    }
     const styledAttributes = {
       ...onElement.attributes,
     };

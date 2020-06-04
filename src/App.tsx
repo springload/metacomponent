@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useRef, useEffect } from "react";
+import React, {
+  Fragment,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import marked from "marked";
 import Modal from "react-modal";
 import { generateTemplates, MetaComponents } from "./lib";
@@ -44,6 +50,10 @@ const modalStyles = {
     background: "none",
     inset: "0px",
     border: "none",
+    top: "0px",
+    bottom: "0px",
+    right: "0px",
+    left: "0px",
   },
 } as const;
 Modal.setAppElement("#root");
@@ -66,15 +76,27 @@ function App() {
   const openWhyModal = () => setIsWhyOpen(true);
   const closeWhyModal = () => setIsWhyOpen(false);
 
+  const iframeRefCallback = useCallback((node) => {
+    console.log("Setting iframe ", node);
+    iframeRef.current = node; // for some reason setting ref={iframeRef} wasn't working in Chrome
+  }, []);
+
   useEffect(() => {
-    const handler = setTimeout(() => {
+    const fn = () => {
       const iframeEl: HTMLIFrameElement | null = iframeRef.current;
       if (!iframeEl) {
+        console.log("No iframe ref available.", iframeEl);
         return;
       }
       // @ts-ignore
       const domDocument = iframeEl.contentWindow?.document;
       if (!domDocument) {
+        console.log("No iframe contentWindow document available.", domDocument);
+        return;
+      }
+      const documentElement = domDocument.documentElement;
+      if (!documentElement) {
+        console.log("No iframe documentElement available.", documentElement);
         return;
       }
       const startTime = Date.now();
@@ -92,7 +114,8 @@ function App() {
       console.log(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
       debounceTime.current = newDebounceTime;
       setMetaComponents(result);
-    }, debounceTime.current);
+    };
+    const handler = setTimeout(fn, debounceTime.current);
     return () => clearTimeout(handler);
   }, [metaHTML, css]);
 
@@ -258,7 +281,7 @@ function App() {
           src="./iframe.html"
           className="iframe_container"
           title="MetaComponent iframe"
-          ref={iframeRef}
+          ref={iframeRefCallback}
         ></iframe>
 
         <fieldset className="output_container">
@@ -286,6 +309,7 @@ function App() {
             {metaComponents
               ? Object.keys(metaComponents.files).map((file, fileIndex) => (
                   <button
+                    key={file}
                     role="tab"
                     aria-selected={resultIndex === fileIndex + 1}
                     className={`tab ${
