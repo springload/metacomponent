@@ -113,6 +113,9 @@ export class ReactTemplate extends Template {
     Object.keys(attributes).forEach((attributeName) => {
       this.renderAttribute(attributeName, attributes[attributeName]);
     });
+    if (onElement.children.length === 0) {
+      this.render += "/";
+    }
     this.render += ">";
     return nodeName;
   }
@@ -203,15 +206,37 @@ export class ReactTemplate extends Template {
 
   onComment(onComment: Parameters<TemplateFormat["onComment"]>[0]): void {
     const { value } = onComment;
-    this.render += `<!--${value}-->`;
+    this.render += `{/*${value}*/}`;
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    this.render += `{${
-      validJavaScriptIdentifer.test(variable.id)
-        ? variable.id
-        : `props["${variable.id}"]`
-    }}`;
+    const identifier = validJavaScriptIdentifer.test(variable.id)
+      ? variable.id
+      : `props["${variable.id}"]`;
+    this.render += `{${identifier} !== undefined ? ${identifier} : `;
+    if (variable.children.length === 0) {
+      this.render += `null`;
+    } else if (variable.children.length === 1) {
+      if (variable.children[0].type === "Text") {
+        this.render += `\``;
+      } else {
+        this.render += `(<React.Fragment>`;
+      }
+    } else {
+      this.render += `(<React.Fragment>`;
+    }
+  }
+
+  onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {
+    if (
+      variable.children.length === 1 &&
+      variable.children[0].type === "Text"
+    ) {
+      this.render += `\``;
+    } else if (variable.children.length > 0) {
+      this.render += `</React.Fragment>)`;
+    }
+    this.render += `}`;
   }
 
   onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {

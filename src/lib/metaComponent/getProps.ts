@@ -100,6 +100,7 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
             };
           });
         }
+        node.children.forEach(walk);
         break;
       case "Variable": {
         if (!node.id) {
@@ -111,6 +112,7 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
           type: "PropTypeVariable",
           required: !node.optional,
         };
+        node.children.forEach(walk);
         break;
       }
     }

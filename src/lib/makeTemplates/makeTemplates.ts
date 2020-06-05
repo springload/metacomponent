@@ -46,8 +46,10 @@ function makeTemplate(
     switch (node.type) {
       case "Element": {
         const openingElement = instance.onElement(node);
-        node.children.forEach(walk);
-        instance.onCloseElement({ openingElement });
+        if (node.children.length > 0) {
+          node.children.forEach(walk);
+          instance.onCloseElement({ openingElement });
+        }
         break;
       }
       case "Text": {
@@ -60,6 +62,8 @@ function makeTemplate(
       }
       case "Variable": {
         instance.onVariable(node);
+        node.children.forEach(walk);
+        instance.onCloseVariable(node);
         break;
       }
       case "If": {

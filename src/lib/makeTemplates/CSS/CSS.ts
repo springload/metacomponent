@@ -32,6 +32,12 @@ export class CSSTemplate extends Template {
     // pass
   };
 
+  onCloseVariable = (
+    closeVariable: Parameters<TemplateFormat["onVariable"]>[0]
+  ) => {
+    // pass
+  };
+
   onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
     // pass
   };

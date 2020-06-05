@@ -14,6 +14,21 @@ test("Parsing document with mt-variable should generate props", () => {
   });
 });
 
+test("Parsing document with mt-variable inside mt-if should generate props", () => {
+  const result = callMetaComponent(
+    "mt-variable-makes-props",
+    `<mt-if test="a=b"><mt-variable id="someId"></mt-if><p>stuff</p>`,
+    "",
+    true
+  );
+
+  expect(Object.keys(result.metaComponent.props).length).toBe(3);
+  expect(result.metaComponent.props["someId"]).toEqual({
+    required: true,
+    type: "PropTypeVariable",
+  });
+});
+
 test("Parsing document with mt-variable should generate optional props", () => {
   const result = callMetaComponent(
     "mt-variable-makes-props",

@@ -18,7 +18,7 @@ import { Log } from "../log";
 //   <mt-variable key="children">placeholder</mt-variable>
 // </mt-alias-select>
 //
-// and rename the element after parsing
+// and then rename the element after parsing
 
 type Props = {
   domDocument: Document;
@@ -112,7 +112,7 @@ function restoreParsingModeElements(domDocument: Document, log: Log): void {
 }
 
 function moveChildlessElements(domDocument: Document) {
-  const childlessElementNames = ["mt-variable"];
+  const childlessElementNames: string[] = [];
   childlessElementNames.forEach((childlessElementName: string): void => {
     Array.from(domDocument.querySelectorAll(childlessElementName)).forEach(
       (childlessElement: Element) => {

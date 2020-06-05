@@ -62,6 +62,12 @@ export class HTMLTemplate extends Template {
     this.html += `<!-- '${variable.id}' goes here -->`;
   };
 
+  onCloseVariable = (
+    closeVariable: Parameters<TemplateFormat["onVariable"]>[0]
+  ) => {
+    // pass
+  };
+
   onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
     // pass
   };

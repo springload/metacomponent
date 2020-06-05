@@ -106,12 +106,14 @@ export type MetaHTMLComment = { type: "Comment"; value: string };
 export type MetaHTMLVariable = {
   type: "Variable";
   id: string;
+  children: MetaNode[];
 };
 
 export type MetaHTMLVariableInternal = {
   type: "Variable";
   id: string;
   optional: boolean;
+  children: MetaNodeInternal[];
 };
 
 type MetaHTMLIfBase = {
@@ -167,12 +169,20 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
   const nodeName = htmlElement.nodeName.toLowerCase();
 
   if (nodeName === "mt-variable") {
-    return parseMetaVariable({ htmlElement, log });
+    return {
+      ...parseMetaVariable({
+        htmlElement,
+        log,
+      }),
+      children: Array.from(node.childNodes).map((childNode) =>
+        nodeToMetaNode({ node: childNode, log })
+      ),
+    };
   } else if (nodeName === "mt-if") {
     return {
       ...parseMetaHTMLIf({ htmlElement, log }),
-      children: Array.from(node.childNodes).map((node) =>
-        nodeToMetaNode({ node, log })
+      children: Array.from(node.childNodes).map((childNode) =>
+        nodeToMetaNode({ node: childNode, log })
       ),
     };
   }
@@ -296,6 +306,7 @@ function internalToPublic(nodes: MetaNodeInternal[]): MetaNode[] {
         return {
           type: node.type,
           id: node.id,
+          children: node.children.map(walk),
         };
       case "If":
         if (node.parseError) {

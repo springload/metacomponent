@@ -25,17 +25,23 @@ const oneFrameMs = 15;
 
 const theme = "monokai";
 
+const showEverything = window.document.location?.search.includes("?everything");
+
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
-const resultIndex = resultIndexString ? parseInt(resultIndexString, 10) : 0;
+const resultIndex = resultIndexString
+  ? parseInt(resultIndexString, 10)
+  : showEverything
+  ? 0
+  : 1;
 
 const defaultValues = {
   metaHTML:
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <mt-variable id="children">\n</h1>`,
+    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <mt-variable id="children"></mt-variable>\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
     `.my-style { padding: 5px }\n.my-style--blue{ color: blue }\n.my-style--red{ color: red }\n/* this CSS isn't used and will be tree shaken */\n.treeShake { color: green; }`,
-  resultIndex,
+  resultIndex: resultIndex,
 };
 
 const templateId = "MyComponent";
@@ -70,11 +76,27 @@ function App() {
   const debounceTime = useRef<number>(100);
   const iframeRef = useRef(null);
 
-  const openWhatModal = () => setIsWhatOpen(true);
+  const openWhatModal = () => {
+    setIsWhyOpen(false);
+    setIsWhatOpen(true);
+  };
   const closeWhatModal = () => setIsWhatOpen(false);
 
-  const openWhyModal = () => setIsWhyOpen(true);
+  const openWhyModal = () => {
+    setIsWhatOpen(false);
+    setIsWhyOpen(true);
+  };
   const closeWhyModal = () => setIsWhyOpen(false);
+
+  useEffect(() => {
+    const root: HTMLElement | null = document.querySelector("#root");
+    if (!root) return;
+    if (isWhatOpen || isWhyOpen) {
+      root.classList.add("blur");
+    } else {
+      root.classList.remove("blur");
+    }
+  }, [isWhatOpen, isWhyOpen]);
 
   const iframeRefCallback = useCallback((node) => {
     console.log("Setting iframe ", node);
@@ -111,7 +133,7 @@ function App() {
       let newDebounceTime = endTime - startTime;
       newDebounceTime =
         newDebounceTime < oneFrameMs ? oneFrameMs : newDebounceTime;
-      console.log(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
+      console.info(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
       debounceTime.current = newDebounceTime;
       setMetaComponents(result);
     };
@@ -177,7 +199,33 @@ function App() {
             <button onClick={closeWhatModal} className="close_button">
               close <span aria-hidden> ✘</span>
             </button>
-            <div dangerouslySetInnerHTML={{ __html: whatIsMetaHTML }}></div>
+            <div>
+              <h2>MetaHTML?</h2>
+
+              <button
+                onClick={openWhyModal}
+                className="modal__link"
+                aria-label="Open modal explaining MetaComponent"
+                aria-expanded={isWhyOpen}
+                aria-controls="why-modal"
+              >
+                <span className="modal__link--peripheral">(see also:</span> Why
+                MetaComponent?<span className="modal__link--peripheral">)</span>
+              </button>
+              <div dangerouslySetInnerHTML={{ __html: whatIsMetaHTML }}></div>
+            </div>
+
+            <button
+              onClick={openWhyModal}
+              className="modal__link"
+              aria-label="Open modal explaining MetaComponent"
+              aria-expanded={isWhyOpen}
+              aria-controls="why-modal"
+            >
+              <span className="modal__link--peripheral">(see also:</span> Why
+              MetaComponent?<span className="modal__link--peripheral">)</span>
+            </button>
+
             <button onClick={closeWhatModal} className="close_button">
               close <span aria-hidden> ✘</span>
             </button>
@@ -229,6 +277,7 @@ function App() {
           </a>
         </div>
         <h1 className="title_container">MetaComponent REPL </h1>
+
         <fieldset className="html_container">
           <legend>
             MetaHTML
@@ -286,26 +335,28 @@ function App() {
 
         <fieldset className="output_container">
           <legend>
-            Output &nbsp;
-            <button
-              role="tab"
-              aria-selected={resultIndex === 0}
-              className={`tab ${
-                resultIndex === 0 ? "tab--selected" : undefined
-              }`}
-              aria-controls="output"
-              id="tab-0"
-              onClick={(e) => {
-                const resultIndex = 0;
-                setResultIndex(resultIndex);
-                localStorageWrapper.setItem(
-                  STORAGE_RESULT_INDEX,
-                  resultIndex.toString()
-                );
-              }}
-            >
-              Everything
-            </button>
+            Outputs:
+            {showEverything && (
+              <button
+                role="tab"
+                aria-selected={resultIndex === 0}
+                className={`tab ${
+                  resultIndex === 0 ? "tab--selected" : undefined
+                }`}
+                aria-controls="output"
+                id="tab-0"
+                onClick={(e) => {
+                  const resultIndex = 0;
+                  setResultIndex(resultIndex);
+                  localStorageWrapper.setItem(
+                    STORAGE_RESULT_INDEX,
+                    resultIndex.toString()
+                  );
+                }}
+              >
+                Everything
+              </button>
+            )}
             {metaComponents
               ? Object.keys(metaComponents.files).map((file, fileIndex) => (
                   <button
@@ -333,22 +384,58 @@ function App() {
                 ))
               : null}
           </legend>
-
-          <AceEditor
-            mode={outputMode}
-            theme={theme}
-            name="output"
-            value={outputValue}
-            readOnly
-            width="100%"
-            height="100%"
-            showPrintMargin={false}
-            showGutter={false}
-            markers={markers}
-          />
+          <Flash
+            text={
+              <>
+                this is uneditable. <br />
+                it's the output from MetaComponent <br />
+                click tabs above to see formats
+              </>
+            }
+          >
+            <AceEditor
+              mode={outputMode}
+              theme={theme}
+              name="output"
+              value={outputValue}
+              readOnly
+              width="100%"
+              height="100%"
+              showPrintMargin={false}
+              showGutter={false}
+              markers={markers}
+            />
+          </Flash>
         </fieldset>
       </div>
     </Fragment>
+  );
+}
+
+type FlashProps = {
+  text: React.ReactNode;
+  children: React.ReactNode;
+};
+
+function Flash({ text, children }: FlashProps) {
+  const timer = useRef<NodeJS.Timeout>();
+  const [animate, setAnimate] = useState("off");
+  const handleKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key.trim() === "") return;
+    setAnimate("on");
+    timer.current = setTimeout(() => {
+      if (timer.current) clearTimeout(timer.current);
+      setAnimate("off");
+    }, 1000);
+  };
+
+  return (
+    <div onKeyPress={handleKey} className="flash-container">
+      <div className={`flash flash--${animate}`}>
+        <span className="flash__text">{text}</span>
+      </div>
+      {children}
+    </div>
   );
 }
 
@@ -367,29 +454,40 @@ function pathType(file: string) {
 export default App;
 
 const whatIsMetaHTML = marked(`
-## MetaHTML ?
 
-The reason we need non-standard HTML is to mark which parts should be configurable, as variables.
+MetaComponent uses MetaHTML, which is standard HTML with markers for the parts that should be configurable, as variables.
 
-MetaHTML is standard HTML with two types of variables, for attributes and elements:
+There are two types of variables, for attributes and elements:
 
 - attributes:
   - \`<span class="{{ someVariable }}">\`
     - \`?\` makes it optional \`{{ someVariable? }}\`.
     - multiple variables \`<span class="{{ class }}{{ otherClass }}">\`
-  - enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate React TypeScript to require that option.
-  - label enumerations with friendly names with \`as FriendlyName\` eg  \`{{ variableName: box--color-red as Red | box--color-blue as Blue }}\`. Enumerations may only be strings.
+  - enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate typings to those valid choices. Enumerations may only be strings.
+  - label enumerations with friendly names with \`as FriendlyName\` eg  \`class="{{ variableName: box--color-red as Red | box--color-blue as Blue }}"\`.
 - elements:
-  - \`<mt-variable id="variableName">\` eg \`<div><mt-variable key="children"></div>\`
-  - conditional logic \`<mt-if test="isShown">thing to show</mt-if>\`. JavaScript expressions are supported and normalized. It should be possible to convert basic JavaScript expressions into equivalents in other languages.
+  - \`<mt-variable id="variableName"></mt-variable>\`
+    - The attribute \`optional\` makes it optional eg \`<mt-variable id="variableName" optional></mt-variable>\`
+    - provide a default value with child nodes eg \`<mt-variable id="variableName">default value</mt-variable>\`
+  - Conditional logic \`<mt-if test="isShown">thing to show if true</mt-if>\`, or \`test="someVariable === 'frogs' "\`, using JavaScript expressions. In the future these expressions will be converted to other languages, so please limit to single variable string comparisons for the greatest range of options.
 
-MetaHTML is for generating stateless components, just the HTML and CSS. Logic should be in a higher-order components (HOC).
+MetaHTML is for generating stateless components. Logic should be in a higher-order components (HOC).
 
-MetaComponent is for _the very front of the front-end_
+There is no support for loops. Use composition instead.
+
+
 `);
 
 const whyIsMetaComponent = marked(`
 ## Why MetaComponent?
+
+MetaComponent can generate stateless components in a variety of languages.
+
+Some of its use-cases involve:
+* migrating to another template format as a one-off conversion;
+* providing templates in multiple formats as an ongoing feature.
+
+### Design Systems / Pattern Libraries
 
 It's often the case that large organisations and governments, for a variety of reasons, have a large variety of web template technology.
 
@@ -397,17 +495,14 @@ They use React, Vue, Angular, Handlebars, Jinja2, Twig, and many, many more.
 
 As a result, websites feel quite different.
 
-If you wanted to unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems (and Pattern Libraries) where you'd publish advice, and components.
+To unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems and Pattern Libraries where you'd publish UX advice, and components.
 
-It would be a lot of manual work to support all of those web frameworks, and so typically Design Systems choose HTML/CSS and only one additional component format that they write manually by hand.
-
-Essentially they declare one format the winner: Angular, React, Vue, Handlebars, or Nunjucks., and technology stacks that don't support that format are left to fend for themselves by implementing the HTML/CSS manually by hand.
+It would be a lot of manual work to support all of those web frameworks, and so typically HTML/CSS and only one additional component format is supported, and all of them are written by hand.
 
 Design Systems often solves one problem (standardising HTML/CSS) while creating new technical barriers that may hinder adoption.
 
 If you consider situations like governments or large organisations with many different technology stacks, it may not be practical to converge template formats, or there might be good reasons for divergence.
 
-MetaComponent tries to complement Design Systems by generating components for many frameworks to make it easiser to adopt.
+**MetaComponent complements Design Systems/Pattern Libraries by generating components for many frameworks to make it easiser to adopt.**
 
-MetaComponent is for _the very front of the front-end_
 `);

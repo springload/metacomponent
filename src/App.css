@@ -13,6 +13,15 @@ body {
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  #root {
+    transition: filter 0.1s;
+  }
+  #root.blur {
+    filter: blur(2px);
+  }
+}
+
 fieldset {
   color: white;
   border: none;
@@ -121,11 +130,13 @@ textarea:focus {
 .tab {
   background: black;
   color: white;
-  font-size: xx-small;
-  border: solid 1px black;
+  font-size: inherit;
   margin-right: 1px;
-  padding: 0.2em 0.5em;
-  vertical-align: middle;
+  border: none;
+  border-radius: 2px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  font-weight: inherit;
 }
 
 .tab:hover {
@@ -135,13 +146,16 @@ textarea:focus {
 
 @media only screen and (min-width: 700px) {
   .tab {
-    font-size: x-small;
+    font-size: x-large;
+    /* padding: 0.2em 0.5em 0.5em 0.5em; */
   }
 }
 
 .tab--selected {
   border: solid 1px #777;
   border-bottom: none;
+  background: #ccc;
+  color: #333;
 }
 
 .mt-tooltip {
@@ -168,7 +182,6 @@ button {
   padding: 20px 20px 100px 20px;
   background: #333;
   color: #fff;
-  border: solid 1px #787;
   line-height: 1.4;
 }
 
@@ -240,6 +253,65 @@ button {
   text-decoration-color: white;
 }
 
+.modal__link {
+  background: none;
+  border: none;
+  padding: 1em 0em;
+  font-size: x-small;
+  color: #7cf;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.modal__link:focus,
+.modal__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.5em;
+  text-decoration-color: white;
+}
+
+.modal__link--peripheral,
+.modal__link--peripheral:focus,
+.modal__link--peripheral:hover {
+  color: #999;
+  text-decoration: none;
+}
+
 #output {
   cursor: not-allowed;
+}
+
+.flash-container {
+  height: 100%;
+  width: 100%;
+}
+
+.flash {
+  position: absolute;
+  width: 90%;
+  top: 40%;
+  padding: 1em 1em 0.2em 1em;
+  transition: opacity 1s;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.flash__text {
+  display: inline;
+  background: #333;
+  color: #fff;
+
+  font-size: xx-large;
+  font-weight: 600;
+  text-shadow: 0px 0px 5px #333;
+}
+
+.flash--on {
+  opacity: 1;
+  transition: opacity 0s;
+}
+
+.flash--off {
+  opacity: 0;
 }

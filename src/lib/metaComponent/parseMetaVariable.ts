@@ -15,9 +15,9 @@ export const parseMetaVariable = ({
     log(
       `Expected to find 'id' (or 'key' for legacy support) attribute on mt-variable`
     );
-    return { type: "Variable", id: "", optional: false };
+    return { type: "Variable", id: "", optional: false, children: [] };
   }
   const optional = htmlElement.hasAttribute("optional") || id.includes("?"); // inline '?' is legacy from MetaComponent v1;
   id = id.replace(/\?/, "");
-  return { type: "Variable", id, optional };
+  return { type: "Variable", id, optional, children: [] };
 };
