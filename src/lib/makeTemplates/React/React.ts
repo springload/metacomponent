@@ -185,9 +185,8 @@ export class ReactTemplate extends Template {
         if (!this.props[attributeValue.id].required) {
           this.render += `${identifier} && `;
         }
-        this.render += `({${Object.keys(attributeValue.options).map(
-          (optionKey) => `"${optionKey}":"${attributeValue.options[optionKey]}"`
-        )}})[${identifier}]`;
+        this.render += JSON.stringify(attributeValue.options);
+        this.render += `[${identifier}]`;
       }
     }
   }

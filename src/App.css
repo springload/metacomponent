@@ -133,7 +133,7 @@ textarea:focus {
   font-size: inherit;
   margin-right: 1px;
   border: none;
-  border-radius: 2px;
+  border-radius: 4px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   font-weight: inherit;

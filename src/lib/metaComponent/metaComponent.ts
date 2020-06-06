@@ -95,8 +95,10 @@ export type MetaCSSPropertiesConstantNode = {
 
 export type MetaCSSPropertiesConditionalNode = {
   type: "MetaCSSPropertiesConditionalNode";
-  condition: { id: string; equalsString: string };
-  cssPropertiesString: string;
+  id: string;
+  condition: {
+    [equalsString: string]: string; // cssProperties as string
+  };
 };
 
 export type MetaHTMLText = { type: "Text"; value: string };
@@ -239,6 +241,11 @@ function getAllMatchingCSSProperties(
       const attributeValues = attributes[attributeName];
       attributeValues.forEach((attributeValue) => {
         if (attributeValue.type === "MetaAttributeVariableOptions") {
+          const conditionalNode: MetaCSSPropertiesConditionalNode = {
+            type: "MetaCSSPropertiesConditionalNode",
+            id: attributeValue.id,
+            condition: {},
+          };
           Object.entries(attributeValue.options).forEach(
             ([optionName, optionValue]) => {
               element.setAttribute(
@@ -251,20 +258,14 @@ function getAllMatchingCSSProperties(
                 cssRoot
               );
               if (cssPropertiesString) {
-                cssProperties.push({
-                  type: "MetaCSSPropertiesConditionalNode",
-                  condition: {
-                    id: attributeValue.id,
-                    equalsString: optionName,
-                  },
-                  cssPropertiesString,
-                });
+                conditionalNode.condition[optionName] = cssPropertiesString;
               }
               if (resetValue) {
                 element.setAttribute(attributeName, resetValue);
               }
             }
           );
+          cssProperties.push(conditionalNode);
         }
       });
     });

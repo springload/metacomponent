@@ -34,10 +34,12 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
       const pickedProps = this.renderCSSPropertyProps(onElement.cssProperties);
       const styledProps = `${styledName}Props`;
 
-      this.constants += `type ${styledProps} = ${pickedProps};\n`;
-      this.constants += `const ${styledName} = styled.${
-        onElement.nodeName
-      }<${styledProps}>\`\n  ${onElement.cssProperties
+      if (pickedProps) {
+        this.constants += `type ${styledProps} = ${pickedProps};\n`;
+      }
+      this.constants += `const ${styledName} = styled.${onElement.nodeName}${
+        pickedProps ? `<${styledProps}>` : ""
+      }\`\n  ${onElement.cssProperties
         .map((cssProperty) => this.renderCSSProperty(cssProperty, styledProps))
         .join("\n  ")}\n\`;\n\n`;
     }
@@ -47,10 +49,10 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
     delete styledAttributes["class"];
     onElement.cssProperties.forEach((cssProperty) => {
       if (cssProperty.type === "MetaCSSPropertiesConstantNode") return;
-      styledAttributes[cssProperty.condition.id] = [
+      styledAttributes[cssProperty.id] = [
         {
           type: "MetaAttributeVariable",
-          id: cssProperty.condition.id,
+          id: cssProperty.id,
         },
       ];
     });
@@ -74,31 +76,44 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
       }
       case "MetaCSSPropertiesConditionalNode": {
         const isValidIdentifier = validJavaScriptIdentifer.test(
-          cssPropertiesNode.condition.id
+          cssPropertiesNode.id
         );
         let conditional = "${";
+        const identifier = isValidIdentifier
+          ? cssPropertiesNode.id
+          : `props["${cssPropertiesNode.id}"]`;
+
         if (isValidIdentifier) {
-          conditional += `({${cssPropertiesNode.condition.id}}: ${styledProps}) => (${cssPropertiesNode.condition.id}`;
+          conditional += `({${cssPropertiesNode.id}}: ${styledProps}) => (`;
         } else {
-          conditional += `(props: ${styledProps}) => (props["${cssPropertiesNode.condition.id}"]`;
+          conditional += `(props: ${styledProps}) => (`;
         }
-        conditional += ` === "${cssPropertiesNode.condition.equalsString}") &&`;
-        conditional += ` \`${cssPropertiesNode.cssPropertiesString}\`}`;
+
+        conditional += JSON.stringify(cssPropertiesNode.condition);
+        conditional += `[`;
+        conditional += identifier;
+        conditional += `])}`;
+
         return conditional;
       }
     }
   }
 
-  renderCSSPropertyProps(cssProperties: MetaCSSPropertiesNode[]) {
-    return `Pick<Props, ${uniq(
+  renderCSSPropertyProps(
+    cssProperties: MetaCSSPropertiesNode[]
+  ): string | undefined {
+    const propUnion = uniq(
       cssProperties
         .map((cssProperty): string => {
           if (cssProperty.type === "MetaCSSPropertiesConditionalNode") {
-            return `"${cssProperty.condition.id}"`;
+            return `"${cssProperty.id}"`;
           }
           return "";
         })
         .filter((val: string): boolean => !!val)
-    ).join(" | ")}>`;
+    ).join(" | ");
+
+    if (propUnion.length === 0) return undefined;
+    return `Pick<Props, ${propUnion}>`;
   }
 }
