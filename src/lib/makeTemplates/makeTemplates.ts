@@ -5,6 +5,7 @@ import { CSSTemplate } from "./CSS/CSS";
 import { HTMLTemplate } from "./HTML/HTML";
 import { ReactTemplate } from "./React/React";
 import { ReactStyledComponentsTemplate } from "./ReactStyledComponents/ReactStyledComponents";
+import { MustacheTemplate } from "./Mustache/Mustache";
 import { Template, OnConstructor } from "./Template";
 
 type MakeTemplatesProps = {
@@ -29,7 +30,8 @@ export function makeTemplates({
       templateId,
       metaComponent,
       new ReactStyledComponentsTemplate(args)
-    )
+    ),
+    makeTemplate(templateId, metaComponent, new MustacheTemplate(args))
   );
 }
 
@@ -69,7 +71,7 @@ function makeTemplate(
       case "If": {
         instance.onIf(node);
         node.children.forEach(walk);
-        instance.onCloseIf();
+        instance.onCloseIf(node);
         break;
       }
     }

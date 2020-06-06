@@ -11,9 +11,9 @@ export class HTMLTemplate extends Template {
     this.html = "";
   }
 
-  onElement = (
+  onElement(
     onElement: Parameters<TemplateFormat["onElement"]>[0]
-  ): ReturnType<TemplateFormat["onElement"]>[0] => {
+  ): ReturnType<TemplateFormat["onElement"]>[0] {
     const { nodeName, attributes } = onElement;
 
     this.html += `<${nodeName}`;
@@ -39,44 +39,42 @@ export class HTMLTemplate extends Template {
     });
     this.html += ">";
     return nodeName;
-  };
+  }
 
-  onCloseElement = (
+  onCloseElement(
     onCloseElement: Parameters<TemplateFormat["onCloseElement"]>[0]
-  ): void => {
+  ) {
     const { openingElement } = onCloseElement;
     this.html += `</${openingElement}>`;
-  };
+  }
 
-  onText = (onText: Parameters<TemplateFormat["onText"]>[0]): void => {
+  onText(onText: Parameters<TemplateFormat["onText"]>[0]): void {
     const { value } = onText;
     this.html += value;
-  };
+  }
 
-  onComment = (onComment: Parameters<TemplateFormat["onComment"]>[0]): void => {
+  onComment(onComment: Parameters<TemplateFormat["onComment"]>[0]): void {
     const { value } = onComment;
     this.html += `<!--${value}-->`;
-  };
+  }
 
-  onVariable = (variable: Parameters<TemplateFormat["onVariable"]>[0]) => {
+  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     this.html += `<!-- '${variable.id}' goes here -->`;
-  };
+  }
 
-  onCloseVariable = (
-    closeVariable: Parameters<TemplateFormat["onVariable"]>[0]
-  ) => {
+  onCloseVariable(closeVariable: Parameters<TemplateFormat["onVariable"]>[0]) {
     // pass
-  };
+  }
 
-  onIf = (onIf: Parameters<TemplateFormat["onIf"]>[0]) => {
+  onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {
     // pass
-  };
+  }
 
-  onCloseIf = () => {
+  onCloseIf(onIf: Parameters<TemplateFormat["onCloseIf"]>[0]) {
     // pass
-  };
+  }
 
-  onFinalise = () => {
+  onFinalise() {
     try {
       this.html = prettier.format(this.html, {
         parser: "html",
@@ -86,15 +84,15 @@ export class HTMLTemplate extends Template {
     } catch (e) {
       // pass
     }
-  };
+  }
 
-  serialize = (
+  serialize(
     onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles => {
+  ): TemplateFiles {
     return {
       [`${this.dirname}/${this.templateId}.html`]: this.html,
     };
-  };
+  }
 }
 
 // Via http://xahlee.info/js/html5_non-closing_tag.html

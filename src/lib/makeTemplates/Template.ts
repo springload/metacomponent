@@ -19,7 +19,7 @@ export interface TemplateFormat {
   onVariable: (onVariable: MetaHTMLVariable) => void;
   onCloseVariable: (closeVariable: MetaHTMLVariable) => void;
   onIf: (onIf: MetaHTMLIf) => void;
-  onCloseIf: () => void;
+  onCloseIf: (onCloseIf: MetaHTMLIf) => void;
   serialize: (args: OnSerialize) => TemplateFiles;
 }
 
@@ -84,7 +84,7 @@ export class Template {
     throw Error("Not implemented");
   }
 
-  onCloseIf(): void {
+  onCloseIf(onCloseIf: Parameters<TemplateFormat["onCloseIf"]>[0]): void {
     throw Error("Not implemented");
   }
 

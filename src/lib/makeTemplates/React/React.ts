@@ -246,7 +246,7 @@ export class ReactTemplate extends Template {
     }
   }
 
-  onCloseIf() {
+  onCloseIf(onCloseIf: Parameters<TemplateFormat["onCloseIf"]>[0]) {
     this.render += `</React.Fragment>)}`;
   }
 

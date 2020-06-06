@@ -16,6 +16,7 @@ import {
 import { parseMetaHTMLIf } from "./parseMetaHTMLIf";
 import { getProps, Props } from "./getProps";
 import { Log } from "../log";
+import { assertUnreachable } from "../makeTemplates/utils";
 
 type ParseMetaComponentStringProps = {
   domDocument: Document;
@@ -438,8 +439,4 @@ function attributesThatCanBeSet(attr: string): boolean {
   // used to filter setting attributes on the real DOM
   // we don't really care about any other attributes
   return ["class"].includes(attr);
-}
-
-function assertUnreachable(x: never): never {
-  throw new Error("Didn't expect to get here");
 }
