@@ -20,7 +20,8 @@ export interface TemplateFormat {
   onCloseVariable: (closeVariable: MetaHTMLVariable) => void;
   onIf: (onIf: MetaHTMLIf) => void;
   onCloseIf: (onCloseIf: MetaHTMLIf) => void;
-  serialize: (args: OnSerialize) => TemplateFiles;
+  onFinalise: (args: OnFinalise) => void;
+  serialize: () => TemplateFiles;
 }
 
 export type OnConstructor = {
@@ -34,7 +35,7 @@ type OnCloseElement = {
   openingElement: string;
 };
 
-type OnSerialize = {
+type OnFinalise = {
   css: string;
 };
 
@@ -88,13 +89,11 @@ export class Template {
     throw Error("Not implemented");
   }
 
-  onFinalise(): void {
+  onFinalise(onFinalise: Parameters<TemplateFormat["onFinalise"]>[0]): void {
     throw Error("Not implemented");
   }
 
-  serialize(
-    onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles {
+  serialize(): TemplateFiles {
     throw Error("Not implemented");
   }
 }

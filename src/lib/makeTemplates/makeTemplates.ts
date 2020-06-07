@@ -6,6 +6,7 @@ import { HTMLTemplate } from "./HTML/HTML";
 import { ReactTemplate } from "./React/React";
 import { ReactStyledComponentsTemplate } from "./ReactStyledComponents/ReactStyledComponents";
 import { MustacheTemplate } from "./Mustache/Mustache";
+import { VueTemplate } from "./Vue/Vue";
 import { Template, OnConstructor } from "./Template";
 
 type MakeTemplatesProps = {
@@ -31,7 +32,8 @@ export function makeTemplates({
       metaComponent,
       new ReactStyledComponentsTemplate(args)
     ),
-    makeTemplate(templateId, metaComponent, new MustacheTemplate(args))
+    makeTemplate(templateId, metaComponent, new MustacheTemplate(args)),
+    makeTemplate(templateId, metaComponent, new VueTemplate(args))
   );
 }
 
@@ -79,7 +81,7 @@ function makeTemplate(
 
   metaComponent.nodes.forEach(walk);
 
-  instance.onFinalise();
+  instance.onFinalise({ css: metaComponent.cssString });
 
-  return instance.serialize({ css: metaComponent.cssString });
+  return instance.serialize();
 }

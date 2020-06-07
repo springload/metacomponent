@@ -66,13 +66,11 @@ textarea:focus {
 
 .title_container {
   grid-area: titleC;
-  color: white;
   font-weight: 300;
-  padding: 0.3em 0px 0px 0.2em;
+  padding: 0.3em 0px 0px 0.25em;
   margin: 0px;
-  color: #bbb;
+  color: #fff;
   font-size: small;
-
   text-align: left;
 }
 
@@ -81,6 +79,12 @@ textarea:focus {
     font-size: medium;
     font-weight: 400;
   }
+}
+
+.title_container__peacock {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: absmiddle;
 }
 
 .iframe_container {

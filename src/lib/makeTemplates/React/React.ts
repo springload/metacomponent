@@ -250,7 +250,7 @@ export class ReactTemplate extends Template {
     this.render += `</React.Fragment>)}`;
   }
 
-  onFinalise() {
+  onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
     if (this.hasMultipleRootNodes) {
       this.render += `</React.Fragment>`;
     }
@@ -268,9 +268,7 @@ export class ReactTemplate extends Template {
     }
   }
 
-  serialize(
-    onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles {
+  serialize(): TemplateFiles {
     return {
       [`${this.dirname}/${this.templateId}.tsx`]: this.fileData,
     };

@@ -74,7 +74,7 @@ export class HTMLTemplate extends Template {
     // pass
   }
 
-  onFinalise() {
+  onFinalise(onFinalise: Parameters<TemplateFormat["onFinalise"]>[0]) {
     try {
       this.html = prettier.format(this.html, {
         parser: "html",
@@ -86,9 +86,7 @@ export class HTMLTemplate extends Template {
     }
   }
 
-  serialize(
-    onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles {
+  serialize(): TemplateFiles {
     return {
       [`${this.dirname}/${this.templateId}.html`]: this.html,
     };

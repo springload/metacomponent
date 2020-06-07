@@ -4,8 +4,12 @@ import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 
 export class CSSTemplate extends Template {
+  css: string;
+
   constructor(args: OnConstructor) {
     super({ ...args, dirname: "css" });
+
+    this.css = "";
   }
 
   onElement(
@@ -42,18 +46,12 @@ export class CSSTemplate extends Template {
     // pass
   }
 
-  onFinalise() {
-    // pass
-  }
+  onFinalise(onFinalise: Parameters<TemplateFormat["onFinalise"]>[0]) {
+    const { css } = onFinalise;
 
-  serialize(
-    onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles {
-    const { css } = onSerialize;
-
-    let newCSS = css;
+    this.css = css;
     try {
-      newCSS = prettier.format(newCSS, {
+      this.css = prettier.format(this.css, {
         parser: "scss",
         printWidth: 80,
         plugins: [parserPostCSS],
@@ -61,9 +59,11 @@ export class CSSTemplate extends Template {
     } catch (e) {
       // pass
     }
+  }
 
+  serialize(): TemplateFiles {
     return {
-      [`${this.dirname}/${this.templateId}.css`]: newCSS,
+      [`${this.dirname}/${this.templateId}.css`]: this.css,
     };
   }
 }

@@ -132,13 +132,11 @@ export class MustacheTemplate extends Template {
     }
   }
 
-  onFinalise() {
+  onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
     // pass
   }
 
-  serialize(
-    onSerialize: Parameters<TemplateFormat["serialize"]>[0]
-  ): TemplateFiles {
+  serialize(): TemplateFiles {
     return {
       [`${this.dirname}/${this.templateId}.mustache`]: this.data,
     };

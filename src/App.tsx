@@ -9,6 +9,7 @@ import marked from "marked";
 import Modal from "react-modal";
 import { generateTemplates, MetaComponents } from "./lib";
 import { localStorageWrapper } from "./storage";
+import peacock from "./peacock.png";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-json";
@@ -276,7 +277,10 @@ function App() {
             Repo
           </a>
         </div>
-        <h1 className="title_container">MetaComponent REPL </h1>
+        <h1 className="title_container">
+          MetaComponent REPL{" "}
+          <img src={peacock} alt="" className="title_container__peacock" />
+        </h1>
 
         <fieldset className="html_container">
           <legend>
