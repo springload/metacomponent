@@ -266,7 +266,9 @@ function getAllMatchingCSSProperties(
               }
             }
           );
-          cssProperties.push(conditionalNode);
+          if (Object.keys(conditionalNode.condition).length > 0) {
+            cssProperties.push(conditionalNode);
+          }
         }
       });
     });
@@ -425,9 +427,16 @@ function getAllMatchingCSSRulesRecursively(nodes: MetaNodeInternal[]): string {
   }
 
   function walk(node: MetaNodeInternal): void {
-    if (node.type !== "Element") return;
-    getAllMatchingCSSRules(node.node, node.attributes, matchedCSS);
-    node.children.forEach(walk);
+    switch (node.type) {
+      case "Element":
+        getAllMatchingCSSRules(node.node, node.attributes, matchedCSS);
+        node.children.forEach(walk);
+        break;
+      case "If":
+      case "Variable":
+        node.children.forEach(walk);
+        break;
+    }
   }
 
   nodes.forEach(walk);
