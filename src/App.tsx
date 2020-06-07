@@ -17,6 +17,7 @@ import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/theme-monokai";
 import "./App.css";
+import startCase from "lodash/startCase";
 
 const STORAGE_METAHTML = "STORAGE_METAHTML";
 const STORAGE_CSS = "STORAGE_CSS";
@@ -33,7 +34,7 @@ const resultIndex = resultIndexString
   ? parseInt(resultIndexString, 10)
   : showEverything
   ? 0
-  : 1;
+  : 3;
 
 const defaultValues = {
   metaHTML:
@@ -339,7 +340,7 @@ function App() {
 
         <fieldset className="output_container">
           <legend>
-            Outputs:
+            <span className="output_container--label">Outputs:</span>
             {showEverything && (
               <button
                 role="tab"
@@ -383,7 +384,7 @@ function App() {
                       );
                     }}
                   >
-                    {pathType(file)}
+                    {formatName(file)}
                   </button>
                 ))
               : null}
@@ -455,11 +456,25 @@ function pathType(file: string) {
   return file.substring(0, file.indexOf("/"));
 }
 
+function formatName(file: string): string {
+  const dirname = pathType(file).replace(/-/g, " ");
+  switch (dirname) {
+    case "html":
+      return "HTML";
+    case "css":
+      return "CSS";
+    default:
+      return startCase(dirname);
+  }
+}
+
 export default App;
 
 const whatIsMetaHTML = marked(`
 
-MetaComponent uses MetaHTML, which is standard HTML with markers for the parts that should be configurable, as variables.
+MetaComponent uses **MetaHTML** and **standard CSS** as inputs to generate components in a variety of formats.
+
+MetaHTML is HTML with markers for the parts that should be configurable, as variables.
 
 There are two types of variables, for attributes and elements:
 
@@ -510,3 +525,74 @@ If you consider situations like governments or large organisations with many dif
 **MetaComponent complements Design Systems/Pattern Libraries by generating components for many frameworks to make it easiser to adopt.**
 
 `);
+
+/*
+  <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="-3 0 97 100"
+              preserveAspectRatio="xMidYMid"
+              className="modal-content__diagram"
+            >
+              <defs>
+                <marker
+                  id="arrowhead"
+                  markerWidth="5"
+                  markerHeight="3"
+                  refX="0"
+                  refY="1.5"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 5 1.5, 0 3" />
+                </marker>
+              </defs>
+              <rect
+                x="0"
+                y="10"
+                width="35"
+                height="9"
+                stroke="#ccc"
+                strokeWidth="0.4"
+                strokeDasharray="1 1"
+              ></rect>
+              <text x="5" y="16" fontSize="5" fill="white">
+                MetaHTML
+              </text>
+              <text x="17" y="23" fontSize="5" fill="white">
+                +
+              </text>
+              <rect
+                x="0"
+                y="24"
+                width="35"
+                height="9"
+                fill="transparent"
+                strokeWidth="0.4"
+                strokeDasharray="1 1"
+              ></rect>
+              <text x="5" y="30.5" fontSize="5">
+                CSS
+              </text>
+
+              <line
+                x1="38"
+                y1="21.5"
+                x2="42"
+                y2="21.5"
+                strokeWidth="1"
+                markerEnd="url(#arrowhead)"
+              />
+
+              <rect
+                x="50"
+                y="10"
+                width="35"
+                height="23"
+                fill="transparent"
+                strokeWidth="0.4"
+                strokeDasharray="1 1"
+              ></rect>
+              <text x="53" y="23" fontSize="5" fill="white">
+                Components
+              </text>
+            </svg>
+*/

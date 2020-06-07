@@ -100,6 +100,13 @@ textarea:focus {
   grid-area: outputC;
 }
 
+.output_container--label {
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  font-size: 1px;
+}
+
 #button_tray_container {
   grid-area: menuC;
 }
@@ -176,6 +183,17 @@ button {
 .modal-content {
   position: relative;
   background: none;
+}
+
+.modal-content__diagram {
+  opacity: 0.7;
+  display: none;
+}
+.modal-content__diagram rect {
+  stroke: white;
+}
+.modal-content__diagram text {
+  fill: white;
 }
 
 .modal-content__body {

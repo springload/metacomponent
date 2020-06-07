@@ -5,10 +5,12 @@ import { assertUnreachable } from "../utils";
 
 export class MustacheTemplate extends Template {
   data: string;
+  unescapedVariables: string[];
 
   constructor(args: OnConstructor) {
     super({ ...args, dirname: "mustache" });
     this.data = "";
+    this.unescapedVariables = [];
   }
 
   onElement(
@@ -101,8 +103,8 @@ export class MustacheTemplate extends Template {
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    // pass
-    this.data += `{{${variable.id}}}`;
+    this.unescapedVariables.push(variable.id);
+    this.data += `{{{${variable.id}}}}`;
     if (variable.children.length > 0) {
       this.data += `{{^${variable.id}}}`;
     }
@@ -133,7 +135,13 @@ export class MustacheTemplate extends Template {
   }
 
   onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
-    // pass
+    let unescaped = "";
+    if (this.unescapedVariables.length) {
+      unescaped = `{{!\nDEVELOPER NOTE: This template uses triple-bracket "{{{" which disables HTML escaping.\nPlease ensure these variables are properly escaped:\n\n  * ${this.unescapedVariables.join(
+        ",\n  * "
+      )}.\n\nThe reason for this is to allow raw HTML, for values such as (eg) <span lang="mi">Māori</span>. }}\n`;
+    }
+    this.data = `${unescaped}${this.data}`;
   }
 
   serialize(): TemplateFiles {
