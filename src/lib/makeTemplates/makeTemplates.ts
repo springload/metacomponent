@@ -1,5 +1,6 @@
 import { MetaComponent } from "../metaComponent/metaComponent";
 import { TemplateFiles } from "../types";
+import { Template, OnConstructor } from "./Template";
 
 import { CSSTemplate } from "./CSS/CSS";
 import { HTMLTemplate } from "./HTML/HTML";
@@ -7,7 +8,7 @@ import { ReactTemplate } from "./React/React";
 import { ReactStyledComponentsTemplate } from "./ReactStyledComponents/ReactStyledComponents";
 import { MustacheTemplate } from "./Mustache/Mustache";
 import { VueTemplate } from "./Vue/Vue";
-import { Template, OnConstructor } from "./Template";
+import { AngularTemplate } from "./Angular/Angular";
 
 type MakeTemplatesProps = {
   templateId: string;
@@ -33,7 +34,8 @@ export function makeTemplates({
       new ReactStyledComponentsTemplate(args)
     ),
     makeTemplate(templateId, metaComponent, new MustacheTemplate(args)),
-    makeTemplate(templateId, metaComponent, new VueTemplate(args))
+    makeTemplate(templateId, metaComponent, new VueTemplate(args)),
+    makeTemplate(templateId, metaComponent, new AngularTemplate(args))
   );
 }
 

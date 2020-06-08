@@ -21,7 +21,8 @@ export class VueTemplate extends Template {
   style: string;
 
   imports: string;
-  typeScript: string;
+  extendPropsString: string;
+  propsString: string;
   computed: Record<string, ComputedProp>;
 
   finalData: string;
@@ -34,24 +35,38 @@ export class VueTemplate extends Template {
     this.style = "";
 
     this.imports = "";
-    this.typeScript = "";
+    this.propsString = "";
+    this.extendPropsString = "";
     this.computed = {};
 
     this.finalData = "";
 
-    this.setTypeScript = this.setTypeScript.bind(this);
+    this.setPropsString = this.setPropsString.bind(this);
     this.renderPropType = this.renderPropType.bind(this);
     this.setImports = this.setImports.bind(this);
     this.renderAttribute = this.renderAttribute.bind(this);
     this.getNewComputedName = this.getNewComputedName.bind(this);
 
-    this.setTypeScript();
+    this.setPropsString();
     this.setImports();
   }
 
-  setTypeScript() {
-    const props = Object.keys(this.props).map(this.renderPropType).join("\n  ");
-    this.typeScript = `type Props = {\n  ${props}\n};`;
+  setPropsString() {
+    this.propsString = Object.keys(this.props)
+      .map((propId) => {
+        return this.renderPropType(propId) + ";";
+      })
+      .join("\n  ");
+
+    this.extendPropsString = Object.keys(this.props)
+      .map((propId) => {
+        return `${
+          validJavaScriptIdentifer.test(propId)
+            ? propId
+            : JSON.stringify(propId)
+        }: Object as () => Props[${JSON.stringify(propId)}],`;
+      })
+      .join("\n    ");
   }
 
   setImports() {
@@ -64,7 +79,7 @@ export class VueTemplate extends Template {
 
     propString += validJavaScriptIdentifer.test(propId)
       ? propId
-      : `"${propId}"`;
+      : JSON.stringify(propId);
 
     if (!prop.required) {
       propString += "?";
@@ -74,11 +89,11 @@ export class VueTemplate extends Template {
 
     switch (prop.type) {
       case "PropTypeVariable": {
-        propString += "any;";
+        propString += "any";
         break;
       }
       case "PropTypeAttributeValue": {
-        propString += `any;`;
+        propString += `any`;
         break;
       }
       case "PropTypeAttributeValueOptions": {
@@ -86,7 +101,7 @@ export class VueTemplate extends Template {
           .map((key) => {
             return validJavaScriptIdentifer.test(key) ? `"${key}"` : `"${key}"`;
           })
-          .join(" | ")};`;
+          .join(" | ")}`;
       }
     }
 
@@ -179,7 +194,7 @@ export class VueTemplate extends Template {
           containsConstant &&
           attributeValue.type !== "MetaAttributeConstant"
         ) {
-          computedProp.expression += "${";
+          computedProp.expression += "${ ";
         }
         const [propExpression, propId] = this.renderAttributeValue(
           attributeValue
@@ -192,7 +207,7 @@ export class VueTemplate extends Template {
           containsConstant &&
           attributeValue.type !== "MetaAttributeConstant"
         ) {
-          computedProp.expression += " || ''}";
+          computedProp.expression += " || '' }";
         }
       });
 
@@ -337,7 +352,18 @@ export class VueTemplate extends Template {
 
     const componentVarName = startCase(this.templateId).replace(/\s/gi, "");
 
-    this.script = `const ${componentVarName} = Vue.extend({\n`;
+    this.script = "";
+
+    if (this.propsString) {
+      this.script += `type Props = {\n  ${this.propsString}\n};\n\n`;
+    }
+
+    this.script += `const ${componentVarName} = Vue.extend({\n`;
+    if (this.extendPropsString) {
+      this.script += "  props: {\n    ";
+      this.script += this.extendPropsString;
+      this.script += "\n  },\n";
+    }
     if (computedString) {
       this.script += `  computed: {\n`;
       this.script += `    ${computedString}\n`;
@@ -346,11 +372,11 @@ export class VueTemplate extends Template {
     this.script += `});\n`;
     this.script += `export default ${componentVarName};`;
 
-    this.finalData = `<template functional>\n<!-- this is prototype code. Vue generation in development. -->\n${this.template}\n</template>\n`;
+    this.finalData = `<template functional>\n${this.template}\n</template>\n`;
     if (css) {
       this.finalData += `<style scoped>\n${css}\n</style>\n`;
     }
-    this.finalData += `<script lang="ts">\n${this.imports}\n\n${this.typeScript}\n\n${this.script}\n</script>\n`;
+    this.finalData += `<script lang="ts">\n${this.imports}\n\n${this.script}\n</script>\n`;
 
     try {
       this.finalData = prettier.format(this.finalData, {
