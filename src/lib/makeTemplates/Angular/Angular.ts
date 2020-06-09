@@ -124,7 +124,23 @@ export class AngularTemplate extends Template {
     attributeName: string,
     attributeValues: MetaAttributeValues
   ): string {
-    // TODO: escape attribute values and keys
+    if (
+      isFunctionReference(attributeName) &&
+      attributeValues.length === 1 &&
+      attributeValues[0].type === "MetaAttributeVariable"
+    ) {
+      const firstValue = attributeValues[0];
+      if (firstValue.type !== "MetaAttributeVariable") {
+        // TS narrowing
+        throw Error("Internal error");
+      }
+
+      const valueAsString = JSON.stringify(firstValue.id);
+      return ` (${attributeName.substring(2)})=${valueAsString.substring(
+        0,
+        valueAsString.length - 1
+      )}($event)"`;
+    }
 
     const containsOnlyConstants = attributeValues.every(
       (attributeValue) => attributeValue.type === "MetaAttributeConstant"
@@ -249,4 +265,8 @@ export class AngularTemplate extends Template {
       [`${this.dirname}/${this.templateId}.ts`]: this.finalData,
     };
   }
+}
+
+function isFunctionReference(str: string): boolean {
+  return str.startsWith("on") && str.length >= 3;
 }

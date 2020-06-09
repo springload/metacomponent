@@ -16,7 +16,12 @@ export class VueJSXTemplate extends ReactTemplate {
   fragmentStrings: FragmentStrings;
 
   constructor(args: OnConstructor) {
-    super({ ...args, fragmentStrings, dirname: args.dirname || "vue-jsx" });
+    super({
+      ...args,
+      fragmentStrings,
+      reactNameReplacement: vueJSXNameReplacement,
+      dirname: args.dirname || "vue-jsx",
+    });
 
     this.render = "";
     this.vue = "";
@@ -44,7 +49,11 @@ export class VueJSXTemplate extends ReactTemplate {
         break;
       }
       case "PropTypeAttributeValue": {
-        propString += `String as () => string`;
+        if (isFunctionReference(prop.attributeName)) {
+          propString += `Function as (e: Event) => Function`;
+        } else {
+          propString += `String as () => string`;
+        }
         break;
       }
       case "PropTypeAttributeValueOptions": {
@@ -99,4 +108,15 @@ export class VueJSXTemplate extends ReactTemplate {
       [`${this.dirname}/${this.templateId}.ts`]: this.vue,
     };
   }
+}
+
+function isFunctionReference(str: string): boolean {
+  return str.startsWith("on");
+}
+
+function vueJSXNameReplacement(str: string): string {
+  if (isFunctionReference(str) && str.startsWith("on")) {
+    return `on${str.substring(2, 3).toUpperCase()}${str.substring(3)}`;
+  }
+  return str;
 }

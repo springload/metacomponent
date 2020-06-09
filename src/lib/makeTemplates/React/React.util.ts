@@ -19,7 +19,17 @@ export function attributeNameTransform(attributeName: string): string {
   // React uses JavaScript names not HTML names which can be different
   // such as className="" vs class="" and htmlFor="" vs for="" and so on
   // so we need to convert them...
-  return transform[attributeName] ? transform[attributeName] : attributeName;
+  if (transform[attributeName]) {
+    return transform[attributeName];
+  }
+
+  if (attributeName.startsWith("on")) {
+    return `on${attributeName
+      .substring(2, 3)
+      .toUpperCase()}${attributeName.substring(3)}`;
+  }
+
+  return attributeName;
 }
 
 export function getTypeScriptElementName(tagName: string): string {

@@ -17,7 +17,8 @@ export class ReactTemplate extends Template {
   typeScript: string;
   constants: string;
   fileData: string;
-  fragmentStrings: FragmentStrings;
+  fragmentStrings: Required<ReactExtensions>["fragmentStrings"];
+  reactNameReplacement: Required<ReactExtensions>["reactNameReplacement"];
 
   constructor(args: OnConstructor & ReactExtensions) {
     super({ ...args, dirname: args.dirname || "react" });
@@ -32,6 +33,10 @@ export class ReactTemplate extends Template {
       start: "<React.Fragment>",
       end: "</React.Fragment>",
     };
+    this.reactNameReplacement =
+      args.reactNameReplacement !== undefined
+        ? args.reactNameReplacement
+        : attributeNameTransform;
 
     this.setTypeScript = this.setTypeScript.bind(this);
     this.renderPropType = this.renderPropType.bind(this);
@@ -133,7 +138,7 @@ export class ReactTemplate extends Template {
     attributeValues: MetaAttributeValues
   ): void {
     // TODO: escape attribute values and keys
-    const reactAttributeName = attributeNameTransform(attributeName);
+    const reactAttributeName = this.reactNameReplacement(attributeName);
     this.render += ` ${reactAttributeName}=`;
     const containsExpression = attributeValues.some(
       (attributeValue) => attributeValue.type !== "MetaAttributeConstant"
@@ -182,13 +187,13 @@ export class ReactTemplate extends Template {
       case "MetaAttributeVariable": {
         this.render += validJavaScriptIdentifer.test(attributeValue.id)
           ? attributeValue.id
-          : `props["${attributeValue.id}"]`;
+          : `props[${JSON.stringify(attributeValue.id)}]`;
         break;
       }
       case "MetaAttributeVariableOptions": {
         const identifier = validJavaScriptIdentifer.test(attributeValue.id)
           ? attributeValue.id
-          : `props["${attributeValue.id}"]`;
+          : `props[${JSON.stringify(attributeValue.id)}]`;
 
         if (!this.props[attributeValue.id].required) {
           this.render += `${identifier} ? `;
@@ -222,7 +227,7 @@ export class ReactTemplate extends Template {
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     const identifier = validJavaScriptIdentifer.test(variable.id)
       ? variable.id
-      : `props["${variable.id}"]`;
+      : `props[${JSON.stringify(variable.id)}]`;
     this.render += `{${identifier} !== undefined ? ${identifier} : `;
     if (variable.children.length === 0) {
       this.render += `null`;
@@ -304,4 +309,5 @@ export type FragmentStrings = {
 
 export type ReactExtensions = {
   fragmentStrings?: FragmentStrings;
+  reactNameReplacement?: (name: string) => string;
 };

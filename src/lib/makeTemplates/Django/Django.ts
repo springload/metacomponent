@@ -108,9 +108,10 @@ export class DjangoTemplate extends Template {
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    this.data += `{% if ${stringToDjangoVar(
-      variable.id
-    )} %}{{ ${stringToDjangoVar(variable.id)} }}`;
+    if (variable.children.length > 0) {
+      this.data += `{% if ${stringToDjangoVar(variable.id)} %}`;
+    }
+    this.data += `{{ ${stringToDjangoVar(variable.id)} }}`;
     if (variable.children.length > 0) {
       this.data += `{% else %}`;
     }
