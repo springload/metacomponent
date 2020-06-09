@@ -128,6 +128,8 @@ export type MetaHTMLIfSuccess = MetaHTMLIfBase & {
   parseError: false;
   ids: string[];
   testAsJavaScriptExpression: string; // a string of codegen'd JS that can be used directly.
+  testAsPythonExpression: string; // a string of codegen'd JS that can be used directly.
+  testAsPHPExpression: string; // a string of codegen'd JS that can be used directly.
   // Other languages should be added. PRs welcome.
 };
 
@@ -327,6 +329,8 @@ function internalToPublic(nodes: MetaNodeInternal[]): MetaNode[] {
             ids: node.ids,
             children: node.children,
             testAsJavaScriptExpression: node.testAsJavaScriptExpression,
+            testAsPythonExpression: node.testAsPythonExpression,
+            testAsPHPExpression: node.testAsPHPExpression,
           };
         }
       case "Element":

@@ -8,7 +8,9 @@ import { ReactTemplate } from "./React/React";
 import { ReactStyledComponentsTemplate } from "./ReactStyledComponents/ReactStyledComponents";
 import { MustacheTemplate } from "./Mustache/Mustache";
 import { VueTemplate } from "./Vue/Vue";
+import { VueJSXTemplate } from "./Vue-JSX/Vue-JSX";
 import { AngularTemplate } from "./Angular/Angular";
+import { DjangoTemplate } from "./Django/Django";
 
 type MakeTemplatesProps = {
   templateId: string;
@@ -27,14 +29,16 @@ export function makeTemplates({
   return mergeTemplateFiles(
     makeTemplate(templateId, metaComponent, new HTMLTemplate(args)),
     makeTemplate(templateId, metaComponent, new CSSTemplate(args)),
+    makeTemplate(templateId, metaComponent, new MustacheTemplate(args)),
+    makeTemplate(templateId, metaComponent, new DjangoTemplate(args)),
     makeTemplate(templateId, metaComponent, new ReactTemplate(args)),
     makeTemplate(
       templateId,
       metaComponent,
       new ReactStyledComponentsTemplate(args)
     ),
-    makeTemplate(templateId, metaComponent, new MustacheTemplate(args)),
     makeTemplate(templateId, metaComponent, new VueTemplate(args)),
+    makeTemplate(templateId, metaComponent, new VueJSXTemplate(args)),
     makeTemplate(templateId, metaComponent, new AngularTemplate(args))
   );
 }
@@ -52,10 +56,8 @@ function makeTemplate(
     switch (node.type) {
       case "Element": {
         const openingElement = instance.onElement(node);
-        if (node.children.length > 0) {
-          node.children.forEach(walk);
-          instance.onCloseElement({ openingElement });
-        }
+        node.children.forEach(walk);
+        instance.onCloseElement({ openingElement, children: node.children });
         break;
       }
       case "Text": {

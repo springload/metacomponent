@@ -28,16 +28,43 @@ export const parseMetaHTMLIf = ({
 
   try {
     let testAsJavaScriptExpression = "";
+    let testAsPythonExpression = "";
+    let testAsPHPExpression = "";
     let ids: string[] = [];
     if (test) {
       const AST = parseExpression(test);
+      if (!["BinaryExpression", "Identifier"].includes(AST.type)) {
+        throw Error(
+          `<mt-if test="${test}"> expression must only include JavaScript expressions that are either (1) a variable, or (2) a variable comparison to a string " myVar === 'value' " or " myVar !== 'value' ".`
+        );
+      }
       ids = findIdentifiers(AST);
-      testAsJavaScriptExpression = generate(AST).code;
+      switch (AST.type) {
+        case "BinaryExpression": {
+          testAsJavaScriptExpression = generate(AST).code;
+          testAsPythonExpression = `${toPython(AST.left)} ${to2CharOperator(
+            AST.operator
+          )} ${toPython(AST.right)}`;
+          testAsPHPExpression = `${toPHP(AST.left)} ${to2CharOperator(
+            AST.operator
+          )} ${toPHP(AST.right)}`;
+          break;
+        }
+        case "Identifier": {
+          testAsJavaScriptExpression = generate(AST).code;
+          testAsPythonExpression = AST.name;
+          testAsPHPExpression = `$${AST.name}`;
+          break;
+        }
+      }
     }
+
     return {
       type: "If",
       ids,
       testAsJavaScriptExpression,
+      testAsPythonExpression,
+      testAsPHPExpression,
       optional,
       parseError: false,
     };
@@ -62,4 +89,34 @@ function findIdentifiers(AST: ReturnType<typeof parseExpression>): string[] {
   Object.keys(AST).forEach((name) => walk(AST[name]));
 
   return ids;
+}
+
+function toPHP(astNode: ReturnType<typeof parseExpression>): string {
+  switch (astNode.type) {
+    case "Identifier":
+      return `$${astNode.name.toString()}`;
+    case "StringLiteral": {
+      return JSON.stringify(astNode.value.toString()); // handles escaping similarly to PHP
+    }
+  }
+  throw Error(`Unsupported AST type "${astNode.type}"`);
+}
+
+function toPython(astNode: ReturnType<typeof parseExpression>): string {
+  switch (astNode.type) {
+    case "Identifier":
+      return stringToDjangoVar(astNode.name.toString());
+    case "StringLiteral": {
+      return JSON.stringify(astNode.value.toString()); // handles escaping similarly to PHP
+    }
+  }
+  throw Error(`Unsupported AST type "${astNode.type}"`);
+}
+
+function to2CharOperator(operator: string): string {
+  return operator.replace(/===/gi, "==").replace(/!==/gi, "!=");
+}
+
+export function stringToDjangoVar(str: string): string {
+  return str.replace(/[^a-zA-Z_]/g, "_");
 }

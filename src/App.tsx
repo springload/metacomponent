@@ -29,12 +29,21 @@ const theme = "monokai";
 
 const showEverything = window.document.location?.search.includes("?everything");
 
+let hashState: any = window.location.hash
+  ? parseInt(window.location.hash, 10)
+  : undefined;
+if (Number.isNaN(hashState)) {
+  hashState = undefined;
+}
+
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
 const resultIndex = resultIndexString
   ? parseInt(resultIndexString, 10)
   : showEverything
   ? 0
-  : 3;
+  : hashState
+  ? hashState
+  : 5;
 
 const defaultValues = {
   metaHTML:
@@ -74,7 +83,9 @@ function App() {
     defaultValues.resultIndex
   );
   const [isWhatOpen, setIsWhatOpen] = useState<boolean>(false);
-  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(false);
+  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(
+    window.location.hash.includes("why")
+  );
   const debounceTime = useRef<number>(100);
   const iframeRef = useRef(null);
 
@@ -382,9 +393,11 @@ function App() {
                         STORAGE_RESULT_INDEX,
                         resultIndex.toString()
                       );
+                      window.location.hash = resultIndex.toString();
                     }}
+                    title={formatName(file)}
                   >
-                    {formatName(file)}
+                    {formatBriefName(file)}
                   </button>
                 ))
               : null}
@@ -456,15 +469,28 @@ function pathType(file: string) {
   return file.substring(0, file.indexOf("/"));
 }
 
-function formatName(file: string): string {
-  const dirname = pathType(file).replace(/-/g, " ");
+function formatName(file: string): string | undefined {
+  const dirname = pathType(file);
+  if (dirname === "react-styled-components") {
+    return "React with Styled Components 💅";
+  }
+  return undefined;
+}
+
+function formatBriefName(file: string): string {
+  const dirname = pathType(file);
+
   switch (dirname) {
     case "html":
       return "HTML";
     case "css":
       return "CSS";
+    case "react-styled-components":
+      return "React 💅";
+    case "vue-jsx":
+      return "Vue JSX";
     default:
-      return startCase(dirname);
+      return startCase(dirname).replace(/-/g, " ");
   }
 }
 
@@ -504,23 +530,19 @@ MetaComponent can generate stateless components in a variety of languages.
 
 Some of its use-cases involve:
 * migrating to another template format as a one-off conversion;
-* providing templates in multiple formats as an ongoing feature.
+* providing templates in multiple formats as an ongoing feature of a Design System or Pattern Library.
 
 ### Design Systems / Pattern Libraries
 
-It's often the case that large organisations and governments, for a variety of reasons, have a large variety of web template technology.
+It's often the case that governments and large organisations have websites with a divergent behaviours and appearances (HTML and CSS) and so an obvious solution is Design Systems and Pattern Libraries where you'd publish UX advice, and components for people to use in order to adhere to the look of your organisation.
 
-They use React, Vue, Angular, Handlebars, Jinja2, Twig, and many, many more.
+There may also be divergence in web component technology -- they use React, Vue, Angular, Handlebars, Jinja2, Twig, and many, many more.
 
-As a result, websites feel quite different.
+It may not be practical to converge template formats, or there might be good reasons for divergence.
 
-To unify that behaviour and appearance (HTML and CSS) an obvious answer is Design Systems and Pattern Libraries where you'd publish UX advice, and components.
+It would be a lot of manual work to support all of those web frameworks, and so Design Systems and Pattern Libraries typically offer HTML/CSS, maybe one additional format, and all of these are written by hand.
 
-It would be a lot of manual work to support all of those web frameworks, and so typically HTML/CSS and only one additional component format is supported, and all of them are written by hand.
-
-Design Systems often solves one problem (standardising HTML/CSS) while creating new technical barriers that may hinder adoption.
-
-If you consider situations like governments or large organisations with many different technology stacks, it may not be practical to converge template formats, or there might be good reasons for divergence.
+Design Systems often solve one problem (standardising HTML/CSS) while creating new technical barriers that may hinder adoption.
 
 **MetaComponent complements Design Systems/Pattern Libraries by generating components for many frameworks to make it easiser to adopt.**
 

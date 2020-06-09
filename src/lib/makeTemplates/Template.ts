@@ -4,6 +4,7 @@ import {
   MetaHTMLComment,
   MetaHTMLIf,
   MetaHTMLVariable,
+  MetaNode,
 } from "../metaComponent/metaComponent";
 import { TemplateFiles } from "../types";
 import { Props } from "../metaComponent/getProps";
@@ -32,6 +33,7 @@ export type OnConstructor = {
 };
 
 type OnCloseElement = {
+  children: MetaNode[];
   openingElement: string;
 };
 

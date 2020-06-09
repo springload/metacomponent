@@ -1,16 +1,15 @@
 import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 import { MetaAttributeValues } from "../../metaComponent/parseMetaHTMLAttribute";
+import { stringToDjangoVar } from "../../metaComponent/parseMetaHTMLIf";
 import { assertUnreachable } from "../utils";
 
-export class MustacheTemplate extends Template {
+export class DjangoTemplate extends Template {
   data: string;
-  unescapedVariables: string[];
 
   constructor(args: OnConstructor) {
-    super({ ...args, dirname: "mustache" });
+    super({ ...args, dirname: "django" });
     this.data = "";
-    this.unescapedVariables = [];
   }
 
   onElement(
@@ -39,7 +38,7 @@ export class MustacheTemplate extends Template {
       if (attributeVariable.type !== "MetaAttributeVariable") {
         throw Error(`Internal error`);
       }
-      attr += `{{#${attributeVariable.id}}}`;
+      attr += `{% if ${stringToDjangoVar(attributeVariable.id)} %}`;
     }
 
     attr += name;
@@ -53,20 +52,26 @@ export class MustacheTemplate extends Template {
               return attributeValue.value;
             }
             case "MetaAttributeVariable": {
-              return `{{${attributeValue.id}}}`;
+              return `{{ ${stringToDjangoVar(attributeValue.id)} }}`;
             }
             case "MetaAttributeVariableOptions": {
-              // Because Mustache is "logic-less" we can't have
-              // if (x === 1) { result1 } else if (x === 2) { result2 } endif;
-              // we can only have truthy results, so we instead we use the fact
-              // that the "=" character is a valid part of a variable name and
-              // we make variables for each possible enumeration. So when
-              // comparing a variable of "x" for a value of "1" we instead check
-              // for a variable named "x=1" literally. So now the code looks like,
-              // if (x=1) { result1 } endif; if(x=2) { result2 } endif;
               return Object.entries(attributeValue.options)
-                .map(([optionName, optionValue]) => {
-                  return `{{${attributeValue.id}=${optionName}}}${optionValue}{{/${attributeValue.id}=${optionName}}}`;
+                .map(([optionName, optionValue], index, arr) => {
+                  let exp = "";
+                  if (index === 0) {
+                    exp += `{% if `;
+                  } else {
+                    exp += `{% elif `;
+                  }
+                  exp += stringToDjangoVar(attributeValue.id);
+                  exp += " == ";
+                  exp += JSON.stringify(optionName);
+                  exp += ` %}`;
+                  exp += optionValue;
+                  if (index === arr.length - 1) {
+                    exp += `{% endif %}`;
+                  }
+                  return exp;
                 })
                 .join("");
             }
@@ -84,7 +89,7 @@ export class MustacheTemplate extends Template {
       if (attributeVariable.type !== "MetaAttributeVariable") {
         throw Error(`Internal error`);
       }
-      attr += `{{/${attributeVariable.id}}}`;
+      attr += `{% endif %}`;
     }
 
     return attr;
@@ -99,49 +104,38 @@ export class MustacheTemplate extends Template {
   }
 
   onComment(onComment: Parameters<TemplateFormat["onComment"]>[0]): void {
-    this.data += `{{! ${onComment.value} }}`;
+    this.data += `{% ${onComment.value} %}`;
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    this.unescapedVariables.push(variable.id);
-    this.data += `{{{${variable.id}}}}`;
+    this.data += `{% if ${stringToDjangoVar(
+      variable.id
+    )} %}{{ ${stringToDjangoVar(variable.id)} }}`;
     if (variable.children.length > 0) {
-      this.data += `{{^${variable.id}}}`;
+      this.data += `{% else %}`;
     }
   }
 
   onCloseVariable(closeVariable: Parameters<TemplateFormat["onVariable"]>[0]) {
     if (closeVariable.children.length > 0) {
-      this.data += `{{/${closeVariable.id}}}`;
+      this.data += `{% endif %}`;
     }
   }
 
   onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {
     if (onIf.parseError === false) {
-      this.data += `{{#${this.renderIf(onIf.testAsJavaScriptExpression)}}}`;
+      this.data += `{% ${onIf.testAsPythonExpression} %}`;
     }
-  }
-
-  renderIf(expression: string): string {
-    return expression.replace(/[\s"']/gi, "").replace(/[=]+/g, "=");
   }
 
   onCloseIf(onCloseIf: Parameters<TemplateFormat["onCloseIf"]>[0]) {
     if (onCloseIf.parseError === false) {
-      this.data += `{{/${this.renderIf(
-        onCloseIf.testAsJavaScriptExpression
-      )}}}`;
+      this.data += `{% endif %}`;
     }
   }
 
   onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
-    let unescaped = "";
-    if (this.unescapedVariables.length) {
-      unescaped = `{{!\nDEVELOPER NOTE: This template uses triple-bracket "{{{" which disables HTML escaping.\nPlease ensure these variables are properly escaped:\n\n  * ${this.unescapedVariables.join(
-        ",\n  * "
-      )}.\n\nThe reason for this is to allow raw HTML, for values such as (eg) <span lang="mi">Māori</span>. }}\n`;
-    }
-    this.data = `${unescaped}${this.data}`;
+    // pass
   }
 
   serialize(): TemplateFiles {

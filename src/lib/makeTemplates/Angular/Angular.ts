@@ -1,6 +1,6 @@
 import startCase from "lodash/startCase";
 import prettier from "prettier/standalone";
-import parserAngular from "prettier/parser-angular";
+import parserTypeScript from "prettier/parser-typescript";
 import { Template, TemplateFormat, OnConstructor } from "../Template";
 import { TemplateFiles } from "../../types";
 import {
@@ -115,9 +115,7 @@ export class AngularTemplate extends Template {
         this.renderAttribute(attributeName, attributes[attributeName])
       )
       .join(" ");
-    if (onElement.children.length === 0) {
-      this.template += "/";
-    }
+
     this.template += ">";
     return nodeName;
   }
@@ -208,11 +206,12 @@ export class AngularTemplate extends Template {
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    this.template += `{{${variable.id} || `;
+    this.template += `{{${variable.id}}}`;
+    this.template += `<ng-template *ngIf="${variable.id} == undefined">`;
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {
-    this.template += "}}";
+    this.template += "</ng-template>";
   }
 
   onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {
@@ -238,7 +237,7 @@ export class AngularTemplate extends Template {
       this.finalData = prettier.format(this.finalData, {
         parser: "typescript",
         printWidth: 80,
-        plugins: [parserAngular],
+        plugins: [parserTypeScript],
       });
     } catch (e) {
       // pass

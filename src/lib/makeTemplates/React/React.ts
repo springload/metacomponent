@@ -11,19 +11,27 @@ import { validJavaScriptIdentifer } from "../utils";
 
 export class ReactTemplate extends Template {
   imports: string;
+  renderPrefix: string;
   render: string;
+  renderSuffix: string;
   typeScript: string;
   constants: string;
   fileData: string;
+  fragmentStrings: FragmentStrings;
 
-  constructor(args: OnConstructor) {
+  constructor(args: OnConstructor & ReactExtensions) {
     super({ ...args, dirname: args.dirname || "react" });
-
     this.imports = "";
+    this.renderPrefix = "";
     this.render = "";
+    this.renderSuffix = "";
     this.typeScript = "";
     this.fileData = "";
     this.constants = "";
+    this.fragmentStrings = args.fragmentStrings || {
+      start: "<React.Fragment>",
+      end: "</React.Fragment>",
+    };
 
     this.setTypeScript = this.setTypeScript.bind(this);
     this.renderPropType = this.renderPropType.bind(this);
@@ -87,21 +95,21 @@ export class ReactTemplate extends Template {
       (propId) => !validJavaScriptIdentifer.test(propId)
     );
     if (containsInvalidIdentifiers) {
-      this.render += `export default function ${this.templateId}(props: Props){\n`;
+      this.renderPrefix += `function ${this.templateId}(props: Props){\n`;
       const destructure = propIds
         .filter((key) => validJavaScriptIdentifer.test(key))
         .join(", ");
       if (destructure) {
-        this.render += `  const { ${destructure} } = props;\n`;
+        this.renderPrefix += `  const { ${destructure} } = props;\n`;
       }
     } else {
-      this.render += `export default function ${
+      this.renderPrefix += `export default function ${
         this.templateId
       }({ ${propIds.join(", ")} }: Props){\n`;
     }
-    this.render += `  return (\n`;
+    this.renderPrefix += `  return (\n`;
     if (this.hasMultipleRootNodes) {
-      this.render += `<React.Fragment>`;
+      this.renderPrefix += this.fragmentStrings.start;
     }
   }
 
@@ -150,7 +158,7 @@ export class ReactTemplate extends Template {
       }
       this.renderAttributeValue(attributeValue);
       if (containsConstant && attributeValue.type !== "MetaAttributeConstant") {
-        this.render += " || ''}";
+        this.render += " : ''}";
       }
     });
 
@@ -183,7 +191,7 @@ export class ReactTemplate extends Template {
           : `props["${attributeValue.id}"]`;
 
         if (!this.props[attributeValue.id].required) {
-          this.render += `${identifier} && `;
+          this.render += `${identifier} ? `;
         }
         this.render += JSON.stringify(attributeValue.options);
         this.render += `[${identifier}]`;
@@ -194,8 +202,11 @@ export class ReactTemplate extends Template {
   onCloseElement(
     onCloseElement: Parameters<TemplateFormat["onCloseElement"]>[0]
   ): void {
-    const { openingElement } = onCloseElement;
-    this.render += `\n</${openingElement}>\n`;
+    const { openingElement, children } = onCloseElement;
+    if (children.length > 0) {
+      // because it was already rendered as a self-closing if it had no children
+      this.render += `\n</${openingElement}>\n`;
+    }
   }
 
   onText(onText: Parameters<TemplateFormat["onText"]>[0]): void {
@@ -219,10 +230,10 @@ export class ReactTemplate extends Template {
       if (variable.children[0].type === "Text") {
         this.render += `\``;
       } else {
-        this.render += `(<React.Fragment>`;
+        this.render += `(${this.fragmentStrings.start}`;
       }
     } else {
-      this.render += `(<React.Fragment>`;
+      this.render += `(${this.fragmentStrings.start}`;
     }
   }
 
@@ -233,29 +244,33 @@ export class ReactTemplate extends Template {
     ) {
       this.render += `\``;
     } else if (variable.children.length > 0) {
-      this.render += `</React.Fragment>)`;
+      this.render += `${this.fragmentStrings.end})`;
     }
     this.render += `}`;
   }
 
   onIf(onIf: Parameters<TemplateFormat["onIf"]>[0]) {
     if (onIf.parseError === false) {
-      this.render += `{${onIf.testAsJavaScriptExpression} && (<React.Fragment>`;
+      this.render += `{${onIf.testAsJavaScriptExpression} && (${this.fragmentStrings.start}`;
     } else {
-      this.render += `{false && (<React.Fragment>`;
+      this.render += `{false && (${this.fragmentStrings.start}`;
     }
   }
 
   onCloseIf(onCloseIf: Parameters<TemplateFormat["onCloseIf"]>[0]) {
-    this.render += `</React.Fragment>)}`;
+    this.render += `${this.fragmentStrings.end})}`;
   }
 
-  onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
+  onFinalise(
+    onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]
+  ): TemplateFiles | undefined {
     if (this.hasMultipleRootNodes) {
-      this.render += `</React.Fragment>`;
+      this.renderSuffix += this.fragmentStrings.end;
     }
 
-    this.fileData = `${this.imports}\n${this.typeScript}\n\n${this.constants}\n\n${this.render}\n  )\n};\n`;
+    const renderFunction = `${this.renderPrefix}${this.render}${this.renderSuffix})\n};`;
+
+    this.fileData = `${this.imports}\n${this.typeScript}\n\n${this.constants}\n\nexport default ${renderFunction}\n`;
 
     try {
       this.fileData = prettier.format(this.fileData, {
@@ -266,6 +281,13 @@ export class ReactTemplate extends Template {
     } catch (e) {
       // pass
     }
+
+    return {
+      renderFunction,
+      render: this.render,
+      typeScript: this.typeScript,
+      constants: this.constants,
+    };
   }
 
   serialize(): TemplateFiles {
@@ -274,3 +296,12 @@ export class ReactTemplate extends Template {
     };
   }
 }
+
+export type FragmentStrings = {
+  start: string;
+  end: string;
+};
+
+export type ReactExtensions = {
+  fragmentStrings?: FragmentStrings;
+};

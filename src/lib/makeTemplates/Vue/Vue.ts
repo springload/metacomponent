@@ -89,11 +89,11 @@ export class VueTemplate extends Template {
 
     switch (prop.type) {
       case "PropTypeVariable": {
-        propString += "any";
+        propString += "Vue.VNode";
         break;
       }
       case "PropTypeAttributeValue": {
-        propString += `any`;
+        propString += `string`;
         break;
       }
       case "PropTypeAttributeValueOptions": {
