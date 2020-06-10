@@ -1,8 +1,8 @@
 {
   "name": "metacomponent",
   "description": "Web Component converter supporting React, Vue, Mustache/Handlebars, Angular, Django...",
-  "version": "0.0.6",
-  "homepage": "/metacomponent/",
+  "version": "0.0.7",
+  "homepage": "https://springload.github.io/metacomponent/",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "devDependencies": {
