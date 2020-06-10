@@ -1,19 +1,22 @@
-<center>
 # MetaComponent 🦚
-</center>
 
 MetaComponent is a component generator that can convert a single component definition into...
 
 - [x] HTML
 - [x] CSS
-- [x] React (TypeScript)
+- [x] Mustache/Handlebars
+- [x] Django
+- [x] React
 - [x] React with Styled-Components
 - [x] Vue
 - [x] Angular
-- [x] Mustache/Handlebars
 - [ ] Twig (Drupal / PHP)
 
 This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
+
+## Demo
+
+Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 
 ## Why?
 
@@ -25,10 +28,6 @@ See [MetaComponent: Why?](https://springload.github.io/metacomponent#why).
 - [x] MetaComponent bundles only the CSS relevant to your HTML, so give it your whole CSS file and then MetaComponent will try to 'tree shake' your CSS, SCSS, and Styled Components declarations.
 - [ ] It can generate code examples to show example usage of these component formats.
 
-## Demo
-
-Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
-
 ## Install
 
 `npm i metacomponent` or `yarn add metacomponent`.
@@ -38,6 +37,11 @@ Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 - More template formats... contribute your favourite!
 - Better CSS support.
 
+## API
+
+See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest you use JSDOM like this example.
+
 # Out of scope
 
-- Loops. We support `children` values (childNodes) so you could just nest other components instead. Maybe we don't need this.
+- Loops. We support `children` values (arbitrary childNodes) so you could just nest other components instead. Maybe we don't need this.
+- It produces TypeScript components and you could always convert that to JavaScript... so probably no need to produce JavaScript components directly.
