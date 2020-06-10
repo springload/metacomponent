@@ -104,7 +104,7 @@ export class MustacheTemplate extends Template {
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     this.unescapedVariables.push(variable.id);
-    this.data += `{{{${variable.id}}}}`;
+    this.data += `{{{ ${variable.id} }}}`;
     if (variable.children.length > 0) {
       this.data += `{{^${variable.id}}}`;
     }

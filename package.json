@@ -1,5 +1,6 @@
 {
   "name": "metacomponent",
+  "description": "Web Component converter supporting React, Vue, Mustache/Handlebars, Angular, Django...",
   "version": "0.0.4",
   "homepage": "/metacomponent/",
   "main": "dist/index.js",
@@ -65,5 +66,16 @@
     "lodash": "^4.17.15",
     "postcss-selector-parser": "^6.0.2",
     "prettier": "^2.0.5"
-  }
+  },
+  "keywords": [
+    "component",
+    "converter",
+    "template",
+    "react",
+    "vue",
+    "typescript",
+    "mustache",
+    "django",
+    "angular"
+  ]
 }

@@ -46,7 +46,19 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
     const styledAttributes = {
       ...onElement.attributes,
     };
-    delete styledAttributes["class"];
+
+    // DEV Note. We delete the 'class' because it's assumed that we know about
+    // all the CSS used, however it's possible that they want a class that
+    // refers to an external stylesheet, so we support styledclass="stuff"
+    // which will overwrite the class, if they want that.
+    if (styledAttributes["styledclass"]) {
+      styledAttributes["class"] = styledAttributes["styledclass"];
+
+      delete styledAttributes["styledclass"];
+    } else {
+      delete styledAttributes["class"];
+    }
+
     onElement.cssProperties.forEach((cssProperty) => {
       if (cssProperty.type === "MetaCSSPropertiesConstantNode") return;
       styledAttributes[cssProperty.id] = [

@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "jsx": "react",
     "rootDir": "./",
-    "outDir": "../../dist"
+    "outDir": "../../dist",
+    "declaration": true
   },
   "include": ["**/*"]
 }

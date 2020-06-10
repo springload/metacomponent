@@ -372,7 +372,7 @@ export class VueTemplate extends Template {
     this.script += `});\n`;
     this.script += `export default ${componentVarName};`;
 
-    this.finalData = `<template functional>\n${this.template}\n</template>\n`;
+    this.finalData = `<template>\n${this.template}\n</template>\n`;
     if (css) {
       this.finalData += `<style scoped>\n${css}\n</style>\n`;
     }

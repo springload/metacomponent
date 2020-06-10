@@ -118,5 +118,5 @@ function to2CharOperator(operator: string): string {
 }
 
 export function stringToDjangoVar(str: string): string {
-  return str.replace(/[^a-zA-Z_]/g, "_");
+  return str.replace(/[^a-zA-Z_0-9]/g, "_");
 }

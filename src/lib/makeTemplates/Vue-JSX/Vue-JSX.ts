@@ -84,11 +84,19 @@ export class VueJSXTemplate extends ReactTemplate {
       .filter((propId) => validJavaScriptIdentifer.test(propId))
       .join(", ")} } = props;`;
 
-    this.vue = `// Vue3 Fragment component\nimport Vue, { Fragment } from 'vue';\n\nexport default Vue.component(${JSON.stringify(
+    const renderString = `${this.hasMultipleRootNodes ? "<Fragment>" : ""}${
+      result.render
+    }${this.hasMultipleRootNodes ? "</Fragment>" : ""}`;
+
+    if (renderString.includes(this.fragmentStrings.start)) {
+      this.vue = `// Vue3 Fragment component\nimport Vue, { Fragment } from 'vue';`;
+    } else {
+      this.vue = `import Vue from 'vue';`;
+    }
+
+    this.vue += `\n\nexport default Vue.component(${JSON.stringify(
       this.templateId
-    )}, {\n  functional: true,\n  ${propsString}\n  render: function(h, context) {\n    const { props } = context;\n    ${spreadConstProps}\n    return (${
-      this.hasMultipleRootNodes ? "<Fragment>" : ""
-    }${result.render}${this.hasMultipleRootNodes ? "</Fragment>" : ""})\n }})`;
+    )}, {\n  functional: true,\n  ${propsString}\n  render: function(h, context) {\n    const { props } = context;\n    ${spreadConstProps}\n    return (${renderString})\n }})`;
 
     try {
       this.vue = prettier.format(this.vue, {

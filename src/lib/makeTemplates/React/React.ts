@@ -108,9 +108,9 @@ export class ReactTemplate extends Template {
         this.renderPrefix += `  const { ${destructure} } = props;\n`;
       }
     } else {
-      this.renderPrefix += `export default function ${
-        this.templateId
-      }({ ${propIds.join(", ")} }: Props){\n`;
+      this.renderPrefix += `function ${this.templateId}({ ${propIds.join(
+        ", "
+      )} }: Props){\n`;
     }
     this.renderPrefix += `  return (\n`;
     if (this.hasMultipleRootNodes) {
@@ -153,7 +153,9 @@ export class ReactTemplate extends Template {
       this.render += '"';
     }
 
-    if (containsExpression && containsConstant) {
+    const isTemplateString = containsExpression && containsConstant;
+
+    if (isTemplateString) {
       this.render += "`";
     }
 
@@ -161,13 +163,13 @@ export class ReactTemplate extends Template {
       if (containsConstant && attributeValue.type !== "MetaAttributeConstant") {
         this.render += "${";
       }
-      this.renderAttributeValue(attributeValue);
+      this.renderAttributeValue(attributeValue, isTemplateString);
       if (containsConstant && attributeValue.type !== "MetaAttributeConstant") {
-        this.render += " : ''}";
+        this.render += "}";
       }
     });
 
-    if (containsExpression && containsConstant) {
+    if (isTemplateString) {
       this.render += "`";
     }
 
@@ -178,28 +180,40 @@ export class ReactTemplate extends Template {
     }
   }
 
-  renderAttributeValue(attributeValue: MetaAttributeValue) {
+  renderAttributeValue(attributeValue: MetaAttributeValue, inString: boolean) {
     switch (attributeValue.type) {
       case "MetaAttributeConstant": {
         this.render += attributeValue.value;
         break;
       }
       case "MetaAttributeVariable": {
-        this.render += validJavaScriptIdentifer.test(attributeValue.id)
+        const isOptional = !this.props[attributeValue.id].required;
+        const identifier = validJavaScriptIdentifer.test(attributeValue.id)
           ? attributeValue.id
           : `props[${JSON.stringify(attributeValue.id)}]`;
+        if (isOptional) {
+          this.render += `${identifier}${inString ? ` || 'f'` : ""}`;
+        } else {
+          this.render += identifier;
+        }
         break;
       }
       case "MetaAttributeVariableOptions": {
+        const isOptional = !this.props[attributeValue.id].required;
         const identifier = validJavaScriptIdentifer.test(attributeValue.id)
           ? attributeValue.id
           : `props[${JSON.stringify(attributeValue.id)}]`;
 
-        if (!this.props[attributeValue.id].required) {
+        if (isOptional) {
           this.render += `${identifier} ? `;
         }
+
         this.render += JSON.stringify(attributeValue.options);
         this.render += `[${identifier}]`;
+
+        if (isOptional) {
+          this.render += `: ${inString ? "''" : "undefined"}`;
+        }
       }
     }
   }
