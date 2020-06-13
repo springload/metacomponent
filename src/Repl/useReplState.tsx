@@ -1,6 +1,4 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import prettier from "prettier/standalone";
-import parserPostCSS from "prettier/parser-postcss";
 
 import { localStorageWrapper } from "./storage";
 import { generateTemplates, MetaComponents } from "../lib";
@@ -123,6 +121,8 @@ export function useReplState() {
       ? aceMode(filePaths[resultIndex - 1])
       : "json";
 
+  const htmlTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+
   const publicSetMetaHTML = (val: string) => {
     let html = val;
     // DEVELOPER NOTE
@@ -140,33 +140,46 @@ export function useReplState() {
     // }
     html = html || val;
     setMetaHTML(html);
-    localStorageWrapper.setItem(STORAGE_METAHTML, html);
+    if (htmlTimer.current) {
+      clearTimeout(htmlTimer.current);
+    }
+    htmlTimer.current = setTimeout(
+      (_) => localStorageWrapper.setItem(STORAGE_METAHTML, html),
+      oneFrameMs
+    );
   };
 
-  const publicSetCSS = (val: string) => {
-    let css = val;
-    try {
-      css = prettier.format(css, {
-        parser: "scss",
-        printWidth: 80,
-        plugins: [parserPostCSS],
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    css = css || val;
+  const cssTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  const publicSetCSS = (css: string) => {
     setCSS(css);
-    localStorageWrapper.setItem(STORAGE_CSS, css);
+    if (cssTimer.current) {
+      clearTimeout(cssTimer.current);
+    }
+    cssTimer.current = setTimeout(
+      (_) => localStorageWrapper.setItem(STORAGE_CSS, css),
+      oneFrameMs
+    );
   };
+
+  const resultIndexTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const setResultIndexPublic = (index: number) => {
     setResultIndex(index);
-    localStorageWrapper.setItem(STORAGE_RESULT_INDEX, index.toString());
+
     window.location.hash = resultIndex.toString();
     const tabButton = document.getElementById(`tab-${index}`);
     if (tabButton) {
       tabButton.focus();
     }
+    if (resultIndexTimer.current) {
+      clearTimeout(resultIndexTimer.current);
+    }
+    resultIndexTimer.current = setTimeout(
+      (_) =>
+        localStorageWrapper.setItem(STORAGE_RESULT_INDEX, index.toString()),
+      oneFrameMs
+    );
   };
 
   const moveResultIndex = (
