@@ -2,8 +2,8 @@ import { callMetaComponent } from "../testHelpers";
 
 test("Can generate logical branches", () => {
   const result = callMetaComponent(
-    "mt-if",
-    `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if",
+    `<m-if test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -20,8 +20,8 @@ test("Can generate logical branches", () => {
 
 test("Can generate logical branches in JavaScript", () => {
   const result = callMetaComponent(
-    "mt-if",
-    `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if",
+    `<m-if test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -35,8 +35,8 @@ test("Can generate logical branches in JavaScript", () => {
 
 test("Can generate logical branches in Python", () => {
   const result = callMetaComponent(
-    "mt-if",
-    `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if",
+    `<m-if test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -50,8 +50,8 @@ test("Can generate logical branches in Python", () => {
 
 test("Can generate logical branches in PHP", () => {
   const result = callMetaComponent(
-    "mt-if",
-    `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if",
+    `<m-if test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -65,8 +65,8 @@ test("Can generate logical branches in PHP", () => {
 
 test("Optional false", () => {
   const result = callMetaComponent(
-    "mt-if-optional",
-    `<mt-if test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if-optional",
+    `<m-if test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -78,8 +78,8 @@ test("Optional false", () => {
 
 test("Optional true", () => {
   const result = callMetaComponent(
-    "mt-if-optional",
-    `<mt-if optional test="frog !== 'frush'   ">hello</mt-if>`,
+    "m-if-optional",
+    `<m-if optional test="frog !== 'frush'   ">hello</m-if>`,
     "",
     true
   );
@@ -92,8 +92,8 @@ test("Optional true", () => {
 test("Throws on syntax error with haltOnErrors=true", () => {
   expect(() => {
     callMetaComponent(
-      "mt-if",
-      `<mt-if test="frog ================ 'frush'   ">hello</mt-if>`,
+      "m-if",
+      `<m-if test="frog ================ 'frush'   ">hello</m-if>`,
       "",
       true
     );
@@ -102,8 +102,8 @@ test("Throws on syntax error with haltOnErrors=true", () => {
 
 test("Can gracefully handle syntax errors without throwing with haltOnErrors=false", () => {
   const result = callMetaComponent(
-    "mt-if",
-    `<mt-if test="frog ================ 'frush'   ">hello</mt-if>`,
+    "m-if",
+    `<m-if test="frog ================ 'frush'   ">hello</m-if>`,
     "",
     false
   );

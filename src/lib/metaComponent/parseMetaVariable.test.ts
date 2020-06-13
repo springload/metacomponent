@@ -2,8 +2,8 @@ import { callMetaComponent } from "../testHelpers";
 
 test("MetaVariable", () => {
   const result = callMetaComponent(
-    "mt-variable",
-    `<mt-variable id="thing"></mt-variable>`,
+    "m-variable",
+    `<m-variable id="thing"></m-variable>`,
     "",
     true
   );
@@ -15,8 +15,8 @@ test("MetaVariable", () => {
 
 test("MetaVariable", () => {
   const result = callMetaComponent(
-    "mt-variable",
-    `<mt-variable id="thing" optional></mt-variable>`,
+    "m-variable",
+    `<m-variable id="thing" optional></m-variable>`,
     "",
     true
   );
@@ -29,8 +29,8 @@ test("MetaVariable", () => {
 
 test("MetaVariable", () => {
   const result = callMetaComponent(
-    "mt-variable",
-    `<mt-variable id="thing?" optional></mt-variable>`,
+    "m-variable",
+    `<m-variable id="thing?" optional></m-variable>`,
     "",
     true
   );
@@ -43,14 +43,14 @@ test("MetaVariable", () => {
 
 test("Throws on syntax error with haltOnErrors=true", () => {
   expect(() => {
-    callMetaComponent("mt-variable", `<mt-variable></mt-variable>`, "", true);
+    callMetaComponent("m-variable", `<m-variable></m-variable>`, "", true);
   }).toThrow();
 });
 
 test("Doesn't throw on syntax error with haltOnErrors=false", () => {
   const result = callMetaComponent(
-    "mt-variable",
-    `<mt-variable></mt-variable>`,
+    "m-variable",
+    `<m-variable></m-variable>`,
     "",
     false
   );
@@ -59,8 +59,8 @@ test("Doesn't throw on syntax error with haltOnErrors=false", () => {
 
 test("MetaVariable with placeholder is retained", () => {
   const result = callMetaComponent(
-    "mt-variable",
-    `<mt-variable id="thing">some placeholder</mt-variable>`,
+    "m-variable",
+    `<m-variable id="thing">some placeholder</m-variable>`,
     "",
     true
   );

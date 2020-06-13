@@ -173,7 +173,7 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
   const names = Array.from(htmlElement.getAttributeNames());
   const nodeName = htmlElement.nodeName.toLowerCase();
 
-  if (nodeName === "mt-variable") {
+  if (nodeName === "m-variable") {
     return {
       ...parseMetaVariable({
         htmlElement,
@@ -183,7 +183,7 @@ function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
         nodeToMetaNode({ node: childNode, log })
       ),
     };
-  } else if (nodeName === "mt-if") {
+  } else if (nodeName === "m-if") {
     return {
       ...parseMetaHTMLIf({ htmlElement, log }),
       children: Array.from(node.childNodes).map((childNode) =>

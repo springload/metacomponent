@@ -1,9 +1,9 @@
 import { callMetaComponent } from "../testHelpers";
 
-test("mt-if doesn't interfere with css string", () => {
+test("m-if doesn't interfere with css string", () => {
   const result = callMetaComponent(
-    "mt-if-css",
-    `<mt-if test="bob === 'frog'"><h1 class="my-style"><mt-variable id="children"></mt-variable></h1></mt-if>`,
+    "m-if-css",
+    `<m-if test="bob === 'frog'"><h1 class="my-style"><m-variable id="children"></m-variable></h1></m-if>`,
     ".my-style { color: blue; }",
     true
   );

@@ -13,7 +13,7 @@ export const parseMetaVariable = ({
   let id = htmlElement.getAttribute("id") || htmlElement.getAttribute("key"); // 'key' is legacy from MetaComponent v1
   if (!id) {
     log(
-      `Expected to find 'id' (or 'key' for legacy support) attribute on mt-variable`
+      `Expected to find 'id' (or 'key' for legacy support) attribute on m-variable`
     );
     return { type: "Variable", id: "", optional: false, children: [] };
   }

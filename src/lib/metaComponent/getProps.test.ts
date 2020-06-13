@@ -1,9 +1,9 @@
 import { callMetaComponent } from "../testHelpers";
 
-test("Parsing document with mt-variable should generate props", () => {
+test("Parsing document with m-variable should generate props", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<mt-variable id="someId"><p>stuff</p>`,
+    "m-variable-makes-props",
+    `<m-variable id="someId"><p>stuff</p>`,
     "",
     true
   );
@@ -14,10 +14,10 @@ test("Parsing document with mt-variable should generate props", () => {
   });
 });
 
-test("Parsing document with mt-variable inside mt-if should generate props", () => {
+test("Parsing document with m-variable inside m-if should generate props", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<mt-if test="a==b"><mt-variable id="someId"></mt-if><p>stuff</p>`,
+    "m-variable-makes-props",
+    `<m-if test="a==b"><m-variable id="someId"></m-if><p>stuff</p>`,
     "",
     true
   );
@@ -29,10 +29,10 @@ test("Parsing document with mt-variable inside mt-if should generate props", () 
   });
 });
 
-test("Parsing document with mt-variable should generate optional props", () => {
+test("Parsing document with m-variable should generate optional props", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<mt-variable id="someId" optional><p>stuff</p>`,
+    "m-variable-makes-props",
+    `<m-variable id="someId" optional><p>stuff</p>`,
     "",
     true
   );
@@ -43,10 +43,10 @@ test("Parsing document with mt-variable should generate optional props", () => {
   });
 });
 
-test("Parsing document with mt-if should generate props", () => {
+test("Parsing document with m-if should generate props", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<mt-if test="aThing"><p>stuff</p></mt-if>`,
+    "m-variable-makes-props",
+    `<m-if test="aThing"><p>stuff</p></m-if>`,
     "",
     true
   );
@@ -57,10 +57,10 @@ test("Parsing document with mt-if should generate props", () => {
   });
 });
 
-test("Parsing document with mt-if should generate props", () => {
+test("Parsing document with m-if should generate props", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<mt-if test="aThing" optional><p>stuff</p></mt-if>`,
+    "m-variable-makes-props",
+    `<m-if test="aThing" optional><p>stuff</p></m-if>`,
     "",
     true
   );
@@ -73,7 +73,7 @@ test("Parsing document with mt-if should generate props", () => {
 
 test("Parsing document with attribute props that are required", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href }}">thing</a>`,
     "",
     true
@@ -89,7 +89,7 @@ test("Parsing document with attribute props that are required", () => {
 
 test("Parsing document with attribute props that are optional", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href? }}">thing</a>`,
     "",
     true
@@ -105,7 +105,7 @@ test("Parsing document with attribute props that are optional", () => {
 
 test("Parsing document with attribute props that are options, without 'as' nice names", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ }}">thing</a>`,
     "",
     true
@@ -124,7 +124,7 @@ test("Parsing document with attribute props that are options, without 'as' nice 
 
 test("Parsing document with attribute props that are options, with 'as' nice names", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo }}">thing</a>`,
     "",
     true
@@ -143,7 +143,7 @@ test("Parsing document with attribute props that are options, with 'as' nice nam
 
 test("Parsing document with attribute props that are multiple options, with 'as' nice names", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a>`,
     "",
     true
@@ -163,7 +163,7 @@ test("Parsing document with attribute props that are multiple options, with 'as'
 
 test("Parsing document with attribute props that are optional, with multiple options, with 'as' nice names", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
+    "m-variable-makes-props",
     `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a>`,
     "",
     true
@@ -183,8 +183,8 @@ test("Parsing document with attribute props that are optional, with multiple opt
 
 test("Props with same id are prioritised", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "m-variable-makes-props",
+    `<a href="{{ href?: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><m-if test="href">a thing</m-if>`,
     "",
     true
   );
@@ -203,8 +203,8 @@ test("Props with same id are prioritised", () => {
 
 test("Props with same id are prioritised, and have correct required status", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "m-variable-makes-props",
+    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><m-if test="href">a thing</m-if>`,
     "",
     true
   );
@@ -223,8 +223,8 @@ test("Props with same id are prioritised, and have correct required status", () 
 
 test("Props with same id are prioritised, and have correct required status", () => {
   const result = callMetaComponent(
-    "mt-variable-makes-props",
-    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><mt-if test="href">a thing</mt-if>`,
+    "m-variable-makes-props",
+    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><m-if test="href">a thing</m-if>`,
     "",
     true
   );
@@ -244,10 +244,10 @@ test("Props with same id are prioritised, and have correct required status", () 
 // TODO: decide whether to support legacy syntax..probably not
 // probably better to provide upgrade advice
 //
-// test("Parsing document with mt-if should generate props", () => {
+// test("Parsing document with m-if should generate props", () => {
 //   const result = callMetaComponent(
-//     "mt-variable-makes-props",
-//     `<mt-if test="aThing?"><p>stuff</p></mt-if>`,
+//     "m-variable-makes-props",
+//     `<m-if test="aThing?"><p>stuff</p></m-if>`,
 //     "",
 //     true
 //   );

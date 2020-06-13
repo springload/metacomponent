@@ -20,13 +20,13 @@ Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 
 ## Why?
 
-See [MetaComponent: Why?](https://springload.github.io/metacomponent#why).
+See [MetaComponent: 'Why?'](https://springload.github.io/metacomponent#why)
 
 ## :gift: Features
 
 - [x] Single-source template generator.
 - [x] MetaComponent bundles only the CSS relevant to your HTML, so give it your whole CSS file and then MetaComponent will try to 'tree shake' your CSS, SCSS, and Styled Components declarations.
-- [ ] It can generate code examples to show example usage of these component formats.
+- [ ] It can generate code examples to show example usage of these component formats (TODO)
 
 ## Install
 
@@ -35,7 +35,6 @@ See [MetaComponent: Why?](https://springload.github.io/metacomponent#why).
 ## :crystal_ball: Future
 
 - More template formats... contribute your favourite!
-- Better CSS support.
 
 ## API
 
@@ -44,4 +43,4 @@ See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest
 # Out of scope
 
 - Loops. We support `children` values (arbitrary childNodes) so you could just nest other components instead. Maybe we don't need this.
-- It produces TypeScript components and you could always convert that to JavaScript... so probably no need to produce JavaScript components directly.
+- It produces TypeScript components and you could always convert that to JavaScript... so probably no need to produce JavaScript components directly, or perhaps a wrapper with Babel could be used to strip types.

@@ -22,7 +22,7 @@ export const parseMetaHTMLIf = ({
     htmlElement.getAttribute("test") || htmlElement.getAttribute("key"); // 'key' is legacy from MetaComponent v1
   if (!test) {
     log(
-      `Expected to find 'test' (or 'key' for legacy support) attribute on mt-if`
+      `Expected to find 'test' (or 'key' for legacy support) attribute on m-if`
     );
   }
 
@@ -35,7 +35,7 @@ export const parseMetaHTMLIf = ({
       const AST = parseExpression(test);
       if (!["BinaryExpression", "Identifier"].includes(AST.type)) {
         throw Error(
-          `<mt-if test="${test}"> expression must only include JavaScript expressions that are either (1) a variable, or (2) a variable comparison to a string " myVar === 'value' " or " myVar !== 'value' ".`
+          `<m-if test="${test}"> expression must only include JavaScript expressions that are either (1) a variable, or (2) a variable comparison to a string " myVar === 'value' " or " myVar !== 'value' ".`
         );
       }
       ids = findIdentifiers(AST);

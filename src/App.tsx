@@ -48,7 +48,7 @@ const resultIndex = resultIndexString
 const defaultValues = {
   metaHTML:
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <mt-variable id="children"></mt-variable>\n</h1>`,
+    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children"></m-variable>\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
     `.my-style { padding: 5px }\n.my-style--blue{ color: blue }\n.my-style--red{ color: red }\n/* this CSS isn't used and will be tree shaken */\n.treeShake { color: green; }`,
@@ -511,10 +511,10 @@ There are two types of variables, for attributes and elements:
   - enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate typings to those valid choices. Enumerations may only be strings.
   - label enumerations with friendly names with \`as FriendlyName\` eg  \`class="{{ variableName: box--color-red as Red | box--color-blue as Blue }}"\`.
 - elements:
-  - \`<mt-variable id="variableName"></mt-variable>\`
-    - The attribute \`optional\` makes it optional eg \`<mt-variable id="variableName" optional></mt-variable>\`
-    - provide a default value with child nodes eg \`<mt-variable id="variableName">default value</mt-variable>\`
-  - Conditional logic \`<mt-if test="isShown">thing to show if true</mt-if>\`, or \`test="someVariable === 'frogs' "\`, using JavaScript expressions. In the future these expressions will be converted to other languages, so please limit to single variable string comparisons for the greatest range of options.
+  - \`<m-variable id="variableName"></m-variable>\`
+    - The attribute \`optional\` makes it optional eg \`<m-variable id="variableName" optional></m-variable>\`
+    - provide a default value with child nodes eg \`<m-variable id="variableName">default value</m-variable>\`
+  - Conditional logic \`<m-if test="isShown">thing to show if true</m-if>\`, or \`test="someVariable === 'frogs' "\`, using JavaScript expressions. In the future these expressions will be converted to other languages, so please limit to single variable string comparisons for the greatest range of options.
 
 MetaHTML is for generating stateless components. Logic should be in a higher-order components (HOC).
 
