@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 
 export function useModalState() {
   const [isWhatOpen, setIsWhatOpen] = useState<boolean>(false);
-  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(
-    window.location.hash.includes("why")
-  );
+  const [isWhyOpen, setIsWhyOpen] = useState<boolean>(true);
 
   const openWhatModal = () => {
     setIsWhyOpen(false);

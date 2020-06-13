@@ -33,19 +33,20 @@ const defaultValues = {
     `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children">default content</m-variable>\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
-    `.my-style {
-    padding: 5px;
-  }
-  .my-style--blue {
-    color: blue;
-  }
-  .my-style--red {
-    color: red;
-  }
-  /* the following CSS isn't used and will be tree shaken */
-  .treeShake {
-    color: green;
-  }`,
+    `
+.my-style {
+  padding: 5px;
+}
+.my-style--blue {
+  color: blue;
+}
+.my-style--red {
+  color: red;
+}
+/* the following CSS isn't used and will be tree shaken */
+.treeShake {
+  color: green;
+}`.trim(),
   resultIndex: resultIndex,
 };
 

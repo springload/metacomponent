@@ -4,7 +4,7 @@ export function Diagram() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="-3 0 97 100"
+      viewBox="0.5 9.5 97 35"
       preserveAspectRatio="xMidYMid"
       className="modal-content__diagram"
     >
@@ -23,51 +23,55 @@ export function Diagram() {
       <rect
         x="0"
         y="10"
-        width="35"
+        width="51"
         height="9"
         stroke="#ccc"
+        fill="transparent"
         strokeWidth="0.4"
         strokeDasharray="1 1"
       ></rect>
       <text x="5" y="16" fontSize="5" fill="white">
-        MetaHTML
+        MetaHTML (input)
       </text>
-      <text x="17" y="23" fontSize="5" fill="white">
+      <text x="24" y="26" fontSize="10" fill="white">
         +
       </text>
       <rect
         x="0"
-        y="24"
-        width="35"
+        y="28"
+        width="51"
         height="9"
         fill="transparent"
         strokeWidth="0.4"
         strokeDasharray="1 1"
       ></rect>
-      <text x="5" y="30.5" fontSize="5">
-        CSS
+      <text x="13" y="34" fontSize="5">
+        CSS (input)
       </text>
 
       <line
-        x1="38"
-        y1="21.5"
-        x2="42"
-        y2="21.5"
-        strokeWidth="1"
+        x1="49"
+        y1="23"
+        x2="53"
+        y2="23"
+        strokeWidth="1.5"
         markerEnd="url(#arrowhead)"
       />
 
       <rect
-        x="50"
+        x="62"
         y="10"
         width="35"
-        height="23"
+        height="27"
         fill="transparent"
         strokeWidth="0.4"
         strokeDasharray="1 1"
       ></rect>
-      <text x="53" y="23" fontSize="5" fill="white">
+      <text x="65" y="20" fontSize="5" fill="white">
         Components
+      </text>
+      <text x="70" y="28" fontSize="5" fill="white">
+        (output)
       </text>
     </svg>
   );

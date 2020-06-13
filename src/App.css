@@ -193,13 +193,14 @@ button {
 }
 
 .modal-content__diagram {
-  opacity: 0.7;
-  display: none;
+  width: 100%;
+  height: 140px;
 }
 .modal-content__diagram rect {
   stroke: white;
 }
-.modal-content__diagram text {
+.modal-content__diagram text,
+.modal-content__diagram polygon {
   fill: white;
 }
 
@@ -256,6 +257,7 @@ body.ReactModal__Body--open #root {
   color: white;
   position: absolute;
   right: 10px;
+  margin-top: 20px;
   padding: 10px;
   font-weight: bold;
   border: none;
