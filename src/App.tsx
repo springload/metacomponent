@@ -19,9 +19,9 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "./App.css";
 import startCase from "lodash/startCase";
 
-const STORAGE_METAHTML = "STORAGE_METAHTML";
-const STORAGE_CSS = "STORAGE_CSS";
-const STORAGE_RESULT_INDEX = "STORAGE_RESULT_INDEX";
+const STORAGE_METAHTML = "STORAGE_METAHTML2";
+const STORAGE_CSS = "STORAGE_CSS2";
+const STORAGE_RESULT_INDEX = "STORAGE_RESULT_INDEX2";
 
 const oneFrameMs = 15;
 

@@ -160,11 +160,11 @@ type NodeToMetaNodeProps = {
 };
 
 function nodeToMetaNode({ node, log }: NodeToMetaNodeProps): MetaNodeInternal {
-  if (node.nodeType === Node.TEXT_NODE) {
+  if (node.nodeType === node.TEXT_NODE) {
     return { type: "Text", value: node.textContent || "" };
-  } else if (node.nodeType === Node.COMMENT_NODE) {
+  } else if (node.nodeType === node.COMMENT_NODE) {
     return { type: "Comment", value: node.textContent || "" };
-  } else if (node.nodeType !== Node.ELEMENT_NODE) {
+  } else if (node.nodeType !== node.ELEMENT_NODE) {
     throw Error(`Unhandled nodeType ${node.nodeType}`);
   }
 
