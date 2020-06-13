@@ -1,7 +1,7 @@
 {
   "name": "metacomponent",
   "description": "Web Component converter supporting React, Vue, Mustache/Handlebars, Angular, Django...",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage": "https://springload.github.io/metacomponent/",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -36,6 +36,7 @@
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
     "predeploy": "yarn build",
+    "prepublish": "yarn build-lib",
     "build-lib": "tsc --build ./src/lib/tsconfig.json"
   },
   "license": "MIT",
