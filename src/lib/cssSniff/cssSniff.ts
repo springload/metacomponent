@@ -32,7 +32,7 @@ export function cssSniff(
   const matched: CSSSniffRoot = matchedCSS || {};
 
   children.forEach((child) => {
-    if (child.nodeType !== Node.ELEMENT_NODE) {
+    if (child.nodeType !== child.ELEMENT_NODE) {
       // only Elements can have CSS (ie, text nodes can't have CSS)
       return;
     }
@@ -52,7 +52,7 @@ function getCSSMatchesByElement(
   options: Options,
   sniffRoot: CSSSniffRoot
 ): void {
-  if (el.nodeType !== Node.ELEMENT_NODE) {
+  if (el.nodeType !== el.ELEMENT_NODE) {
     return;
   }
 

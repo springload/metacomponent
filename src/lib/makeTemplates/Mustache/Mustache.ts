@@ -139,7 +139,7 @@ export class MustacheTemplate extends Template {
     if (this.unescapedVariables.length) {
       unescaped = `{{!\nDEVELOPER NOTE: This template uses triple-bracket "{{{" which disables HTML escaping.\nPlease ensure these variables are properly escaped:\n\n  * ${this.unescapedVariables.join(
         ",\n  * "
-      )}.\n\nThe reason for this is to allow raw HTML, for values such as (eg) <span lang="mi">Māori</span>. }}\n`;
+      )}.\n\nThe reason for this is to allow raw HTML, for values such as (eg) <span lang="mi">Māori</span>.\n}}\n`;
     }
     this.data = `${unescaped}${this.data}`;
   }

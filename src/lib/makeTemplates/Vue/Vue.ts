@@ -286,7 +286,11 @@ export class VueTemplate extends Template {
   }
 
   onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
-    this.template += `<slot name="${variable.id}">`;
+    if (variable.id === "children") {
+      this.template += `<slot>`; // treat 'children' as default slot
+    } else {
+      this.template += `<slot name=${JSON.stringify(variable.id)}>`;
+    }
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {

@@ -38,7 +38,12 @@ fieldset legend {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   font-size: medium;
+
   font-weight: 300;
+  background: black;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
 }
 
 @media only screen and (min-width: 700px) {
@@ -101,10 +106,12 @@ textarea:focus {
 }
 
 .output_container--label {
+  display: block;
   overflow: hidden;
   width: 1px;
   height: 1px;
   font-size: 1px;
+  color: #000;
 }
 
 #button_tray_container {
@@ -141,32 +148,32 @@ textarea:focus {
 .tab {
   background: black;
   color: white;
-  font-size: inherit;
+  font-size: medium;
   margin-right: 1px;
   border: none;
-  border-radius: 4px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top: solid 3px transparent;
   font-weight: inherit;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
 }
 
 .tab:hover {
-  background: #ccc;
+  background: #00d5a9;
   color: #333;
 }
 
 @media only screen and (min-width: 700px) {
   .tab {
-    font-size: x-large;
+    font-size: large;
     /* padding: 0.2em 0.5em 0.5em 0.5em; */
   }
 }
 
 .tab--selected {
-  border: solid 1px #777;
+  background: #00d5a9;
+  box-shadow: 0px 0px 5px #00d5a9;
+  color: #000;
   border-bottom: none;
-  background: #ccc;
-  color: #333;
 }
 
 .mt-tooltip {
@@ -197,14 +204,13 @@ button {
 }
 
 .modal-content__body {
-  position: absolute;
-  right: 50px;
-  top: 0px;
+  position: relative;
+  margin: 0 auto;
   max-width: 400px;
   padding: 20px 20px 100px 20px;
   background: #333;
   color: #fff;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .modal-content__body ul {
@@ -213,7 +219,7 @@ button {
 }
 
 .modal-content__body li {
-  margin: 0px;
+  margin: 0px 0px 0.5em 0px;
   padding: 0px;
 }
 
@@ -226,6 +232,11 @@ button {
   color: #ee6;
 }
 
+body.ReactModal__Body--open #root {
+  height: 100vh;
+  overflow: hidden;
+}
+
 .what-button {
   background: black;
   color: #ccc;
@@ -235,8 +246,9 @@ button {
 }
 
 .what-button:hover {
-  background: #ccc;
-  color: #333;
+  background: #00d5a9;
+  border-color: #00d5a9;
+  color: #000;
 }
 
 .close_button {
@@ -246,11 +258,11 @@ button {
   right: 10px;
   padding: 10px;
   font-weight: bold;
-  border: inset 1px #000;
+  border: none;
 }
 
 .close_button:hover {
-  background: #ccc;
+  background: #00d5a9;
   color: #000;
 }
 
@@ -263,7 +275,7 @@ button {
   border: none;
   padding: 1em 2em;
   font-size: x-small;
-  color: #7cf;
+  color: #00d5a9;
   font-weight: 600;
   text-decoration: none;
 }
@@ -280,7 +292,7 @@ button {
   border: none;
   padding: 1em 0em;
   font-size: x-small;
-  color: #7cf;
+  color: #00d5a9;
   font-weight: 600;
   text-decoration: none;
 }
@@ -336,4 +348,8 @@ button {
 
 .flash--off {
   opacity: 0;
+}
+
+abbr {
+  text-decoration: none;
 }
