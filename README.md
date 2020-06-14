@@ -14,13 +14,9 @@ MetaComponent is a component generator that can convert a single component defin
 
 This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
 
-## Demo
+## Demo / Docs / Why?
 
 Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
-
-## Why?
-
-See [MetaComponent: 'Why?'](https://springload.github.io/metacomponent#why)
 
 ## :gift: Features
 
@@ -38,7 +34,7 @@ See [MetaComponent: 'Why?'](https://springload.github.io/metacomponent#why)
 
 ## API
 
-See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest you use JSDOM like this example.
+See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest you use JSDOM.
 
 # Out of scope
 

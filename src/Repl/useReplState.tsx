@@ -19,8 +19,11 @@ if (Number.isNaN(hashState)) {
 }
 
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
-const resultIndex = resultIndexString
+const resultIndexNumber = resultIndexString
   ? parseInt(resultIndexString, 10)
+  : NaN;
+const resultIndex = !Number.isNaN(resultIndexNumber)
+  ? resultIndexNumber
   : showEverything
   ? 0
   : hashState
@@ -65,45 +68,60 @@ export function useReplState() {
   const iframeRefCallback = useCallback((node) => {
     console.log("Setting iframe ", node);
     iframeRef.current = node; // for some reason setting ref={iframeRef} wasn't working in Chrome
+    reprocessMetaComponentSoon();
   }, []);
 
-  useEffect(() => {
-    const fn = () => {
-      const iframeEl: HTMLIFrameElement | null = iframeRef.current;
-      if (!iframeEl) {
-        console.log("No iframe ref available.", iframeEl);
-        return;
-      }
-      // @ts-ignore
-      const domDocument = iframeEl.contentWindow?.document;
-      if (!domDocument) {
-        console.log("No iframe contentWindow document available.", domDocument);
-        return;
-      }
-      const documentElement = domDocument.documentElement;
-      if (!documentElement) {
-        console.log("No iframe documentElement available.", documentElement);
-        return;
-      }
-      const startTime = Date.now();
-      const result = generateTemplates({
-        domDocument,
-        templateId,
-        metaHTMLString: metaHTML,
-        cssString: css,
-        haltOnErrors: false,
-      });
-      const endTime = Date.now();
-      let newDebounceTime = endTime - startTime;
-      newDebounceTime =
-        newDebounceTime < oneFrameMs ? oneFrameMs : newDebounceTime;
-      console.info(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
-      debounceTime.current = newDebounceTime;
-      setMetaComponents(result);
-    };
-    const handler = setTimeout(fn, debounceTime.current);
-    return () => clearTimeout(handler);
-  }, [metaHTML, css]);
+  const reprocessTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  const reprocessMetaComponent = () => {
+    const iframeEl: HTMLIFrameElement | null = iframeRef.current;
+    if (!iframeEl) {
+      console.log("No iframe ref available.", iframeEl);
+      return;
+    }
+    // @ts-ignore
+    const domDocument = iframeEl.contentWindow?.document;
+    if (!domDocument) {
+      console.log(
+        "No iframe contentWindow document available. Trying again soon",
+        domDocument
+      );
+      reprocessMetaComponentSoon();
+      return;
+    }
+    const documentElement = domDocument.documentElement;
+    if (!documentElement) {
+      console.log("No iframe documentElement available.", documentElement);
+      return;
+    }
+    const startTime = Date.now();
+    const result = generateTemplates({
+      domDocument,
+      templateId,
+      metaHTMLString: metaHTML,
+      cssString: css,
+      haltOnErrors: false,
+    });
+    const endTime = Date.now();
+    let newDebounceTime = endTime - startTime;
+    newDebounceTime =
+      newDebounceTime < oneFrameMs ? oneFrameMs : newDebounceTime;
+    console.info(`Debouncing calling MetaComponent at ${newDebounceTime}ms`);
+    debounceTime.current = newDebounceTime;
+    setMetaComponents(result);
+  };
+
+  const reprocessMetaComponentSoon = () => {
+    if (reprocessTimer.current) {
+      clearTimeout(reprocessTimer.current);
+    }
+    reprocessTimer.current = setTimeout(
+      reprocessMetaComponent,
+      debounceTime.current
+    );
+  };
+
+  reprocessMetaComponentSoon();
 
   const filePaths = metaComponents ? Object.keys(metaComponents.files) : [];
 
@@ -165,10 +183,10 @@ export function useReplState() {
 
   const resultIndexTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const setResultIndexPublic = (index: number) => {
+  const publicSetResultIndex = (index: number) => {
     setResultIndex(index);
 
-    window.location.hash = resultIndex.toString();
+    window.location.hash = index.toString();
     const tabButton = document.getElementById(`tab-${index}`);
     if (tabButton) {
       tabButton.focus();
@@ -191,8 +209,9 @@ export function useReplState() {
     switch (keyCode) {
       case 37: // left
       case 38: // up
-        if (resultIndex > 0) {
-          setResultIndexPublic(resultIndex - 1);
+        const lowestIndex = showEverything ? 0 : 1;
+        if (resultIndex > lowestIndex) {
+          publicSetResultIndex(resultIndex - 1);
         }
         break;
       case 39: // right
@@ -201,8 +220,8 @@ export function useReplState() {
           (metaComponents && metaComponents.files
             ? Object.keys(metaComponents.files).length
             : 0) + 1;
-        if (resultIndex < numberOfResults) {
-          setResultIndexPublic(resultIndex + 1);
+        if (resultIndex < numberOfResults - 1) {
+          publicSetResultIndex(resultIndex + 1);
         }
         break;
     }
@@ -214,7 +233,7 @@ export function useReplState() {
     css,
     setCSS: publicSetCSS,
     resultIndex,
-    setResultIndex,
+    setResultIndex: publicSetResultIndex,
     templateId,
     iframeRef,
     iframeRefCallback,
@@ -222,7 +241,6 @@ export function useReplState() {
     outputValue,
     outputMode,
     showEverything,
-    setResultIndexPublic,
     moveResultIndex,
   };
 }

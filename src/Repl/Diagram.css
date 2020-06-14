@@ -1,0 +1,51 @@
+.diagram {
+  display: grid;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-column-gap: 5px;
+  grid-row-gap: 0px;
+
+  grid-template-areas:
+    "diagram-metahtml diagram-plus diagram-css"
+    "diagram-equals diagram-equals diagram-equals"
+    "diagram-output diagram-output diagram-output";
+}
+.box {
+  border: dashed 2px white;
+  border-radius: 10px;
+  padding: 1em;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.diagram-metahtml {
+  grid-area: diagram-metahtml;
+  text-align: center;
+}
+
+.diagram-plus {
+  grid-area: diagram-plus;
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bold;
+  padding-top: 0.1em;
+}
+
+.diagram-css {
+  grid-area: diagram-css;
+  text-align: center;
+}
+
+.diagram-equals {
+  grid-area: diagram-equals;
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bold;
+  padding-top: 0.3em;
+}
+
+.diagram-output {
+  grid-area: diagram-output;
+  text-align: center;
+}

@@ -105,15 +105,6 @@ textarea:focus {
   grid-area: outputC;
 }
 
-.output_container--label {
-  display: block;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  font-size: 1px;
-  color: #000;
-}
-
 #button_tray_container {
   grid-area: menuC;
 }
@@ -140,8 +131,8 @@ textarea:focus {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "titleC menuC"
-      "htmlC outputC"
-      "cssC outputC";
+      "htmlC cssC"
+      "outputC outputC";
   }
 }
 
@@ -214,7 +205,13 @@ button {
   line-height: 1.5;
 }
 
-.modal-content__body ul {
+.modal-content__body h3 {
+  border-top: solid 2px #00d5a9;
+  padding-top: 0.8em;
+}
+
+.modal-content__body ul,
+.modal-content__body ol {
   margin: 0px 0px 0px 1em;
   padding: 0px;
 }
@@ -313,10 +310,6 @@ body.ReactModal__Body--open #root {
   text-decoration: none;
 }
 
-#output {
-  cursor: not-allowed;
-}
-
 .flash-container {
   height: 100%;
   width: 100%;
@@ -324,8 +317,8 @@ body.ReactModal__Body--open #root {
 
 .flash {
   position: absolute;
-  width: 90%;
-  top: 40%;
+  width: 99%;
+  top: 20%;
   padding: 1em 1em 0.2em 1em;
   transition: opacity 1s;
   z-index: 2;

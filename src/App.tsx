@@ -78,7 +78,7 @@ function App() {
 
         <fieldset className="html_container">
           <legend>
-            MetaHTML
+            Input: MetaHTML
             <button
               onClick={openWhatModal}
               className="what-button"
@@ -103,7 +103,7 @@ function App() {
         </fieldset>
 
         <fieldset className="css_container">
-          <legend>Standard CSS</legend>
+          <legend>Input: Standard CSS</legend>
           <AceEditor
             mode="css"
             theme={theme}
@@ -187,7 +187,7 @@ function App() {
               width="100%"
               height="100%"
               showPrintMargin={false}
-              showGutter={false}
+              showGutter={true}
               // markers={markers}
             />
           </Flash>
