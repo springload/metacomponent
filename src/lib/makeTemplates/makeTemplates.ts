@@ -69,8 +69,10 @@ function makeTemplate(
         break;
       }
       case "Variable": {
-        instance.onVariable(node);
-        node.children.forEach(walk);
+        const shouldNotRenderChildren = instance.onVariable(node);
+        if (!shouldNotRenderChildren) {
+          node.children.forEach(walk);
+        }
         instance.onCloseVariable(node);
         break;
       }

@@ -102,7 +102,9 @@ export class MustacheTemplate extends Template {
     this.data += `{{! ${onComment.value} }}`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     this.unescapedVariables.push(variable.id);
     this.data += `{{{ ${variable.id} }}}`;
     if (variable.children.length > 0) {

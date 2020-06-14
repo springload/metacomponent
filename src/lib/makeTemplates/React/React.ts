@@ -238,19 +238,21 @@ export class ReactTemplate extends Template {
     this.render += `{/*${value}*/}`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     const identifier = validJavaScriptIdentifer.test(variable.id)
       ? variable.id
       : `props[${JSON.stringify(variable.id)}]`;
     this.render += `{${identifier} !== undefined ? ${identifier} : `;
     if (variable.children.length === 0) {
       this.render += `null`;
-    } else if (variable.children.length === 1) {
-      if (variable.children[0].type === "Text") {
-        this.render += `\``;
-      } else {
-        this.render += `(${this.fragmentStrings.start}`;
-      }
+    } else if (
+      variable.children.length === 1 &&
+      variable.children[0].type === "Text"
+    ) {
+      this.render += `\`${variable.children[0].value.replace(/`/g, "\\`")}`;
+      return true;
     } else {
       this.render += `(${this.fragmentStrings.start}`;
     }

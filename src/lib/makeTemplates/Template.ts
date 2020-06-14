@@ -17,7 +17,7 @@ export interface TemplateFormat {
   onText: (text: MetaHTMLText) => void;
   onComment: (text: MetaHTMLComment) => void;
   onCloseElement: (closeElement: OnCloseElement) => void;
-  onVariable: (onVariable: MetaHTMLVariable) => void;
+  onVariable: (onVariable: MetaHTMLVariable) => OnVariableResponse;
   onCloseVariable: (closeVariable: MetaHTMLVariable) => void;
   onIf: (onIf: MetaHTMLIf) => void;
   onCloseIf: (onCloseIf: MetaHTMLIf) => void;
@@ -40,6 +40,10 @@ type OnCloseElement = {
 type OnFinalise = {
   css: string;
 };
+
+type ShouldNotRenderChildren = true;
+
+type OnVariableResponse = ShouldNotRenderChildren | void;
 
 export class Template {
   dirname: string;
@@ -73,7 +77,9 @@ export class Template {
     throw Error("Not implemented");
   }
 
-  onVariable(onVariable: Parameters<TemplateFormat["onVariable"]>[0]): void {
+  onVariable(
+    onVariable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     throw Error("Not implemented");
   }
 

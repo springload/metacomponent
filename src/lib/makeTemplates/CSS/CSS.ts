@@ -30,7 +30,9 @@ export class CSSTemplate extends Template {
     // pass
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     // pass
   }
 

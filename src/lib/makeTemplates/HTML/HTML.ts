@@ -58,7 +58,9 @@ export class HTMLTemplate extends Template {
     this.html += `<!--${value}-->`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     this.html += `<!-- '${variable.id}' goes here -->`;
   }
 

@@ -285,7 +285,9 @@ export class VueTemplate extends Template {
     this.template += `<!--${value}-->`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     if (variable.id === "children") {
       this.template += `<slot>`; // treat 'children' as default slot
     } else {

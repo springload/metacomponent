@@ -221,7 +221,9 @@ export class AngularTemplate extends Template {
     this.template += `<!--${value}-->`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     this.template += `{{${variable.id}}}`;
     if (variable.children.length > 0) {
       this.template += `<ng-template *ngIf="${variable.id} == undefined">`;
@@ -251,7 +253,14 @@ export class AngularTemplate extends Template {
   onFinalise(onFinalise: Parameters<TemplateFormat["onFinalise"]>[0]) {
     const componentVarName = startCase(this.templateId).replace(/\s/gi, "");
 
-    this.finalData = `/* DEV NOTE: this template is under development */\n${this.imports}\n\n${this.typeScript}\n\n@Component({\n  selector: '${this.templateId}',\n  template: \`${this.template}\n\`\n})\nexport default class ${componentVarName} {}`;
+    this.finalData = `/* DEV NOTE: this template is under development */\n${
+      this.imports
+    }\n\n${this.typeScript}\n\n@Component({\n  selector: '${
+      this.templateId
+    }',\n  template: \`${this.template.replace(
+      /`/g,
+      "\\`"
+    )}\n\`\n})\nexport default class ${componentVarName} {}`;
 
     try {
       this.finalData = prettier.format(this.finalData, {

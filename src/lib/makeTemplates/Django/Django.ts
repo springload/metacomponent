@@ -107,7 +107,9 @@ export class DjangoTemplate extends Template {
     this.data += `{% ${onComment.value} %}`;
   }
 
-  onVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
+  onVariable(
+    variable: Parameters<TemplateFormat["onVariable"]>[0]
+  ): ReturnType<TemplateFormat["onVariable"]> {
     if (variable.children.length > 0) {
       this.data += `{% if ${stringToDjangoVar(variable.id)} %}`;
     }
