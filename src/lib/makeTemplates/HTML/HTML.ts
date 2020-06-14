@@ -61,7 +61,11 @@ export class HTMLTemplate extends Template {
   onVariable(
     variable: Parameters<TemplateFormat["onVariable"]>[0]
   ): ReturnType<TemplateFormat["onVariable"]> {
+    const prop = this.props[variable.id];
+
     this.html += `<!-- '${variable.id}' goes here -->`;
+
+    if (prop.required) return true;
   }
 
   onCloseVariable(closeVariable: Parameters<TemplateFormat["onVariable"]>[0]) {
