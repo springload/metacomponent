@@ -41,30 +41,6 @@ function App() {
     closeWhatModal,
   } = useModalState();
 
-  // const markers = [];
-  // if (
-  //   resultIndex > 0 &&
-  //   filePaths[resultIndex - 1] &&
-  //   pathType(filePaths[resultIndex - 1]).includes("react")
-  // ) {
-  //   const templateIdIndex = outputValue.indexOf(templateId);
-  //   const outputValueBefore = outputValue.substring(0, templateIdIndex);
-  //   const rowIndex =
-  //     outputValueBefore.length - outputValueBefore.replace(/\n/g, "").length;
-
-  //   const startCol = outputValue.split("\n")[rowIndex].indexOf(templateId);
-
-  //   markers.push({
-  //     startRow: rowIndex,
-  //     startCol,
-  //     endRow: rowIndex,
-  //     endCol: startCol + templateId.length - 1,
-  //     className: "mt-tooltip",
-  //     type: "text" as const,
-  //     inFront: true,
-  //   });
-  // }
-
   return (
     <Fragment>
       <WhyModal isOpen={isWhyOpen} closeModal={closeWhyModal} />
