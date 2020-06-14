@@ -77,6 +77,7 @@ export function useReplState() {
     const iframeEl: HTMLIFrameElement | null = iframeRef.current;
     if (!iframeEl) {
       console.log("No iframe ref available.", iframeEl);
+      reprocessMetaComponentSoon();
       return;
     }
     // @ts-ignore
@@ -92,6 +93,7 @@ export function useReplState() {
     const documentElement = domDocument.documentElement;
     if (!documentElement) {
       console.log("No iframe documentElement available.", documentElement);
+      reprocessMetaComponentSoon();
       return;
     }
     const startTime = Date.now();
