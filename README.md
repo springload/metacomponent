@@ -14,9 +14,44 @@ MetaComponent is a component generator that can convert a single component defin
 
 This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
 
-## Demo / Docs / Why?
+## Demo / Docs
 
 Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
+
+## Why?
+
+Some of its use-cases are:
+
+1. providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
+2. learning about similarities and differences in component languages.
+
+<details>
+<summary>Use-case 1: design systems and pattern libraries</summary>
+
+It's often the case that governments and large organisations have
+websites that have very different websites and components, and
+these differences are often accidental or unnecessary.
+
+An obvious solution would be to make a Design System or Pattern
+Library where you'd publish components to unify HTML and CSS.
+
+However one stumbling block is when there's also a divergence in
+web component technology -- they use React, or Vue, Angular,
+Handlebars, Jinja2, Twig, and many, many more.
+
+It would be a lot of manual work to support all of those comonent
+formats, and so Design Systems and Pattern Libraries typically
+offer HTML/CSS, and maybe one additional format, and all of these
+are written by hand.
+
+Design Systems often solve one problem (standardising HTML/CSS)
+while creating new technical barriers that may hinder adoption.
+
+MetaComponent complements Design Systems Pattern Libraries by
+generating components for many frameworks to make it easiser to
+adopt.
+
+</details>
 
 ## :gift: Features
 

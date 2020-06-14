@@ -31,7 +31,12 @@ export function Header({ isWhyOpen, openWhyModal }: Props) {
       </div>
       <h1 className="title_container">
         MetaComponent <abbr title="Read-eval-print loop">REPL</abbr>
-        <img src={peacock} alt="" className="title_container__peacock" />
+        <img
+          src={peacock}
+          alt="(Peacock Logo)"
+          title="Peacock"
+          className="title_container__peacock"
+        />
       </h1>
     </Fragment>
   );

@@ -80,9 +80,19 @@ textarea:focus {
 }
 
 .title_container__peacock {
-  width: 1.1em;
-  height: 1.1em;
+  width: 3.5em;
+  height: 3.5em;
+  transform: scale(0.3);
+  margin-left: 0.3em;
   vertical-align: absmiddle;
+  position: absolute;
+  transition: 1s transform;
+  transform-origin: top left;
+  z-index: 1000;
+}
+
+.title_container__peacock:hover {
+  transform: scale(1);
 }
 
 .iframe_container {
