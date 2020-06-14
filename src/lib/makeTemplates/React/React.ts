@@ -183,7 +183,7 @@ export class ReactTemplate extends Template {
   renderAttributeValue(attributeValue: MetaAttributeValue, inString: boolean) {
     switch (attributeValue.type) {
       case "MetaAttributeConstant": {
-        this.render += attributeValue.value;
+        this.render += attributeValue.value.replace(/`/g, "`");
         break;
       }
       case "MetaAttributeVariable": {
@@ -192,7 +192,7 @@ export class ReactTemplate extends Template {
           ? attributeValue.id
           : `props[${JSON.stringify(attributeValue.id)}]`;
         if (isOptional) {
-          this.render += `${identifier}${inString ? ` || 'f'` : ""}`;
+          this.render += `${identifier}${inString ? ` || ""` : ""}`;
         } else {
           this.render += identifier;
         }

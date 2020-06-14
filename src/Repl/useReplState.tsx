@@ -65,18 +65,12 @@ export function useReplState() {
   const iframeRef = useRef(null);
   const debounceTime = useRef<number>(100);
 
-  const iframeRefCallback = useCallback((node) => {
-    console.log("Setting iframe ", node);
-    iframeRef.current = node; // for some reason setting ref={iframeRef} wasn't working in Chrome
-    reprocessMetaComponentSoon();
-  }, []);
-
   const reprocessTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const reprocessMetaComponent = () => {
     const iframeEl: HTMLIFrameElement | null = iframeRef.current;
     if (!iframeEl) {
-      console.log("No iframe ref available.", iframeEl);
+      console.log("No iframe ref available. Retrying soon...", iframeEl);
       reprocessMetaComponentSoon();
       return;
     }
@@ -84,7 +78,7 @@ export function useReplState() {
     const domDocument = iframeEl.contentWindow?.document;
     if (!domDocument) {
       console.log(
-        "No iframe contentWindow document available. Trying again soon",
+        "No iframe contentWindow document available. Retrying soon...",
         domDocument
       );
       reprocessMetaComponentSoon();
@@ -92,7 +86,10 @@ export function useReplState() {
     }
     const documentElement = domDocument.documentElement;
     if (!documentElement) {
-      console.log("No iframe documentElement available.", documentElement);
+      console.log(
+        "No iframe documentElement available. Retrying soon...",
+        documentElement
+      );
       reprocessMetaComponentSoon();
       return;
     }
@@ -123,7 +120,16 @@ export function useReplState() {
     );
   };
 
-  reprocessMetaComponentSoon();
+  const iframeRefCallback = useCallback((node) => {
+    /* eslint-disable */
+    console.log("Setting iframe ", node);
+    iframeRef.current = node; // for some reason setting ref={iframeRef} wasn't working in Chrome
+    reprocessMetaComponentSoon();
+  }, []); /* eslint-disable */
+
+  useEffect(() => {
+    reprocessMetaComponentSoon();
+  }, [metaHTML, css]);
 
   const filePaths = metaComponents ? Object.keys(metaComponents.files) : [];
 
@@ -174,6 +180,7 @@ export function useReplState() {
 
   const publicSetCSS = (css: string) => {
     setCSS(css);
+
     if (cssTimer.current) {
       clearTimeout(cssTimer.current);
     }

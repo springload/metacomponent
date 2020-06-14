@@ -46,6 +46,9 @@ export class VueJSXTemplate extends ReactTemplate {
     switch (prop.type) {
       case "PropTypeVariable": {
         propString += "Object as () => Vue.VNode";
+        if (!prop.required) {
+          propString += " | undefined";
+        }
         break;
       }
       case "PropTypeAttributeValue": {
@@ -53,6 +56,9 @@ export class VueJSXTemplate extends ReactTemplate {
           propString += `Function as (e: Event) => Function`;
         } else {
           propString += `String as () => string`;
+        }
+        if (!prop.required) {
+          propString += " | undefined";
         }
         break;
       }
@@ -62,6 +68,9 @@ export class VueJSXTemplate extends ReactTemplate {
             return validJavaScriptIdentifer.test(key) ? `"${key}"` : `"${key}"`;
           })
           .join(" | ")}`;
+        if (!prop.required) {
+          propString += " | undefined";
+        }
       }
     }
 

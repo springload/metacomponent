@@ -70,17 +70,18 @@ MetaHTML is HTML with markers for the parts that should be configurable, as vari
 
 There are two types of variables, for attributes and elements:
 
-- attributes:
-  - \`<span class="{{ someVariable }}">\`
-    - \`?\` makes it optional \`{{ someVariable? }}\`.
-    - multiple variables \`<span class="{{ class }}{{ otherClass }}">\`
-  - enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate typings to those valid choices. Enumerations may only be strings.
-  - label enumerations with friendly names with \`as FriendlyName\` eg  \`class="{{ variableName: box--color-red as Red | box--color-blue as Blue }}"\`.
-- elements:
-  - \`<m-variable id="variableName"></m-variable>\`
-    - The attribute \`optional\` makes it optional eg \`<m-variable id="variableName" optional></m-variable>\`
-    - provide a default value with child nodes eg \`<m-variable id="variableName">default value</m-variable>\`
-  - Conditional logic \`<m-if test="isShown">thing to show if true</m-if>\`, or \`test="someVariable === 'frogs' "\`, using JavaScript expressions. In the future these expressions will be converted to other languages, so please limit to single variable string comparisons for the greatest range of options.
+### Attributes
+- \`<span class="{{ someVariable }}">\`
+  - \`?\` makes it optional \`{{ someVariable? }}\`.
+  - multiple variables \`<span class="{{ class }}{{ otherClass }}">\`
+- enumerations like \`{{ variableName: option1 | option2 }}\` eg \`<span class="{{ color: class-red | class-blue }}">\` and MetaComponent will generate typings to those valid choices. Enumerations may only be strings.
+- label enumerations with friendly names with \`as FriendlyName\` eg  \`class="{{ variableName: box--color-red as Red | box--color-blue as Blue }}"\`.
+
+### Elements
+- \`<m-variable id="variableName"></m-variable>\`
+  - The attribute \`optional\` makes it optional eg \`<m-variable id="variableName" optional></m-variable>\`
+  - provide a default value with child nodes eg \`<m-variable id="variableName">default value</m-variable>\`
+- Conditional logic \`<m-if test="isShown">shown if true</m-if>\`, or \`<m-if test="someVariable === 'frogs' ">shown if true</m-if>\`.
 
 MetaHTML is for generating stateless components. Logic should be in a higher-order components (HOC).
 

@@ -34,7 +34,43 @@ export function WhyModal({ isOpen, closeModal }: Props) {
             <abbr title="Read-eval-print loop">REPL</abbr> User Interface
           </h3>
           <Diagram />
-          <div dangerouslySetInnerHTML={{ __html: content2 }}></div>
+          <details>
+            <summary>Use-case 1: design systems and pattern libraries</summary>
+            <p>
+              It's often the case that governments and large organisations have
+              websites that have very different websites and components, and
+              these differences are often accidental or unnecessary.
+            </p>
+
+            <p>
+              An obvious solution would be to make a Design System or Pattern
+              Library where you'd publish components to unify HTML and CSS.
+            </p>
+
+            <p>
+              However one stumbling block is when there's also a divergence in
+              web component technology -- they use React, or Vue, Angular,
+              Handlebars, Jinja2, Twig, and many, many more.
+            </p>
+
+            <p>
+              It would be a lot of manual work to support all of those comonent
+              formats, and so Design Systems and Pattern Libraries typically
+              offer HTML/CSS, and maybe one additional format, and all of these
+              are written by hand.
+            </p>
+
+            <p>
+              Design Systems often solve one problem (standardising HTML/CSS)
+              while creating new technical barriers that may hinder adoption.
+            </p>
+
+            <p>
+              MetaComponent complements Design Systems Pattern Libraries by
+              generating components for many frameworks to make it easiser to
+              adopt.
+            </p>
+          </details>
 
           <button onClick={closeModal} className="close_button">
             close <span aria-hidden> ✘</span>
@@ -51,20 +87,4 @@ MetaComponent can generate components in React, Django, Vue, Angular, and more.
 Some of its use-cases are:
 1. providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
 2. learning about similarities and differences in component languages.
-`);
-
-const content2 = marked(`### Use-case 1: design systems and pattern libraries
-
-It's often the case that governments and large organisations have websites that have very different websites and components, and these differences are often accidental or unnecessary.
-
-An obvious solution would be to make a Design System or Pattern Library where you'd publish components to unify HTML and CSS.
-
-However one stumbling block is when there's also a divergence in web component technology -- they use React, or Vue, Angular, Handlebars, Jinja2, Twig, and many, many more.
-
-It would be a lot of manual work to support all of those comonent formats, and so Design Systems and Pattern Libraries typically offer HTML/CSS, and maybe one additional format, and all of these are written by hand.
-
-Design Systems often solve one problem (standardising HTML/CSS) while creating new technical barriers that may hinder adoption.
-
-MetaComponent complements Design Systems Pattern Libraries by generating components for many frameworks to make it easiser to adopt.
-
 `);

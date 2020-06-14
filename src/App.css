@@ -11,15 +11,8 @@ body {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  #root {
-    transition: filter 0.1s;
-  }
-  #root.blur {
-    filter: blur(2px);
-  }
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 fieldset {
@@ -178,61 +171,8 @@ button {
   cursor: pointer;
 }
 
-.modal-content {
-  position: relative;
-  background: none;
-}
-
-.modal-content__diagram {
-  width: 100%;
-  height: 140px;
-}
-.modal-content__diagram rect {
-  stroke: white;
-}
-.modal-content__diagram text,
-.modal-content__diagram polygon {
-  fill: white;
-}
-
-.modal-content__body {
-  position: relative;
-  margin: 0 auto;
-  max-width: 400px;
-  padding: 20px 20px 100px 20px;
-  background: #333;
-  color: #fff;
-  line-height: 1.5;
-}
-
-.modal-content__body h3 {
-  border-top: solid 2px #00d5a9;
-  padding-top: 0.8em;
-}
-
-.modal-content__body ul,
-.modal-content__body ol {
-  margin: 0px 0px 0px 1em;
-  padding: 0px;
-}
-
-.modal-content__body li {
-  margin: 0px 0px 0.5em 0px;
-  padding: 0px;
-}
-
-.modal-content__body code {
-  background: #222;
-  color: white;
-  border: solid 1px #444;
-  white-space: pre-wrap;
-  padding: 0.2em;
-  color: #ee6;
-}
-
-body.ReactModal__Body--open #root {
-  height: 100vh;
-  overflow: hidden;
+.ace_scrollbar.ace_scrollbar-h {
+  display: none;
 }
 
 .what-button {
@@ -284,30 +224,6 @@ body.ReactModal__Body--open #root {
   text-decoration: underline;
   text-underline-offset: 0.5em;
   text-decoration-color: white;
-}
-
-.modal__link {
-  background: none;
-  border: none;
-  padding: 1em 0em;
-  font-size: x-small;
-  color: #00d5a9;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.modal__link:focus,
-.modal__link:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.5em;
-  text-decoration-color: white;
-}
-
-.modal__link--peripheral,
-.modal__link--peripheral:focus,
-.modal__link--peripheral:hover {
-  color: #999;
-  text-decoration: none;
 }
 
 .flash-container {
