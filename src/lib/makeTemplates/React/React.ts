@@ -103,8 +103,10 @@ export class ReactTemplate extends Template {
     const containsInvalidIdentifiers = propIds.some(
       (propId) => !validJavaScriptIdentifer.test(propId)
     );
+    // ensure a named export (not just a default export)
+    this.renderPrefix = `export function `;
     if (containsInvalidIdentifiers) {
-      this.renderPrefix += `function ${this.templateId}(props: Props){\n`;
+      this.renderPrefix += `${this.templateId}(props: Props){\n`;
       const destructure = propIds
         .filter((key) => validJavaScriptIdentifer.test(key))
         .join(", ");
@@ -112,7 +114,7 @@ export class ReactTemplate extends Template {
         this.renderPrefix += `  const { ${destructure} } = props;\n`;
       }
     } else {
-      this.renderPrefix += `function ${this.templateId}({ ${propIds.join(
+      this.renderPrefix += `${this.templateId}({ ${propIds.join(
         ", "
       )} }: Props){\n`;
     }
@@ -305,12 +307,12 @@ export class ReactTemplate extends Template {
     onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]
   ): TemplateFiles | undefined {
     if (this.hasMultipleRootNodes) {
-      this.renderSuffix += this.fragmentStrings.end;
+      this.renderSuffix = this.fragmentStrings.end;
     }
 
-    const renderFunction = `${this.renderPrefix}${this.render}${this.renderSuffix})\n};`;
+    const renderFunction = `${this.renderPrefix}${this.render}${this.renderSuffix})\n}; export default ${this.templateId}`;
 
-    this.fileData = `${this.imports}\n${this.typeScript}\n\n${this.constants}\n\nexport default ${renderFunction}\n`;
+    this.fileData = `${this.imports}\n${this.typeScript}\n\n${this.constants}\n\n${renderFunction}\n`;
 
     try {
       this.fileData = prettier.format(this.fileData, {

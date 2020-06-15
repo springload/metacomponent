@@ -6,10 +6,12 @@ import { assertUnreachable } from "../utils";
 export class EmberTemplate extends Template {
   data: string;
   unescapedVariables: string[];
+  usesTruthHelpers: boolean;
 
   constructor(args: OnConstructor) {
     super({ ...args, dirname: "ember" });
     this.data = "";
+    this.usesTruthHelpers = false;
     this.unescapedVariables = [];
   }
 
@@ -51,6 +53,7 @@ export class EmberTemplate extends Template {
               return `{{@${attributeValue.id}}}`;
             }
             case "MetaAttributeVariableOptions": {
+              this.usesTruthHelpers = true;
               return Object.entries(attributeValue.options)
                 .map(([optionName, optionValue]) => {
                   return `{{if (eq ${attributeValue.id} ${JSON.stringify(
@@ -130,7 +133,12 @@ export class EmberTemplate extends Template {
 
   onFinalise(onSerialize: Parameters<TemplateFormat["onFinalise"]>[0]) {
     let unescaped = "";
-    this.data = `${unescaped}${this.data}`;
+
+    this.data = `${
+      this.usesTruthHelpers
+        ? "<!-- This uses Ember Truth Helpers https://www.npmjs.com/package/ember-truth-helpers -->\n"
+        : ""
+    }${unescaped}${this.data}`;
   }
 
   serialize(): TemplateFiles {
