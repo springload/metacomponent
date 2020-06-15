@@ -4,12 +4,13 @@ MetaComponent is a component generator that can convert a single component defin
 
 - [x] HTML
 - [x] CSS
-- [x] Mustache/Handlebars
-- [x] Django
 - [x] React
-- [x] React with Styled-Components
-- [x] Vue
-- [x] Angular
+- [x] React with Styled-Components 💅
+- [x] Django
+- [x] Mustache/Handlebars
+- [x] Vue (beta)
+- [x] Angular (beta)
+- [x] Ember (alpha)
 - [ ] Twig (Drupal / PHP)
 
 This is particularly useful for Design Systems and Pattern Libraries where a single template definition could be converted into multiple formats.
