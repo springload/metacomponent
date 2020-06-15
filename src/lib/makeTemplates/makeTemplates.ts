@@ -11,6 +11,7 @@ import { VueTemplate } from "./Vue/Vue";
 import { VueJSXTemplate } from "./Vue-JSX/Vue-JSX";
 import { AngularTemplate } from "./Angular/Angular";
 import { DjangoTemplate } from "./Django/Django";
+import { EmberTemplate } from "./Ember/Ember";
 
 type MakeTemplatesProps = {
   templateId: string;
@@ -39,7 +40,8 @@ export function makeTemplates({
     ),
     makeTemplate(templateId, metaComponent, new VueTemplate(args)),
     makeTemplate(templateId, metaComponent, new VueJSXTemplate(args)),
-    makeTemplate(templateId, metaComponent, new AngularTemplate(args))
+    makeTemplate(templateId, metaComponent, new AngularTemplate(args)),
+    makeTemplate(templateId, metaComponent, new EmberTemplate(args))
   );
 }
 

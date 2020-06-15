@@ -12,28 +12,36 @@ const oneFrameMs = 15;
 const showEverything = window.document.location?.search.includes("?everything");
 
 let hashState: any = window.location.hash
-  ? parseInt(window.location.hash, 10)
+  ? parseInt(window.location.hash.replace(/#/, ""), 10)
   : undefined;
+
+console.log({ hashState, hash: window.location.hash });
+
 if (Number.isNaN(hashState)) {
   hashState = undefined;
 }
 
+console.log({ hashState });
+
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
+
 const resultIndexNumber = resultIndexString
   ? parseInt(resultIndexString, 10)
   : NaN;
-const resultIndex = !Number.isNaN(resultIndexNumber)
-  ? resultIndexNumber
-  : showEverything
-  ? 0
-  : hashState
-  ? hashState
-  : 5;
+
+const resultIndex =
+  hashState !== undefined
+    ? hashState
+    : !Number.isNaN(resultIndexNumber)
+    ? resultIndexNumber
+    : showEverything
+    ? 0
+    : 5;
 
 const defaultValues = {
   metaHTML:
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children">default content</m-variable>\n</h1>`,
+    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children"></m-variable>\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
     `
@@ -50,8 +58,10 @@ const defaultValues = {
 .treeShake {
   color: green;
 }`.trim(),
-  resultIndex: resultIndex,
+  resultIndex,
 };
+
+console.log(defaultValues.resultIndex);
 
 const templateId = "MyComponent";
 

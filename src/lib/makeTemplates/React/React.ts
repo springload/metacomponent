@@ -75,11 +75,15 @@ export class ReactTemplate extends Template {
         break;
       }
       case "PropTypeAttributeValue": {
-        propString += `React.${getTypeScriptElementName(
-          prop.nodeName
-        )}HTMLAttributes<HTML${getTypeScriptElementName(
-          prop.nodeName
-        )}Element>["${attributeNameTransform(prop.attributeName)}"];`;
+        if (prop.attributeName.startsWith("data-")) {
+          propString += "string";
+        } else {
+          propString += `React.${getTypeScriptElementName(
+            prop.nodeName
+          )}HTMLAttributes<HTML${getTypeScriptElementName(
+            prop.nodeName
+          )}Element>["${attributeNameTransform(prop.attributeName)}"];`;
+        }
         break;
       }
       case "PropTypeAttributeValueOptions": {
