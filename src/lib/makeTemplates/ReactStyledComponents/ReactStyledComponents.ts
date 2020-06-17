@@ -3,6 +3,7 @@ import { ReactTemplate } from "../React/React";
 import { TemplateFormat, OnConstructor } from "../Template";
 import { MetaCSSPropertiesNode } from "../../metaComponent/metaComponent";
 import { validJavaScriptIdentifer } from "../utils";
+import { MetaAttributeValue } from "../../metaComponent/parseMetaHTMLAttribute";
 
 export class ReactStyledComponentsTemplate extends ReactTemplate {
   styledConstants: string[];
@@ -56,7 +57,21 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
 
       delete styledAttributes["styledclass"];
     } else {
-      delete styledAttributes["class"];
+      styledAttributes["class"] = styledAttributes["class"].filter(
+        (attributeValue: MetaAttributeValue) => {
+          // if the attributeValue is either
+          //   "MetaAttributeConstant"
+          //   "MetaAttributeVariableOptions
+          // then it could be associated with CSS classes that we've already generated
+          // 'styled-components' components for.
+          // so the only scenario where we retain the className attribute is for arbitrary classNames
+          return attributeValue.type === "MetaAttributeVariable";
+        }
+      );
+
+      if (styledAttributes["class"].length === 0) {
+        delete styledAttributes["class"];
+      }
     }
 
     onElement.cssProperties.forEach((cssProperty) => {
