@@ -81,7 +81,7 @@ See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest
 
 # Command Line
 
-MetaComponent 2.1.0 and later installs a `metacomponent-watcher` script in `node_modules/.bin/metacomponent-watcher` that takes two args `indir` and `outdir` to watch a directory and output files. E.g.
+MetaComponent 2.1.0 and later installs a `metacomponent-watcher` script in `node_modules/.bin/metacomponent-watcher` that takes two args `in` and `out` to watch a directory and output files. E.g.
 
 ```
 node node_modules/.bin/metacomponent-watcher.js  --in some_dir --out some_other_dir
