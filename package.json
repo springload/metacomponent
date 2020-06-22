@@ -18,6 +18,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-modal": "^3.10.5",
+    "@types/yargs": "^15.0.5",
     "downa": "^1.0.1",
     "gh-pages": "^3.0.0",
     "jsdom": "^16.2.2",
@@ -65,9 +66,12 @@
   "dependencies": {
     "@babel/generator": "^7.10.2",
     "@babel/parser": "^7.10.2",
+    "chokidar": "^3.4.0",
     "lodash": "^4.17.15",
+    "mkdirp": "^1.0.4",
     "postcss-selector-parser": "^6.0.2",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "yargs": "^15.3.1"
   },
   "keywords": [
     "component",
@@ -82,5 +86,8 @@
     "django",
     "jinja",
     "angular"
-  ]
+  ],
+  "bin": {
+    "metacomponent-watcher": "bin/metacomponent-watcher.js"
+  }
 }

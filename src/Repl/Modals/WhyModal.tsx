@@ -48,6 +48,8 @@ const content1 = marked(`
 MetaComponent can generate components in React, Django, Vue, Angular, and more.
 
 Some of its use-cases are:
+* progressive enhancement of webapps, keeping serverside templates in sync with clientside templates.
 * providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
+* migrating to another format (eg using legacy CSS to migrate to \`styled-components\`).
 * learning about similarities and differences in component languages.
 `);

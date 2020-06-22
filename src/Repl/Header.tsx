@@ -20,6 +20,15 @@ export function Header({ isWhyOpen, openWhyModal }: Props) {
           Why MetaComponent?
         </button>
         <a
+          href="https://twitter.com/hollowaynz"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="button-tray__link"
+          aria-label="Twitter @hollowaynz"
+        >
+          Twitter
+        </a>
+        <a
           href="https://github.com/springload/metacomponent"
           target="_blank"
           rel="noreferrer noopener"

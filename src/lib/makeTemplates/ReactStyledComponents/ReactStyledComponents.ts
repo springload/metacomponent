@@ -56,7 +56,7 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
       styledAttributes["class"] = styledAttributes["styledclass"];
 
       delete styledAttributes["styledclass"];
-    } else {
+    } else if (styledAttributes["class"]) {
       styledAttributes["class"] = styledAttributes["class"].filter(
         (attributeValue: MetaAttributeValue) => {
           // if the attributeValue is either
@@ -68,7 +68,6 @@ export class ReactStyledComponentsTemplate extends ReactTemplate {
           return attributeValue.type === "MetaAttributeVariable";
         }
       );
-
       if (styledAttributes["class"].length === 0) {
         delete styledAttributes["class"];
       }

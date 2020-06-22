@@ -24,33 +24,35 @@ Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 Some of its use-cases are:
 
 1. providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
-2. learning about similarities and differences in component languages.
+2. progressive enhancement of webapps, keeping serverside components in sync with clientside components.
+3. migrating to another component format (eg using legacy CSS to migrate to \`styled-components\`).
+4. learning about similarities and differences in component formats.
 
 <details>
-<summary>Use-case 1: design systems and pattern libraries</summary>
+    <summary>Use-case 1: design systems and pattern libraries</summary>
 
-It's often the case that governments and large organisations have
-websites that have very different websites and components, and
-these differences are often accidental or unnecessary.
+    It's often the case that governments and large organisations have
+    websites that have very different websites and components, and
+    these differences are often accidental or unnecessary.
 
-An obvious solution would be to make a Design System or Pattern
-Library where you'd publish components to unify HTML and CSS.
+    An obvious solution would be to make a Design System or Pattern
+    Library where you'd publish components to unify HTML and CSS.
 
-However one stumbling block is when there's also a divergence in
-web component technology -- they use React, or Vue, Angular,
-Handlebars, Jinja2, Twig, and many, many more.
+    However one stumbling block is when there's also a divergence in
+    web component technology -- they use React, or Vue, Angular,
+    Handlebars, Jinja2, Twig, and many, many more.
 
-It would be a lot of manual work to support all of those comonent
-formats, and so Design Systems and Pattern Libraries typically
-offer HTML/CSS, and maybe one additional format, and all of these
-are written by hand.
+    It would be a lot of manual work to support all of those comonent
+    formats, and so Design Systems and Pattern Libraries typically
+    offer HTML/CSS, and maybe one additional format, and all of these
+    are written by hand.
 
-Design Systems often solve one problem (standardising HTML/CSS)
-while creating new technical barriers that may hinder adoption.
+    Design Systems often solve one problem (standardising HTML/CSS)
+    while creating new technical barriers that may hinder adoption.
 
-MetaComponent complements Design Systems Pattern Libraries by
-generating components for many frameworks to make it easiser to
-adopt.
+    MetaComponent complements Design Systems Pattern Libraries by
+    generating components for many frameworks to make it easiser to
+    adopt.
 
 </details>
 
@@ -76,3 +78,11 @@ See `src/lib/testHelpers.ts` for example usage. It requires a DOM and we suggest
 
 - Loops. We support `children` values (arbitrary childNodes) so you could just nest other components instead. Maybe we don't need this.
 - It produces TypeScript components and you could always convert that to JavaScript... so probably no need to produce JavaScript components directly, or perhaps a wrapper with Babel could be used to strip types.
+
+# Command Line
+
+MetaComponent 2.1.0 and later installs a `metacomponent-watcher` script in `node_modules/.bin/metacomponent-watcher` that takes two args `indir` and `outdir` to watch a directory and output files. E.g.
+
+```
+node node_modules/.bin/metacomponent-watcher.js  --in some_dir --out some_other_dir
+```
