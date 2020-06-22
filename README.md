@@ -23,13 +23,13 @@ Try the [MetaComponent REPL](https://springload.github.io/metacomponent).
 
 Some of its use-cases are:
 
-1. providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
-2. progressive enhancement of webapps, keeping serverside components in sync with clientside components.
+1. progressive enhancement of webapps, keeping serverside components in sync with clientside components.
+2. providing components in multiple formats as an ongoing feature of a Design System or Pattern Library.
 3. migrating to another component format (eg using legacy CSS to migrate to \`styled-components\`).
 4. learning about similarities and differences in component formats.
 
 <details>
-    <summary>Use-case 1: design systems and pattern libraries</summary>
+    <summary>Use-case 2: design systems and pattern libraries</summary>
 
     It's often the case that governments and large organisations have
     websites that have very different websites and components, and
