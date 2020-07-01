@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import marked from "marked";
 import { modalStyles } from "./Modal.Util";
-import { Diagram } from "../Diagram";
+import { Diagram } from "./Diagram";
 
 type Props = {
   isOpen: boolean;

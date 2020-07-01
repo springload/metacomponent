@@ -15,13 +15,9 @@ let hashState: any = window.location.hash
   ? parseInt(window.location.hash.replace(/#/, ""), 10)
   : undefined;
 
-console.log({ hashState, hash: window.location.hash });
-
 if (Number.isNaN(hashState)) {
   hashState = undefined;
 }
-
-console.log({ hashState });
 
 const resultIndexString = localStorageWrapper.getItem(STORAGE_RESULT_INDEX);
 
@@ -41,7 +37,7 @@ const resultIndex =
 const defaultValues = {
   metaHTML:
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children"></m-variable>\n</h1>`,
+    `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children" optional>fallback content...</m-variable>\n</h1>`,
   css:
     localStorageWrapper.getItem(STORAGE_CSS) ||
     `
@@ -54,14 +50,12 @@ const defaultValues = {
 .my-style--red {
   color: red;
 }
-/* the following CSS isn't used and will be tree shaken */
+/* the following CSS isn't used and will be tree shaken! */
 .treeShake {
   color: green;
 }`.trim(),
   resultIndex,
 };
-
-console.log(defaultValues.resultIndex);
 
 const templateId = "MyComponent";
 
@@ -73,7 +67,7 @@ export function useReplState() {
   );
   const [metaComponents, setMetaComponents] = useState<MetaComponents>();
   const iframeRef = useRef(null);
-  const debounceTime = useRef<number>(100);
+  const debounceTime = useRef<number>(250);
 
   const reprocessTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 

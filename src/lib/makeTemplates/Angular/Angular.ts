@@ -227,16 +227,16 @@ export class AngularTemplate extends Template {
     const prop = this.props[variable.id];
 
     this.template += `{{${variable.id}}}`;
-    if (!prop.required && variable.children.length > 0) {
+    if (prop && !prop.required && variable.children.length > 0) {
       this.template += `<ng-template *ngIf="${variable.id} == undefined">`;
     }
-    if (prop.required) return true;
+    if (prop && prop.required) return true;
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {
     const prop = this.props[variable.id];
 
-    if (!prop.required && variable.children.length > 0) {
+    if (prop && !prop.required && variable.children.length > 0) {
       this.template += "</ng-template>";
     }
   }

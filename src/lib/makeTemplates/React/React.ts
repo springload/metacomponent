@@ -253,21 +253,23 @@ export class ReactTemplate extends Template {
       ? variable.id
       : `props[${JSON.stringify(variable.id)}]`;
 
-    if (prop.required) {
-      this.render += `{${identifier}}`;
-      return true;
-    } else {
-      this.render += `{${identifier} !== undefined ? ${identifier} : `;
-      if (variable.children.length === 0) {
-        this.render += `null`;
-      } else if (
-        variable.children.length === 1 &&
-        variable.children[0].type === "Text"
-      ) {
-        this.render += `\`${variable.children[0].value.replace(/`/g, "\\`")}`;
+    if (prop) {
+      if (prop.required) {
+        this.render += `{${identifier}}`;
         return true;
       } else {
-        this.render += `(${this.fragmentStrings.start}`;
+        this.render += `{${identifier} !== undefined ? ${identifier} : `;
+        if (variable.children.length === 0) {
+          this.render += `null`;
+        } else if (
+          variable.children.length === 1 &&
+          variable.children[0].type === "Text"
+        ) {
+          this.render += `\`${variable.children[0].value.replace(/`/g, "\\`")}`;
+          return true;
+        } else {
+          this.render += `(${this.fragmentStrings.start}`;
+        }
       }
     }
   }
@@ -275,12 +277,13 @@ export class ReactTemplate extends Template {
   onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {
     const prop = this.props[variable.id];
 
-    if (prop.required) {
+    if (prop && prop.required) {
       // If this is genuinely required then there's no need to render anything
       return;
     }
 
     if (
+      prop &&
       variable.children.length === 1 &&
       variable.children[0].type === "Text"
     ) {

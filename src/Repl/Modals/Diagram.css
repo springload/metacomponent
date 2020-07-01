@@ -5,7 +5,7 @@
 
   grid-template-columns: 1fr;
   grid-template-rows: auto;
-  grid-column-gap: 5px;
+  grid-column-gap: 10px;
   grid-row-gap: 0px;
 
   grid-template-areas:
@@ -13,6 +13,7 @@
     "diagram-equals diagram-equals diagram-equals"
     "diagram-output diagram-output diagram-output";
 }
+
 .box {
   border: dashed 2px white;
   border-radius: 10px;
@@ -31,7 +32,7 @@
   text-align: center;
   font-size: xx-large;
   font-weight: bold;
-  padding-top: 0.1em;
+  padding-top: 0.5em;
 }
 
 .diagram-css {
@@ -44,7 +45,8 @@
   text-align: center;
   font-size: xx-large;
   font-weight: bold;
-  padding-top: 0.3em;
+  padding-top: 0.1em;
+  padding-bottom: 0.3em;
 }
 
 .diagram-output {

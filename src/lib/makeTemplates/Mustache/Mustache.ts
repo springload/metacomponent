@@ -106,19 +106,18 @@ export class MustacheTemplate extends Template {
     variable: Parameters<TemplateFormat["onVariable"]>[0]
   ): ReturnType<TemplateFormat["onVariable"]> {
     const prop = this.props[variable.id];
-
     this.unescapedVariables.push(variable.id);
     this.data += `{{{ ${variable.id} }}}`;
-    if (!prop.required && variable.children.length > 0) {
+    if (prop && !prop.required && variable.children.length > 0) {
       this.data += `{{^${variable.id}}}`;
     }
-    if (prop.required) return true;
+    if (prop && prop.required) return true;
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     const prop = this.props[variable.id];
 
-    if (!prop.required && variable.children.length > 0) {
+    if (prop && !prop.required && variable.children.length > 0) {
       this.data += `{{/${variable.id}}}`;
     }
   }

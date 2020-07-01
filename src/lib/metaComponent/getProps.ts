@@ -107,7 +107,14 @@ export function getProps(nodes: MetaNodeInternal[], log: Log): Props {
           log(`Ignoring empty prop id from ${JSON.stringify(node)}`);
           break;
         }
-        if (props[node.id]) return; // don't clobber a more specific typing
+        if (props[node.id]) {
+          // don't clobber a more specific typing
+          // but making it optional is ok
+          if (node.optional) {
+            props[node.id].required = false;
+          }
+          return;
+        }
         props[node.id] = {
           type: "PropTypeVariable",
           required: !node.optional,

@@ -201,7 +201,7 @@ test("Props with same id are prioritised", () => {
   });
 });
 
-test("Props with same id are prioritised, and have correct required status", () => {
+test("Props with same id are prioritised, and differing required statuses are resolved leniently", () => {
   const result = callMetaComponent(
     "m-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}">thing</a><m-if test="href">a thing</m-if>`,
@@ -221,7 +221,7 @@ test("Props with same id are prioritised, and have correct required status", () 
   });
 });
 
-test("Props with same id are prioritised, and have correct required status", () => {
+test("Props with same id are prioritised (options and m-if), and have required status", () => {
   const result = callMetaComponent(
     "m-variable-makes-props",
     `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><m-if test="href">a thing</m-if>`,
@@ -234,6 +234,26 @@ test("Props with same id are prioritised, and have correct required status", () 
     attributeName: "href",
     nodeName: "a",
     required: true,
+    options: {
+      Zombo: "http://zombo.com/",
+      Holloway: "https://holloway.nz",
+    },
+  });
+});
+
+test("Props with same id are prioritised (options and m-variable), and have required status", () => {
+  const result = callMetaComponent(
+    "m-variable-makes-props",
+    `<a href="{{ href: http://zombo.com/ as Zombo | https://holloway.nz as Holloway }}" aria-hidden="{{ href }}">thing</a><m-variable id="href" optional>a thing</m-variable>`,
+    "",
+    true
+  );
+  expect(Object.keys(result.metaComponent.props).length).toBe(1);
+  expect(result.metaComponent.props["href"]).toEqual({
+    type: "PropTypeAttributeValueOptions",
+    attributeName: "href",
+    nodeName: "a",
+    required: false,
     options: {
       Zombo: "http://zombo.com/",
       Holloway: "https://holloway.nz",

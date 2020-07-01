@@ -295,7 +295,7 @@ export class VueTemplate extends Template {
     } else {
       this.template += `<slot name=${JSON.stringify(variable.id)}>`;
     }
-    if (prop.required) return true;
+    if (prop && prop.required) return true;
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onCloseVariable"]>[0]) {

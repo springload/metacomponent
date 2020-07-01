@@ -95,22 +95,24 @@ export class EmberTemplate extends Template {
 
     this.unescapedVariables.push(variable.id);
 
-    if (prop.required) {
-      this.data += `{{@${variable.id}}}`;
-    } else {
-      this.data += `{{#if ${variable.id}}}`;
-      this.data += `{{@${variable.id}}}`;
-      if (variable.children.length > 0) {
-        this.data += `{{else}}`;
+    if (prop) {
+      if (prop.required) {
+        this.data += `{{@${variable.id}}}`;
+      } else {
+        this.data += `{{#if ${variable.id}}}`;
+        this.data += `{{@${variable.id}}}`;
+        if (variable.children.length > 0) {
+          this.data += `{{else}}`;
+        }
       }
+      if (prop.required) return true;
     }
-    if (prop.required) return true;
   }
 
   onCloseVariable(variable: Parameters<TemplateFormat["onVariable"]>[0]) {
     const prop = this.props[variable.id];
 
-    if (!prop.required && variable.children.length > 0) {
+    if (prop && !prop.required && variable.children.length > 0) {
       this.data += `{{/${variable.id}}}`;
     }
   }
