@@ -15,7 +15,7 @@ body {
   overflow-y: scroll;
 }
 
-fieldset {
+.field_textarea {
   color: white;
   border: none;
   min-height: 40vh;
@@ -26,7 +26,7 @@ fieldset {
   position: relative;
 }
 
-fieldset legend {
+.field_textarea legend {
   display: block;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
@@ -40,7 +40,7 @@ fieldset legend {
 }
 
 @media only screen and (min-width: 700px) {
-  fieldset legend {
+  .field_textarea legend {
     font-size: x-large;
     font-weight: 300;
   }
@@ -95,6 +95,16 @@ textarea:focus {
   transform: scale(1);
 }
 
+.app_modes {
+  grid-area: modeC;
+  display: inline-block;
+  border: none;
+}
+.app_modes legend {
+  display: inline-block;
+  border: none;
+}
+
 .iframe_container {
   grid-area: iframeC;
   height: 1px;
@@ -112,7 +122,7 @@ textarea:focus {
   grid-area: menuC;
 }
 
-.MetaComponentDemo {
+.MetaComponentDemo--mode-Component {
   display: grid;
   min-height: 100vh;
 
@@ -123,6 +133,7 @@ textarea:focus {
 
   grid-template-areas:
     "titleC"
+    "modeC"
     "menuC"
     "htmlC"
     "cssC"
@@ -130,12 +141,40 @@ textarea:focus {
 }
 
 @media only screen and (min-width: 700px) {
-  .MetaComponentDemo {
-    grid-template-columns: 1fr 1fr;
+  .MetaComponentDemo--mode-Component {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-areas:
-      "titleC menuC"
-      "htmlC cssC"
-      "outputC outputC";
+      "titleC titleC modeC menuC"
+      "htmlC htmlC cssC cssC"
+      "outputC outputC outputC outputC";
+  }
+}
+
+.MetaComponentDemo--mode-Usage {
+  display: grid;
+  min-height: 100vh;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-column-gap: 5px;
+  grid-row-gap: 0px;
+
+  grid-template-areas:
+    "titleC"
+    "modeC"
+    "menuC"
+    "htmlC"
+    "cssC"
+    "outputC";
+}
+
+@media only screen and (min-width: 700px) {
+  .MetaComponentDemo--mode-Usage {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "titleC titleC modeC menuC"
+      "htmlC htmlC cssC cssC"
+      "outputC outputC outputC outputC";
   }
 }
 

@@ -1,12 +1,15 @@
 import React, { Fragment } from "react";
+import { Mode } from "./useReplState";
 import peacock from "./peacock.png";
 
 type Props = {
   openWhyModal: () => void;
   isWhyOpen: boolean;
+  mode: Mode;
+  setMode: React.Dispatch<React.SetStateAction<Mode>>;
 };
 
-export function Header({ isWhyOpen, openWhyModal }: Props) {
+export function Header({ isWhyOpen, openWhyModal, mode, setMode }: Props) {
   return (
     <Fragment>
       <div id="button_tray_container" className="button-tray">
@@ -47,6 +50,27 @@ export function Header({ isWhyOpen, openWhyModal }: Props) {
           className="title_container__peacock"
         />
       </h1>
+      <fieldset className="app_modes">
+        <legend>
+          UI Modes:
+          <button
+            className={`tab ${mode === "Component" ? " tab--selected" : ""}`}
+            aria-current={mode === "Component" && "page"}
+            aria-label="Switch to Component mode"
+            onClick={() => setMode("Component")}
+          >
+            Component
+          </button>
+          <button
+            className={`tab ${mode === "Usage" ? " tab--selected" : ""}`}
+            aria-current={mode === "Usage" && "page"}
+            aria-label="Switch to Usage mode"
+            onClick={() => setMode("Usage")}
+          >
+            Usage
+          </button>
+        </legend>
+      </fieldset>
     </Fragment>
   );
 }

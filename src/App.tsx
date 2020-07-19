@@ -1,15 +1,10 @@
 import React, { Fragment } from "react";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/mode-html";
-import "ace-builds/src-noconflict/mode-css";
-import "ace-builds/src-noconflict/theme-monokai";
+import { ComponentMode } from "./Repl/ComponentMode";
 
 import { WhyModal } from "./Repl/Modals/WhyModal";
 import { WhatModal } from "./Repl/Modals/WhatModal";
 import { Header } from "./Repl/Header";
-import { Flash } from "./Repl/Flash";
-import startCase from "lodash/startCase";
+
 import { useReplState } from "./Repl/useReplState";
 import { useModalState } from "./Repl/Modals/useModalState";
 
@@ -19,6 +14,8 @@ const theme = "monokai";
 
 function App() {
   const {
+    mode,
+    setMode,
     metaHTML,
     setMetaHTML,
     css,
@@ -49,49 +46,13 @@ function App() {
         closeModal={closeWhatModal}
         openWhyModal={openWhyModal}
       />
-      <div className="MetaComponentDemo">
-        <Header isWhyOpen={isWhyOpen} openWhyModal={openWhyModal} />
-
-        <fieldset className="html_container">
-          <legend>
-            Input: MetaHTML
-            <button
-              onClick={openWhatModal}
-              className="what-button"
-              aria-label="Why MetaHTML?"
-              aria-expanded={isWhatOpen}
-              aria-controls="what-modal"
-            >
-              ?
-            </button>
-          </legend>
-          <AceEditor
-            mode="html"
-            theme={theme}
-            onChange={setMetaHTML}
-            name="html"
-            value={metaHTML}
-            width="100%"
-            height="100%"
-            showGutter={true}
-            showPrintMargin={false}
-          />
-        </fieldset>
-
-        <fieldset className="css_container">
-          <legend>Input: Standard CSS</legend>
-          <AceEditor
-            mode="css"
-            theme={theme}
-            onChange={setCSS}
-            name="css"
-            value={css}
-            width="100%"
-            height="100%"
-            showGutter={true}
-            showPrintMargin={false}
-          />
-        </fieldset>
+      <div className={`MetaComponentDemo MetaComponentDemo--mode-${mode}`}>
+        <Header
+          isWhyOpen={isWhyOpen}
+          openWhyModal={openWhyModal}
+          mode={mode}
+          setMode={setMode}
+        />
 
         <iframe
           id="iframe"
@@ -101,105 +62,33 @@ function App() {
           ref={iframeRefCallback}
         ></iframe>
 
-        <fieldset className="output_container">
-          <legend>
-            <span className="output_container--label">Outputs:</span>
-            {showEverything && (
-              <button
-                role="tab"
-                aria-selected={resultIndex === 0}
-                className={`tab ${
-                  resultIndex === 0 ? "tab--selected" : undefined
-                }`}
-                aria-controls="output"
-                id="tab-0"
-                tabIndex={resultIndex === 0 ? 0 : -1}
-                onClick={() => setResultIndex(0)}
-                onKeyUp={(e) => moveResultIndex(e, 0)}
-              >
-                Everything
-              </button>
-            )}
-            {metaComponents
-              ? Object.keys(metaComponents.files).map((file, fileIndex) => {
-                  const isSelected = resultIndex === fileIndex + 1;
-                  const tabIndex = fileIndex + 1;
-                  return (
-                    <button
-                      key={file}
-                      role="tab"
-                      aria-selected={isSelected}
-                      className={`tab ${
-                        isSelected ? "tab--selected" : undefined
-                      }`}
-                      aria-controls="output"
-                      id={`tab-${tabIndex}`}
-                      onClick={() => setResultIndex(tabIndex)}
-                      title={formatName(file)}
-                      tabIndex={isSelected ? 0 : -1}
-                      onKeyUp={(e) => moveResultIndex(e, tabIndex)}
-                    >
-                      {formatBriefName(file)}
-                    </button>
-                  );
-                })
-              : null}
-          </legend>
-          <Flash
-            text={
-              <>
-                this is uneditable. <br />
-                it's the output from MetaComponent <br />
-                click tabs above to see formats
-              </>
-            }
-          >
-            <AceEditor
-              mode={outputMode}
-              theme={theme}
-              name="output"
-              value={outputValue}
-              readOnly
-              width="100%"
-              height="100%"
-              showPrintMargin={false}
-              showGutter={true}
-              // markers={markers}
-            />
-          </Flash>
-        </fieldset>
+        {mode === "Component" && (
+          <ComponentMode
+            {...{
+              metaComponents,
+              resultIndex,
+              outputValue,
+              outputMode,
+              setResultIndex,
+              moveResultIndex,
+              metaHTML,
+              setMetaHTML,
+              css,
+              setCSS,
+              showEverything,
+              isWhatOpen,
+              isWhyOpen,
+              openWhyModal,
+              openWhatModal,
+              closeWhyModal,
+              closeWhatModal,
+              theme,
+            }}
+          />
+        )}
       </div>
     </Fragment>
   );
-}
-
-function pathType(file: string) {
-  return file.substring(0, file.indexOf("/"));
-}
-
-function formatName(file: string): string | undefined {
-  const dirname = pathType(file);
-  if (dirname === "react-styled-components") {
-    return "React with Styled Components 💅";
-  }
-  return undefined;
-}
-
-function formatBriefName(file: string): string {
-  const dirname = pathType(file);
-
-  switch (dirname) {
-    case "html":
-      return "HTML";
-    case "css":
-      return "CSS";
-    case "react-styled-components":
-      return "React 💅";
-    case "vue-jsx":
-      return "Vue JSX";
-    default:
-      return startCase(dirname).replace(/-/g, " ");
-  }
 }
 
 export default App;

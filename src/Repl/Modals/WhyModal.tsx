@@ -45,7 +45,7 @@ export function WhyModal({ isOpen, closeModal }: Props) {
 }
 
 const content1 = marked(`
-MetaComponent can generate components in React, Django, Vue, Angular, and many more.
+MetaComponent can generate components in plain HTML and CSS, but also React, Django, Vue, Angular, and many more.
 
 Some of its use-cases are:
 * progressive enhancement of webapps, keeping server-side templates in sync with client-side templates.

@@ -59,7 +59,10 @@ const defaultValues = {
 
 const templateId = "MyComponent";
 
+export type Mode = "Component" | "Usage";
+
 export function useReplState() {
+  const [mode, setMode] = useState<Mode>("Component");
   const [metaHTML, setMetaHTML] = useState<string>(defaultValues.metaHTML);
   const [css, setCSS] = useState<string>(defaultValues.css);
   const [resultIndex, setResultIndex] = useState<number>(
@@ -241,6 +244,8 @@ export function useReplState() {
   };
 
   return {
+    mode,
+    setMode,
     metaHTML,
     setMetaHTML: publicSetMetaHTML,
     css,
