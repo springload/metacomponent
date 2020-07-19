@@ -67,7 +67,7 @@
     "@babel/generator": "^7.10.2",
     "@babel/parser": "^7.10.2",
     "chokidar": "^3.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mkdirp": "^1.0.4",
     "postcss-selector-parser": "^6.0.2",
     "prettier": "^2.0.5",
