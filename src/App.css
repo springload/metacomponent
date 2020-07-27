@@ -209,6 +209,33 @@ textarea:focus {
   border-bottom: none;
 }
 
+.tab2 {
+  background: black;
+  color: #ccc;
+  font-size: x-small;
+  margin: 0px 5px;
+  border: none;
+  border-top: solid 3px transparent;
+  font-weight: inherit;
+  padding-top: 0.2em;
+  padding-bottom: 0.4em;
+}
+
+.tab2:hover {
+  background: #444;
+  color: #fff;
+}
+
+@media only screen and (min-width: 700px) {
+  .tab2 {
+    font-size: small;
+  }
+}
+
+.tab2--selected {
+  border-bottom: solid 1px #00d5a9;
+}
+
 .mt-tooltip {
   background: rgba(255, 255, 0, 0.1);
   color: black;

@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { ComponentMode } from "./Repl/ComponentMode";
+import { UsageMode } from "./Repl/UsageMode";
 
 import { WhyModal } from "./Repl/Modals/WhyModal";
 import { WhatModal } from "./Repl/Modals/WhatModal";
@@ -86,6 +87,7 @@ function App() {
             }}
           />
         )}
+        {mode === "Usage" && <UsageMode />}
       </div>
     </Fragment>
   );

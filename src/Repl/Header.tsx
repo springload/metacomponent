@@ -52,9 +52,8 @@ export function Header({ isWhyOpen, openWhyModal, mode, setMode }: Props) {
       </h1>
       <fieldset className="app_modes">
         <legend>
-          UI Modes:
           <button
-            className={`tab ${mode === "Component" ? " tab--selected" : ""}`}
+            className={`tab2 ${mode === "Component" ? " tab2--selected" : ""}`}
             aria-current={mode === "Component" && "page"}
             aria-label="Switch to Component mode"
             onClick={() => setMode("Component")}
@@ -62,7 +61,7 @@ export function Header({ isWhyOpen, openWhyModal, mode, setMode }: Props) {
             Component
           </button>
           <button
-            className={`tab ${mode === "Usage" ? " tab--selected" : ""}`}
+            className={`tab2 ${mode === "Usage" ? " tab2--selected" : ""}`}
             aria-current={mode === "Usage" && "page"}
             aria-label="Switch to Usage mode"
             onClick={() => setMode("Usage")}
