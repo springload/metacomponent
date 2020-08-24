@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Mode } from "./useReplState";
+import { Mode } from "./useAppState";
 import peacock from "./peacock.png";
 
 type Props = {

@@ -7,44 +7,47 @@ import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/theme-monokai";
 import { MetaComponents } from "../lib";
 import { formatName, formatBriefName } from "./Utils";
+import "./ComponentMode.css";
+import { useComponentModeState } from "./useComponentModeState";
 
 type Props = {
   isWhatOpen: boolean;
   theme: string;
-  metaHTML: string;
-  setMetaHTML: (metaHTML: string) => void;
-  css: string;
-  setCSS: (css: string) => void;
-  showEverything: boolean;
-  resultIndex: number;
-  setResultIndex: (resultIndex: number) => void;
-  outputValue: string;
-  outputMode: string;
-  moveResultIndex: (
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    resultIndex: number
-  ) => void;
-  metaComponents: MetaComponents | undefined;
   openWhatModal: () => void;
+  metaComponents: MetaComponents | undefined;
+  metaHTML: string;
+  css: string;
+  setCSS: (metaHTML: string) => void;
+  setMetaHTML: (metaHTML: string) => void;
+  isWhyOpen: boolean;
+  openWhyModal: () => void;
+  closeWhatModal: () => void;
+  closeWhyModal: () => void;
 };
 
 export function ComponentMode({
-  isWhatOpen,
-  theme,
-  setMetaHTML,
+  metaComponents,
   metaHTML,
+  setMetaHTML,
   css,
   setCSS,
-  showEverything,
-  resultIndex,
-  outputValue,
-  outputMode,
-  setResultIndex,
-  moveResultIndex,
-  metaComponents,
-
+  isWhatOpen,
+  isWhyOpen,
+  openWhyModal,
   openWhatModal,
+  closeWhyModal,
+  closeWhatModal,
+  theme,
 }: Props) {
+  const {
+    showEverything,
+    resultIndex,
+    outputValue,
+    outputMode,
+    setResultIndex,
+    moveResultIndex,
+  } = useComponentModeState(metaComponents);
+
   return (
     <Fragment>
       <fieldset className="html_container field_textarea">

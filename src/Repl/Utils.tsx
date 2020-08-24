@@ -28,3 +28,5 @@ export function formatBriefName(file: string): string {
       return startCase(dirname).replace(/-/g, " ");
   }
 }
+
+export const oneFrameMs = 1000 / 60;

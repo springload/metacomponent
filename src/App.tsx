@@ -6,10 +6,11 @@ import { WhyModal } from "./Repl/Modals/WhyModal";
 import { WhatModal } from "./Repl/Modals/WhatModal";
 import { Header } from "./Repl/Header";
 
-import { useReplState } from "./Repl/useReplState";
+import { useComponentModeState } from "./Repl/useComponentModeState";
 import { useModalState } from "./Repl/Modals/useModalState";
 
 import "./App.css";
+import { useAppState } from "./Repl/useAppState";
 
 const theme = "monokai";
 
@@ -17,19 +18,14 @@ function App() {
   const {
     mode,
     setMode,
-    metaHTML,
-    setMetaHTML,
-    css,
-    setCSS,
-    showEverything,
     iframeRefCallback,
+    metaHTMLs,
+    setMetaHTMLs,
+    CSSs,
+    setCSSs,
     metaComponents,
-    resultIndex,
-    outputValue,
-    outputMode,
-    setResultIndex,
-    moveResultIndex,
-  } = useReplState();
+  } = useAppState();
+
   const {
     isWhatOpen,
     isWhyOpen,
@@ -67,16 +63,16 @@ function App() {
           <ComponentMode
             {...{
               metaComponents,
-              resultIndex,
-              outputValue,
-              outputMode,
-              setResultIndex,
-              moveResultIndex,
-              metaHTML,
-              setMetaHTML,
-              css,
-              setCSS,
-              showEverything,
+              //resultIndex,
+              //  outputValue,
+              // outputMode,
+              // setResultIndex,
+              // moveResultIndex,
+              metaHTML: metaHTMLs[0],
+              setMetaHTML: (metaHTML: string) => setMetaHTMLs([metaHTML]),
+              css: CSSs[0],
+              setCSS: (css: string) => setCSSs([css]),
+              // showEverything,
               isWhatOpen,
               isWhyOpen,
               openWhyModal,
@@ -87,7 +83,17 @@ function App() {
             }}
           />
         )}
-        {mode === "Usage" && <UsageMode />}
+        {mode === "Usage" && (
+          <UsageMode
+            {...{
+              theme,
+              metaHTMLs,
+              setMetaHTMLs,
+              CSSs,
+              setCSSs,
+            }}
+          />
+        )}
       </div>
     </Fragment>
   );
