@@ -26,32 +26,20 @@
   }
 }
 
-.MetaComponentDemo--mode-Usage {
-  display: grid;
-  min-height: 100vh;
-
-  grid-template-columns: 1fr;
-  grid-template-rows: auto;
-  grid-column-gap: 5px;
-  grid-row-gap: 0px;
-
-  grid-template-areas:
-    "titleC"
-    "modeC"
-    "menuC"
-    "htmlC"
-    "cssC"
-    "outputC";
+.MetaComponentDemo--mode-Component .html_container {
+  grid-area: htmlC;
 }
 
-@media only screen and (min-width: 700px) {
-  .MetaComponentDemo--mode-Usage {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-areas:
-      "titleC titleC modeC menuC"
-      "htmlC htmlC cssC cssC"
-      "outputC outputC outputC outputC";
-  }
+.MetaComponentDemo--mode-Component .css_container {
+  grid-area: cssC;
+}
+
+.MetaComponentDemo--mode-Component .makeTemplates_container {
+  grid-area: buttonC;
+}
+
+.MetaComponentDemo--mode-Component .field_textarea {
+  height: 100%;
 }
 
 .tab {

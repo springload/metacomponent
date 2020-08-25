@@ -63,11 +63,6 @@ function App() {
           <ComponentMode
             {...{
               metaComponents,
-              //resultIndex,
-              //  outputValue,
-              // outputMode,
-              // setResultIndex,
-              // moveResultIndex,
               metaHTML: metaHTMLs[0],
               setMetaHTML: (metaHTML: string) => setMetaHTMLs([metaHTML]),
               css: CSSs[0],

@@ -32,11 +32,11 @@ export function ComponentMode({
   css,
   setCSS,
   isWhatOpen,
-  isWhyOpen,
-  openWhyModal,
+  // isWhyOpen,
+  // openWhyModal,
   openWhatModal,
-  closeWhyModal,
-  closeWhatModal,
+  // closeWhyModal,
+  // closeWhatModal,
   theme,
 }: Props) {
   const {

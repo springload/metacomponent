@@ -22,7 +22,6 @@ body {
   padding: 0px;
   margin: 0px;
   width: 100%;
-  height: 100%;
   position: relative;
 }
 
@@ -48,18 +47,6 @@ body {
 
 textarea:focus {
   background: #393939;
-}
-
-.html_container {
-  grid-area: htmlC;
-}
-
-.css_container {
-  grid-area: cssC;
-}
-
-.makeTemplates_container {
-  grid-area: buttonC;
 }
 
 .title_container {

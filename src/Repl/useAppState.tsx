@@ -104,7 +104,7 @@ const STORAGE_CSS = "STORAGE_CSS2";
 const defaultValues = {
   metaHTML: [
     localStorageWrapper.getItem(STORAGE_METAHTML) ||
-      `<h1\n  class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children" optional>fallback content...</m-variable>\n</h1>`,
+      `<h1\n class="my-style {{ colour: my-style--blue as blue | my-style--red as red }}"\n>\n  <m-variable id="children" optional>fallback content...</m-variable>\n</h1>`,
   ],
   css: [
     localStorageWrapper.getItem(STORAGE_CSS) ||
